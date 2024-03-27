@@ -6,7 +6,7 @@ import Footer from './components/nav y pie/Footer';
 import Plans from './components/contenido/Plans';
 import Carrusel from './components/Carousel/Carrusel';
 import Galeria from './components/contenido/Galeria';
-
+import Contacto from './components/Formulario/Contacto';
 function App() {
   
   return (
@@ -18,6 +18,7 @@ function App() {
       <Plans/>
       <Carrusel/>
       <Galeria/>
+      <Contacto/>
       <Footer/>
     </div>
   )
