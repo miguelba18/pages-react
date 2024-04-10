@@ -96,15 +96,15 @@ const CustomNextArrow = (props) => {
 const PopupCard = ({ imagen, titulo, descripcion, onClose }) => {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-lg p-6 max-w-[60%]">
-                <div className="flex items-center">
-                    <img src={imagen} className="w-[300px] h-[300px] object-cover mr-4 rounded-lg" />
+            <div className="bg-white rounded-lg p-6 max-w-[90%] xl:max-w-[60%]">
+                <div className="xl:flex items-center">
+                    <img src={imagen} className=" xl:w-[300px] xl:h-[300px] object-cover mr-4 rounded-lg" />
                     <div>
-                        <h2 className="text-xl font-semibold">{titulo}</h2>
-                        <p className="text-gray-700">{descripcion}</p>
+                        <h2 className="text-xl font-semibold ">{titulo}</h2>
+                        <p className="text-gray-700 mt-8">{descripcion}</p>
                     </div>
                 </div>
-                <button onClick={onClose} className="absolute top-20 right-2  text-black hover:text-gray-700 focus:outline-none">
+                <button onClick={onClose} className="absolute xl:top-[27%] top-[10%] right-[0%] xl:right-[20%]  text-black hover:text-gray-700 focus:outline-none">
                     <RiCloseFill className='h-10 w-10' />
                 </button>
 
