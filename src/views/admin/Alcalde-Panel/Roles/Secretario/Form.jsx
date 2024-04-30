@@ -18,8 +18,8 @@ const Form = () => {
     telefono: "",
     email: "",
     password: "",
-    ciudad: "",
   };
+
   const [open, setOpen] = useState(false);
   const [alertSeverity, setAlertSeverity] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
@@ -28,22 +28,24 @@ const Form = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
 
   const [formData, setFormData] = useState(initialState);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
     setFormData({
       ...formData,
+
       [name]: value,
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const token = localStorage.getItem("token");
     if (!token) {
       return;
@@ -56,7 +58,7 @@ const Form = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/V1/auth/alcalde",
+        "http://localhost:8080/api/V1/auth/secretario",
         formData,
         config
       );
@@ -74,10 +76,10 @@ const Form = () => {
 
   return (
     <div className="flex justify-center items-center  ">
-      <div className="  md:p-10 xl:w-[50%] w-[100%]">
-        <form
+      <div className=" md:p-10 xl:w-[50%] w-[100%]">
+        <form 
           onSubmit={handleSubmit}
-          className=" shadow-xl py-10 bg-tertiary-100 px-[20%] "
+          className=" shadow-xl py-10 bg-tertiary-100 px-[20%]"
         >
           <img
             src="../../../../../../src/assets/img/img1.png"
@@ -85,9 +87,8 @@ const Form = () => {
             className="mb-0"
           />
           <h4 className="text-center text-2xl font-bold py-8">
-            Registro de Alcalde Nuevo
+            Registro de Secretario Nuevo
           </h4>
-
           <div className="mb-4">
             <label
               htmlFor="nombre"
@@ -190,7 +191,7 @@ const Form = () => {
                 className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
                 required
               />
-              <div className="absolute inset-y-0  right-0 flex items-center pr-2">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                 {showPassword ? (
                   <RiEyeOffFill
                     className=" cursor-pointer"
@@ -205,29 +206,12 @@ const Form = () => {
               </div>
             </div>
           </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="ciudadId"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Ciudad:
-            </label>
-            <input
-              type="text"
-              name="ciudad"
-              value={formData.ciudad}
-              onChange={handleChange}
-              className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent "
-              required
-            />
-          </div>
           <>
             <button
               type="submit"
               className="bg-green-500/80 hover:bg-green-500 transition-colors rounded-lg p-3 text-white"
             >
-              Guardar Alcalde
+              Guardar Secretario
             </button>
             <Dialog
               open={open}

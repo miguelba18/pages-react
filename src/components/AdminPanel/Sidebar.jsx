@@ -9,12 +9,16 @@ import {
   RiPagesFill,
   RiAddCircleFill,
   RiMenu3Fill,
-  RiCloseFill
-  
+  RiCloseFill,
+  RiFileList3Fill,
+  RiAdminFill,
+  RiArrowDropRightLine,
+  RiBillFill,
 } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
+  const [showSubMenu, setShowSubMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [userRoleId, setUserRoleId] = useState(null);
@@ -47,95 +51,349 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className={
-          `xl:h-[100vh] overflow-y-scroll h-full w-[80%] md:w-[40%] lg:w-[30%] xl:w-full fixed xl:static top-0 bg-tertiary-100 p-8 flex flex-col justify-between z-50 transition-all duration-500 ${showMenu ? "left-0" : "-left-full"}`
-        }
+        className={`xl:h-[100vh] overflow-y-scroll h-full w-[80%] md:w-[40%] lg:w-[30%] xl:w-full fixed xl:static top-0 bg-tertiary-100 p-4 flex flex-col justify-between z-50 transition-all duration-500 ${
+          showMenu ? "left-0" : "-left-full"
+        }`}
       >
         <div>
-        <h1 className="text-center text-2xl font-normal mb-10 flex items-center ">
-          <RiAppsFill className="text-secundary mr-4" />
-          {userRoleId === "ADMIN" && <span>SIM Admin<span className="text-4xl text-secundary">.</span></span>}
-          {userRoleId === "Alcalde" && <span>SIM Alcalde<span className="text-4xl text-secundary">.</span></span>}
-          {userRoleId === "Secretario" && <span>SIM Secretario<span className="text-4xl text-secundary">.</span></span>}
-          {userRoleId === "Personal" && <span>SIM Personal<span className="text-4xl text-secundary">.</span></span>}
-        </h1>
+          <h1 className="text-center text-2xl font-normal mb-10 flex items-center ">
+            <RiAppsFill className="text-secundary mr-4" />
+            {userRoleId === "ADMIN" && (
+              <span>
+                SIM Admin<span className="text-4xl text-secundary">.</span>
+              </span>
+            )}
+            {userRoleId === "Alcalde" && (
+              <span>
+                SIM Alcalde<span className="text-4xl text-secundary">.</span>
+              </span>
+            )}
+            {userRoleId === "Secretario" && (
+              <span>
+                SIM Secretario<span className="text-4xl text-secundary">.</span>
+              </span>
+            )}
+            {userRoleId === "Personal" && (
+              <span>
+                SIM Personal<span className="text-4xl text-secundary">.</span>
+              </span>
+            )}
+          </h1>
           <nav>
             <ul className="list-none">
+              {userRoleId === "ADMIN" && (
+                <>
+                  <li className="">
+                    <button
+                      onClick={() => setShowSubMenu(!showSubMenu)}
+                      className="flex items-center  gap-4 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
+                    >
+                      <RiAdminFill className="text-xl text-secundary" />
+                      Admin y Alcaldes
+                      <RiArrowDropRightLine
+                        className={`text-3xl ${showSubMenu && "rotate-90"}`}
+                      />
+                    </button>
 
-            {userRoleId === "ADMIN" && (
-              <li className={location.pathname === '/alcalde' ? 'bg-secundary text-white rounded-lg ' : 'hover:bg-tertiary-900 transition-colors  rounded-lg' }>
-              <Link
-                to="/alcalde"
-                className="flex items-center  gap-4 px-4 py-2 mb-2" 
+                    <ul className={`my-2 ${!showSubMenu && "hidden"} `}>
+                      <li
+                        className={
+                          location.pathname === "/alcalde"
+                            ? "bg-secundary text-white rounded-lg  "
+                            : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                        }
+                      >
+                        <Link
+                          to="/alcalde"
+                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                        >
+                          <RiAddCircleFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/alcalde"
+                                ? "text-white "
+                                : ""
+                            }`}
+                          />
+                          Agregar Alcalde
+                        </Link>
+                      </li>
+                      <li
+                        className={
+                          location.pathname === "/tablaadminalcalde"
+                            ? "bg-secundary text-white rounded-lg "
+                            : "hover:bg-tertiary-900 transition-colors text-gray-500  rounded-lg"
+                        }
+                      >
+                        <Link
+                          to="/tablaadminalcalde"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiFileList3Fill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/tablaadminalcalde"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Ver Admin y Alcaldes
+                        </Link>
+                      </li>
+                    </ul>
+                    <li
+                      className={
+                        location.pathname === "/calendarioadmin"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/calendarioadmin"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiCalendarTodoFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/calendarioadmin"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Calendario
+                      </Link>
+                    </li>
+                  </li>
+                </>
+              )}
+
+              {userRoleId === "Alcalde" && (
+                <>
+                  <li>
+                    <button
+                      onClick={() => setShowSubMenu(!showSubMenu)}
+                      className="flex items-center  gap-4 px-4 py-2 mb-2 hover:bg-tertiary-900 rounded-lg  "
+                    >
+                      <RiAdminFill className="text-xl text-secundary" />
+                      Secretarios y Personal
+                      <RiArrowDropRightLine
+                        className={`text-3xl ${showSubMenu && "rotate-90"}`}
+                      />
+                    </button>
+
+                    <ul className={`my-2 ${!showSubMenu && "hidden"} `}>
+                      <li
+                        className={
+                          location.pathname === "/secretario"
+                            ? "bg-secundary text-white rounded-lg "
+                            : " rounded-lg hover:bg-tertiary-900 transition-colors"
+                        }
+                      >
+                        <Link
+                          to="/secretario"
+                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiAddCircleFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/secretario"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Agregar Secretario
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/personal"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/personal"
+                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiAddCircleFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/personal"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Agregar Personal
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/tabla"
+                            ? "bg-secundary text-white rounded-lg "
+                            : "hover:bg-tertiary-900 transition-colors  rounded-lg"
+                        }
+                      >
+                        <Link
+                          to="/tabla"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiFileList3Fill
+                            className={`text-xl xl:text-3xl text-secundary ${
+                              location.pathname === "/tabla" ? "text-white" : ""
+                            }`}
+                          />
+                          Ver Secretarios y Personal
+                        </Link>
+                      </li>
+
+                      
+                    </ul>
+                    <li
+                        className={
+                          location.pathname === "/calendarioalcalde"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/calendarioalcalde"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2"
+                        >
+                          <RiCalendarTodoFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/calendarioalcalde"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Calendario
+                        </Link>
+                      </li>
+                  </li>
+                </>
+              )}
+
+              <li
+                className={
+                  location.pathname === "/"
+                    ? "bg-secundary text-white rounded-lg"
+                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                }
               >
-                <RiAddCircleFill className={`text-xl text-secundary ${location.pathname === '/alcalde' ? 'text-white' : ''}`} />
-                Agregar Alcalde
-              </Link>
-              </li>
-            )}
-
-            {userRoleId === "Alcalde" && (
-              <>
-              <li className={location.pathname === '/secretario' ? 'bg-secundary text-white rounded-lg ' : ' rounded-lg hover:bg-tertiary-900 transition-colors' }>
                 <Link
-                  to="/secretario"
-                  className="flex gap-4 items-center   px-4 py-2  mb-2"
+                  to="/"
+                  className="flex items-center  gap-4 px-4 py-2 mb-2"
                 >
-                  <RiAddCircleFill className={`text-xl text-secundary ${location.pathname === '/secretario' ? 'text-white' : ''}`} />
-                  Agregar Secretario
+                  <RiDashboardFill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/" ? "text-white" : ""
+                    }`}
+                  />
+                  Dashboard
                 </Link>
-                </li>
+              </li>
 
-                <li className={location.pathname === '/personal' ? 'bg-secundary text-white rounded-lg' : 'rounded-lg hover:bg-tertiary-900 transition-colors ' }>
+              {userRoleId === "Secretario" && (
+                <>
+                  <li
+                    className={
+                      location.pathname === "/calendarioalcalde"
+                        ? "bg-secundary text-white rounded-lg"
+                        : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                    }
+                  >
+                    <Link
+                      to="/calendarioalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiCalendarTodoFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/calendarioalcalde"
+                            ? "text-white"
+                            : ""
+                        }`}
+                      />
+                      Calendario
+                    </Link>
+                  </li>
+                </>
+              )}
+
+              {userRoleId === "Personal" && (
+                <>
+                  <li
+                    className={
+                      location.pathname === "/calendarioalcalde"
+                        ? "bg-secundary text-white rounded-lg"
+                        : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                    }
+                  >
+                    <Link
+                      to="/calendarioalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiCalendarTodoFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/calendarioalcalde"
+                            ? "text-white"
+                            : ""
+                        }`}
+                      />
+                      Calendario
+                    </Link>
+                  </li>
+                </>
+              )}
+
+              <li
+                className={
+                  location.pathname === "/facturaelectronica"
+                    ? "bg-secundary text-white rounded-lg"
+                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                }
+              >
                 <Link
-                  to="/personal"
+                  to="/facturaelectronica"
+                  className="flex items-center  gap-4 px-4 py-2 mb-2"
+                >
+                  <RiBillFill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/facturaelectronica"
+                        ? "text-white"
+                        : ""
+                    }`}
+                  />
+                  Factura Electronica
+                </Link>
+              </li>
+
+              <li
+                className={
+                  location.pathname === "/perfil"
+                    ? "bg-secundary text-white rounded-lg"
+                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                }
+              >
+                <Link
+                  to="/perfil"
                   className="flex items-center  gap-4 px-4 py-2  mb-2"
                 >
-                  <RiAddCircleFill className={`text-xl text-secundary ${location.pathname === '/personal' ? 'text-white' : ''}`} />
-                  Agregar Personal
+                  <RiUser6Fill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/perfil" ? "text-white" : ""
+                    }`}
+                  />
+                  Perfil
                 </Link>
-                </li>
-                
-              </>
-            )}
-            <li className={location.pathname === '/' ? 'bg-secundary text-white rounded-lg' : 'rounded-lg hover:bg-tertiary-900 transition-colors ' }>
-            <Link
-              to="/"
-              className="flex items-center  gap-4 px-4 py-2 mb-2"
-            >
-              <RiDashboardFill className={`text-xl text-secundary ${location.pathname === '/' ? 'text-white' : ''}`} />
-              Dashboard
-            </Link>
-            </li>
-
-            <li className={location.pathname === '/calendario' ? 'bg-secundary text-white rounded-lg' : 'rounded-lg hover:bg-tertiary-900 transition-colors ' }>
-            <Link
-              to="/calendario"
-              className="flex items-center  gap-4 px-4 py-2 mb-2"
-            >
-              <RiCalendarTodoFill className={`text-xl text-secundary ${location.pathname === '/calendario' ? 'text-white' : ''}`} />
-              Calendario
-            </Link>
-            </li>
-
-            <li className={location.pathname === '/perfil' ? 'bg-secundary text-white rounded-lg' : 'rounded-lg hover:bg-tertiary-900 transition-colors ' }>
-            <Link
-              to="/perfil"
-              className="flex items-center  gap-4 px-4 py-2  mb-2"
-            >
-              <RiUser6Fill className={`text-xl text-secundary ${location.pathname === '/perfil' ? 'text-white' : ''}`} />
-              Perfil
-            </Link>
-            </li>
+              </li>
             </ul>
           </nav>
         </div>
         <nav>
-        <button className="flex items-center gap-4 px-4 py-2 rounded-lg bg-secundary/70 hover:bg-secundary hover:text-white transition-colors mb-2">
-          <RiPagesFill className="text-white" />
-          <Link to={"/home"} className=" text-white  ">Landing Page</Link>
-        </button>
-        
+          <button className="flex items-center gap-4 px-4 py-2 rounded-lg bg-secundary/70 hover:bg-secundary hover:text-white transition-colors mb-2">
+            <RiPagesFill className="text-white" />
+            <Link to={"/home"} className=" text-white  ">
+              Landing Page
+            </Link>
+          </button>
+
           <button
             onClick={LimpiarToken}
             className="flex items-center  gap-4 px-4 py-2 rounded-lg hover:bg-tertiary-900 transition-colors"
@@ -150,8 +408,7 @@ const Sidebar = () => {
         onClick={() => setShowMenu(!showMenu)}
         className="xl:hidden fixed bottom-4 right-4 bg-secundary text-white p-3 rounded-full z-50 mr-2"
       >
-        {showMenu ? <RiCloseFill />: <RiMenu3Fill /> }
-        
+        {showMenu ? <RiCloseFill /> : <RiMenu3Fill />}
       </button>
     </>
   );

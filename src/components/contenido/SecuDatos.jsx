@@ -19,7 +19,7 @@ const SecuDatos = () => {
                 </div>
 
                 <div className="md:col-span-4 flex ml-[15%] xl:ml-0  mt-[3%] xl:mt-[10%] pb-8 xl:p-0">
-                    <img src="/public/img/roundsecurity.png" className="h-[100%] w-[80%] xl:h-[60%] xl:w-[70%] object-cover >  "/>
+                    <img src="/src/assets/img/roundsecurity.png" className="h-[100%] w-[80%] xl:h-[60%] xl:w-[70%] object-cover >  "/>
                 </div>
            
         </section>

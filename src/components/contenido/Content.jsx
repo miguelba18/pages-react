@@ -3,7 +3,7 @@ import { RiCheckboxBlankCircleFill,RiArrowRightLine } from "react-icons/ri";
 
 const Content =() =>{
     return(
-        <section className=" min-h-[90vh] grid grid-cols-1 xl:grid-cols-8  bg-cover " style={{ backgroundImage: `url('/public/img/fondo.jpg')` }}>           
+        <section className=" min-h-[90vh] grid grid-cols-1 xl:grid-cols-8  bg-cover " style={{ backgroundImage: `url('/src/assets/img/fondo.jpg')` }}>           
                 <div className=" md:col-span-4 flex items-center justify-center xl:p-24 p-4">
                     <div className="flex flex-col gap-6">
                         <h1 id="Inicio" className="text-4xl xl:text-6xl font-bold leading-[5rem] xl:leading-[6.5rem] text-gray-500 ">
@@ -28,9 +28,8 @@ const Content =() =>{
                 </div>
 
                 <div className="md:col-span-4 flex  ml-6 -mt-20 xl:mt-20">
-                    <img src="/public/img/imgcontent.png" className="h-[50%] w-[90%] md:h-[60%] md:w-[90%] object-cover mt-20  "/>
+                    <img src="/src/assets/img/imgcontent.png" className="h-[50%] w-[90%] md:h-[60%] md:w-[90%] object-cover mt-20  "/>
                 </div>
-           
         </section>
     )}
 
