@@ -1,6 +1,7 @@
 import  { useState } from "react";
 import EditProfileModal from "./EditarPerfil";
 import useProfile from "../../../hook/Perfil/useProfile";
+import {toast} from "react-toastify";
 function Perfil() {
   const { profile, updateProfile } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
@@ -9,7 +10,11 @@ function Perfil() {
     const success = await updateProfile(editedProfile);
     if (success) {
       setIsEditing(false);
-      alert("Perfil editado exitosamente");
+      toast.success("Perfil editado exitosamente" ,{ autoClose: 1200 });
+      setTimeout(() =>
+        {
+          window.location.reload();
+        }, 1700);
     }
   };
 

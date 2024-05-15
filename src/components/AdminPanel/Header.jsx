@@ -7,22 +7,18 @@ import {
   RiSearchLine,
   RiNotification3Line,
   RiArrowDownSLine,
-  RiSettings4Line,
-  RiLogoutCircleLine,
   RiCheckboxCircleFill,
   RiCloseCircleFill,
 } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+
+import DarkModeSwitch from "../Darkmode/DarkModeSwitch";
 
 const Header = () => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [imagen, setImagen] = useState("");
-  const LimpiarToken = () => {
-    window.localStorage.removeItem("token");
-    navigate("/home");
-  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -58,7 +54,7 @@ const Header = () => {
   }, [navigate]);
 
   return (
-    <header className="xl:h-[10vh] border-b border-tertiary-100 md:p-3 px-2">
+    <header className="xl:h-[10vh] border-b border-tertiary-100 md:p-3 px-2  ">
       <div className="flex justify-between items-center">
         <h1 className="font-normal md:text-4xl">Dashboard Overview</h1>
 
@@ -149,22 +145,11 @@ const Header = () => {
             </MenuItem>
             <hr className="border-gray-300 my-4" />
             <MenuItem className="p-0 hover:bg-transparent">
-              <Link
-                to="/configuracion"
-                className="flex items-center gap-x-4 rounded-lg transition-colors py-2 px-10 hover:bg-secundary/70 hover:text-white flex-1"
-              >
-                <RiSettings4Line className="h-4 w-4 mt-1" />
-                <span className="text-sm">Configuración</span>
-              </Link>
+              <DarkModeSwitch/>
             </MenuItem>
+            
 
-            <button
-              onClick={LimpiarToken}
-              className="flex items-center gap-x-4 rounded-lg transition-colors py-2 px-10 hover:bg-secundary/70 hover:text-white w-full"
-            >
-              <RiLogoutCircleLine className="h-4 w-4 mt-1" />
-              <span className="text-sm">Cerrar Sesión</span>
-            </button>
+            
           </Menu>
         </nav>
       </div>

@@ -37,14 +37,14 @@ const EliminarAlcalde = ({ id, onDelete }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Error al eliminar el registro.");
+        throw new Error("Error al eliminar el Alcalde.");
       }
 
       onDelete(id);
       toast.success("Alcalde eliminado correctamente");
     } catch (error) {
-      console.error("Error al eliminar el registro:", error);
-      toast.error("Error al eliminar el registro");
+      console.error("Error al eliminar el Alcalde:", error);
+      toast.error("Error al eliminar el Alcalde");
     } finally {
       setIsLoading(false);
     }

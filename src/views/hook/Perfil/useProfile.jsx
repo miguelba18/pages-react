@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 const useProfile = () => {
-  const [profile, setprofile] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [token, setToken] = useState(null);
 
   useEffect(() => {
@@ -18,10 +19,10 @@ const useProfile = () => {
       axios
         .get("http://localhost:8080/api/V1/usuario/perfil", { headers })
         .then((response) => {
-          setprofile(response.data);
+          setProfile(response.data);
         })
         .catch(() => {
-          setprofile(null);
+          setProfile(null);
         });
     }
   }, []);
@@ -43,10 +44,10 @@ const useProfile = () => {
         throw new Error(response.data.error);
       }
 
-      setprofile(response.data);
+      setProfile(response.data);
       return true;
     } catch (error) {
-      alert(error.response.data);
+      toast.error("El numero de celular debe tener 10 digitos");
       return false;
     }
   };

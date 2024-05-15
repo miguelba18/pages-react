@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
+import useAuthToken from '../Token/useAuthToken';
+
 
 const useFetchRecordatorios = () => {
   const [recordatorios, setRecordatorios] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { token } = useAuthToken();
 
   useEffect(() => {
     const obtenerRecordatorios = async () => {
       try {
-        const token = localStorage.getItem("token");
+        
         const response = await fetch('http://localhost:8080/api/V1/recordatorio/listar', {
           method: 'GET',
           headers: {
@@ -24,6 +27,7 @@ const useFetchRecordatorios = () => {
         const data = await response.json();
         setRecordatorios(data);
         setLoading(false);
+        
       } catch (error) {
         console.error('Error:', error);
         setError(error.message);
@@ -32,7 +36,7 @@ const useFetchRecordatorios = () => {
     };
 
     obtenerRecordatorios();
-  }, []);
+  }, [token]);
 
   return { recordatorios, loading, error };
 };

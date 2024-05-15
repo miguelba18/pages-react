@@ -12,6 +12,10 @@ export default {
         tertiary:{
           100:"#f7f7f7",
           900:"#ffffff",
+        },
+        cuartary:{
+          "100":"#21222d",
+          "900":"#171821",
         }
         
 

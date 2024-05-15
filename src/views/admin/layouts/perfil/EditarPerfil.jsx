@@ -1,15 +1,14 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import {RiEdit2Line} from "react-icons/ri";
+import { RiEdit2Line } from "react-icons/ri";
 function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
-
   EditProfileModal.propTypes = {
     perfil: PropTypes.object.isRequired,
     isOpen: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
-  }
-  
+  };
+
   const [editedProfile, setEditedProfile] = useState({ ...perfil });
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,8 +53,7 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
           <h2 className="text-2xl font-semibold mb-2">Edit Profile</h2>
           <form>
             <div className="pb-4">
-              
-            <div className="relative mb-2">
+              <div className="relative mb-2">
                 <img
                   src={editedProfile.imagen}
                   className="w-28 h-28 rounded-lg object-cover"
@@ -66,7 +64,6 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 >
                   <RiEdit2Line />
                 </label>
-                
               </div>
               <input
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hidden  "
@@ -75,49 +72,48 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 name="imagen"
                 accept="image/*"
                 onChange={handleInputChange}
-
               />
               <p className="text-sm text-gray-500">
-                  Solo imágenes de tipo: png, jpg, jpeg
-                </p>
+                Solo imágenes de tipo: png, jpg, jpeg
+              </p>
             </div>
-          <div className="flex">
-            <div className="pb-2 mr-4">
-              <label
-                htmlFor="nombre"
-                className="font-semibold text-sm text-gray-700 block pb-1"
-              >
-                Nombre
-              </label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre"
-                className="border-2  border-gray-300 rounded-xl px-2 py-2 w-full"
-                value={editedProfile.nombre}
-                onChange={handleInputChange}
-                disabled={!isAdmin}
-              />
+            <div className="flex">
+              <div className="pb-2 mr-4">
+                <label
+                  htmlFor="nombre"
+                  className="font-semibold text-sm text-gray-700 block pb-1"
+                >
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  className="border-2  border-gray-300 rounded-xl px-2 py-2 w-full"
+                  value={editedProfile.nombre}
+                  onChange={handleInputChange}
+                  disabled={!isAdmin}
+                />
+              </div>
+              <div className="pb-2">
+                <label
+                  htmlFor="apellido"
+                  className="font-semibold text-sm text-gray-700 block pb-1"
+                >
+                  Apellido
+                </label>
+                <input
+                  type="text"
+                  id="apellido"
+                  name="apellido"
+                  className="border-2 border-gray-300 rounded-xl px-2 py-2 w-full"
+                  value={editedProfile.apellido}
+                  onChange={handleInputChange}
+                  disabled={!isAdmin}
+                />
+              </div>
             </div>
-            <div className="pb-2">
-              <label
-                htmlFor="apellido"
-                className="font-semibold text-sm text-gray-700 block pb-1"
-              >
-                Apellido
-              </label>
-              <input
-                type="text"
-                id="apellido"
-                name="apellido"
-                className="border-2 border-gray-300 rounded-xl px-2 py-2 w-full"
-                value={editedProfile.apellido}
-                onChange={handleInputChange}
-                disabled={!isAdmin}
-              />
-            </div>
-            </div>
-             
+
             <div className="pb-2">
               <label
                 htmlFor="ciudad"
@@ -132,7 +128,7 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 className="border-2 border-gray-300 rounded-xl px-2 py-2 w-full"
                 value={editedProfile.ciudad}
                 onChange={handleInputChange}
-                disabled={!isAdmin}
+                disabled
               />
             </div>
             <div className="pb-2">
@@ -152,7 +148,7 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 disabled={!isAdmin}
               />
             </div>
-            
+
             <div className="pb-2">
               <label
                 htmlFor="cedula"
@@ -201,26 +197,25 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 className="border-2 border-gray-300 rounded-xl px-2 py-2 "
                 value={editedProfile.rol}
                 onChange={handleInputChange}
-                disabled={!isAdmin}
+                disabled
               />
             </div>
 
             <div className="flex justify-end mt-4">
-            <button
-              onClick={handleSaveClick}
-              className="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600"
-            >
-              Guardar
-            </button>
-            <button
-              onClick={onClose}
-              className="ml-2 text-gray-600 hover:text-gray-800"
-            >
-              Cancelar
-            </button>
-          </div>
+              <button
+                onClick={handleSaveClick}
+                className="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600"
+              >
+                Guardar
+              </button>
+              <button
+                onClick={onClose}
+                className="ml-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancelar
+              </button>
+            </div>
           </form>
-          
         </div>
       </div>
     </div>
