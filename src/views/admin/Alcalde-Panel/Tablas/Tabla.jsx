@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { RiEdit2Fill, RiDeleteBin5Fill } from "react-icons/ri";
 import actualizarUsuario from "../../../hook/Editar/Secretario/editar";
 import eliminarUsuario from "../../../hook/Editar/Secretario/eliminar";
@@ -19,7 +19,6 @@ const Tabla = () => {
   const [cedula, setCedula] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
-  
 
   const openEditModal = (mayor) => {
     setSelectedMayor(mayor);
@@ -55,21 +54,25 @@ const Tabla = () => {
       cedula,
       telefono,
       email,
-      mensaje,
       setMensaje,
-      () => setIsEditModalOpen(false),
+      setIsEditModalOpen,
       setLocalMayors
     );
-    window.location.reload();
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 1700);
   };
 
   useEffect(() => {
     fetchData(setLocalMayors, setMensaje);
-  }, []);
+  }, [mensaje]);
 
   return (
     <>
-    <div className="  flex justify-center"><img src="../../../../../../src/assets/img/img2.png" /></div>
+      <div className="flex justify-center">
+        <img src="../../../../../../src/assets/img/img2.png" />
+      </div>
       <h1 className="text-2xl font-bold mb-4">Lista de Secretarios y Personal</h1>
       <table className="table-auto w-full mt-8">
         <thead>
@@ -88,7 +91,7 @@ const Tabla = () => {
             <tr key={mayor.id}>
               <td className="border px-4 py-2 text-center">{mayor.nombre}</td>
               <td className="border px-4 py-2 text-center">{mayor.apellido}</td>
-              <td className="border px-4 py-2  text-center">{mayor.cedula}</td>
+              <td className="border px-4 py-2 text-center">{mayor.cedula}</td>
               <td className="border px-4 py-2 text-center">{mayor.telefono}</td>
               <td className="border px-4 py-2 text-center">{mayor.email}</td>
               <td className="border px-4 py-2 text-center">{mayor.rol.name}</td>

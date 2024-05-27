@@ -39,6 +39,7 @@ const useProfile = () => {
           },
         }
       );
+      
 
       if (response.data && response.data.error) {
         throw new Error(response.data.error);

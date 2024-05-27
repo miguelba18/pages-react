@@ -34,7 +34,7 @@ const Alcalde = () => {
       </h1>
       <div className="flex justify-end">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-8 "
+          className="flex mb-2 justify-center items-center gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] "
           onClick={() => setShowForm(true)}
         >
           Crear Alcalde

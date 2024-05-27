@@ -40,7 +40,7 @@ const actualizarUsuario = async (
 
     const responseData = response.data;
     setMensaje(responseData.message);
-    toast.success("Usuario editado correctamente");
+    toast.success("Usuario editado correctamente",{autoClose: 1200});
     setIsModalOpen(false);
     
   } catch (error) {

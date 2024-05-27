@@ -26,7 +26,7 @@ function useCalendarUtils() {
   const [recordatoriosPorDia, setRecordatoriosPorDia] = useState({});
   const [coloresAsignados, setColoresAsignados] = useState({});
   const { recordatorios } = useFetchRecordatorios();
-  const [userRoleId, setUserRoleId] = useState(null);
+  const [userRoleId, setuserRoleId] = useState(null);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -36,7 +36,7 @@ function useCalendarUtils() {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
         const roleId = decodedToken.role;
 
-        setUserRoleId(roleId);
+        setuserRoleId(roleId);
       } catch (error) {
         console.error("Error al decodificar el token:", error);
         window.localStorage.removeItem("token");

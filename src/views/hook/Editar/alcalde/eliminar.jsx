@@ -52,11 +52,11 @@ const EliminarAlcalde = ({ id, onDelete }) => {
 
   return (
     <button
-      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+    className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
       onClick={handleClick}
       disabled={isLoading}
     >
-      {isLoading ? "Eliminando..." : <RiDeleteBin5Fill />}
+      {isLoading ? "Eliminando..." : <RiDeleteBin5Fill className="" />}
     </button>
   );
 };

@@ -1,26 +1,11 @@
+import useAuthToken from "../../../hook/Token/useAuthToken";
 import { useState } from "react";
-import axios from "axios";
-import { Alert, AlertTitle } from "@mui/material";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-} from "@mui/material";
-import { RiErrorWarningFill, RiEyeOffFill, RiEyeFill } from "react-icons/ri";
-import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
+import { RiEyeOffFill, RiEyeFill } from "react-icons/ri";
+import useSelectCityDepaUtils from "../../../../utils/useSelectCityDepaUtils";
+import { toast } from "react-toastify";
 
-const Form = () => {
-  const initialState = {
-    nombre: "",
-    apellido: "",
-    cedula: "",
-    telefono: "",
-    email: "",
-    password: "",
-    ciudad: "",
-  };
+const RegistroAdmin = () => {
+  const { token } = useAuthToken();
   const {
     departamentos,
     filteredCiudades,
@@ -31,66 +16,79 @@ const Form = () => {
     setSelectedCiudad,
     setSelectedDepartamento,
   } = useSelectCityDepaUtils();
-  const [open, setOpen] = useState(false);
-  const [alertSeverity, setAlertSeverity] = useState("success");
-  const [alertMessage, setAlertMessage] = useState("");
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellido: "",
+    cedula: "",
+    telefono: "",
+    email: "",
+    password: "",
+    departamentoId: "",
+    ciudadId: "",
+  });
+
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return;
-    }
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const dataToSubmit = {
+      ...formData,
+      departamentoId: selectedDepartamento,
+      ciudadId: selectedCiudad,
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/V1/auth/alcalde",
-        formData,
-        config
-      );
-      setFormData(initialState);
+      const response = await fetch("http://localhost:8080/api/V1/auth/admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(dataToSubmit),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        toast.success(result.message, { autoClose: 2000 });
+        setFormData({
+          nombre: "",
+          apellido: "",
+          cedula: "",
+          telefono: "",
+          email: "",
+          password: "",
+          
+        });
       setSelectedCiudad("");
       setSelectedDepartamento("");
-      setAlertSeverity("success");
-      setAlertMessage(response.data.message);
-      setOpen(true);
+      } else {
+        const result = await response.json();
+        toast.error(result.message);
+      }
     } catch (error) {
-      setAlertSeverity("error");
-      setAlertMessage(error.response.data.message);
-      setOpen(true);
-      console.error("Error al crear alcalde:", error.response.data.message);
+      toast.error("Error al realizar la solicitud:", error);
     }
   };
 
   return (
-    <div className="flex justify-center items-center  ">
-      <div className="  md:p-10 xl:w-[50%] w-[100%]">
+    <div className="flex justify-center items-center">
+      <div className="md:p-10 xl:w-[50%] w-[100%]">
         <form
+          className="shadow-xl py-10 bg-tertiary-100 px-[20%]"
           onSubmit={handleSubmit}
-          className=" shadow-xl py-10 bg-tertiary-100 px-[20%] "
         >
           <img
             src="../../../../../../src/assets/img/img1.png"
@@ -98,7 +96,7 @@ const Form = () => {
             className="mb-0"
           />
           <h4 className="text-center text-2xl font-bold py-8">
-            Registro de Alcalde Nuevo
+            Registro de Admin Nuevo
           </h4>
 
           <div className="mb-4">
@@ -112,9 +110,9 @@ const Form = () => {
               type="text"
               name="nombre"
               required
-              value={formData.nombre}
-              onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+              onChange={handleChange}
+              value={formData.nombre}
             />
           </div>
 
@@ -125,14 +123,13 @@ const Form = () => {
             >
               Apellido:
             </label>
-
             <input
               type="text"
               name="apellido"
-              value={formData.apellido}
-              onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
               required
+              onChange={handleChange}
+              value={formData.apellido}
             />
           </div>
 
@@ -146,10 +143,10 @@ const Form = () => {
             <input
               type="number"
               name="cedula"
-              value={formData.cedula}
-              onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
               required
+              onChange={handleChange}
+              value={formData.cedula}
             />
           </div>
 
@@ -163,10 +160,10 @@ const Form = () => {
             <input
               type="number"
               name="telefono"
-              value={formData.telefono}
-              onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
               required
+              onChange={handleChange}
+              value={formData.telefono}
             />
           </div>
 
@@ -180,10 +177,10 @@ const Form = () => {
             <input
               type="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
               required
+              onChange={handleChange}
+              value={formData.email}
             />
           </div>
 
@@ -198,20 +195,20 @@ const Form = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
-                value={formData.password}
-                onChange={handleChange}
                 className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
                 required
+                onChange={handleChange}
+                value={formData.password}
               />
-              <div className="absolute inset-y-0  right-0 flex items-center pr-2">
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                 {showPassword ? (
                   <RiEyeOffFill
-                    className=" cursor-pointer"
+                    className="cursor-pointer"
                     onClick={togglePasswordVisibility}
                   />
                 ) : (
                   <RiEyeFill
-                    className=" cursor-pointer"
+                    className="cursor-pointer"
                     onClick={togglePasswordVisibility}
                   />
                 )}
@@ -268,39 +265,17 @@ const Form = () => {
               ))}
             </select>
           </div>
-          <>
-            <button
-              type="submit"
-              className="bg-green-500/80 hover:bg-green-500 transition-colors rounded-lg p-3 text-white"
-            >
-              Guardar Alcalde
-            </button>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">
-                {alertSeverity === "success" ? "Éxito" : "Error"}
-              </DialogTitle>
-              <DialogContent>
-                <Alert severity={alertSeverity} icon={<RiErrorWarningFill />}>
-                  <AlertTitle>
-                    {alertSeverity === "success" ? "Éxito" : "Error"}
-                  </AlertTitle>
-                  {alertMessage}
-                </Alert>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cerrar</Button>
-              </DialogActions>
-            </Dialog>
-          </>
+
+          <button
+            type="submit"
+            className="flex justify-center items-center gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+          >
+            Guardar Administrador
+          </button>
         </form>
       </div>
     </div>
   );
 };
 
-export default Form;
+export default RegistroAdmin;

@@ -28,7 +28,7 @@ const Contacto = () => {
   const [email, setEmail] = useState("");
   const [celular, setCelular] = useState("");
   const [texto, setTexto] = useState("");
-  const [error, setError] = useState("");
+  
   const maxLength = 255;
 
   const handleNumber = (event) => {
@@ -43,11 +43,15 @@ const Contacto = () => {
     if (newText.length <= maxLength) {
       setTexto(newText);
     }
+    else{
+      toast.error("El mensaje no puede tener más de 255 caracteres.", {autoClose: 1200});
+      return;
+    }
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (celular.length !== 10) {
-      setError("El número de teléfono debe tener 10 dígitos.");
+      toast.error("El numero de telefono debe tener 10 digitos", {autoClose: 1700});
       return;
     }
 
@@ -132,7 +136,7 @@ const Contacto = () => {
                 required
               />
               <div>{celular.length}/10</div>
-              {error && <p className="text-red-500">{error}</p>}
+              
             </div>
           </div>
           <div className="mt-6">

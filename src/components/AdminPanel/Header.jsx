@@ -4,7 +4,7 @@ import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import {
-  RiSearchLine,
+  
   RiNotification3Line,
   RiArrowDownSLine,
   RiCheckboxCircleFill,
@@ -58,19 +58,7 @@ const Header = () => {
       <div className="flex justify-between items-center">
         <h1 className="font-normal md:text-4xl">Dashboard Overview</h1>
 
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-              placeholder="Search"
-              required
-            />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-              <RiSearchLine className="h-6 w-6" />
-            </div>
-          </div>
-        </div>
+        
 
         <nav className="flex items-center xl:gap-x-2">
           <Menu

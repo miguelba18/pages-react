@@ -4,6 +4,10 @@ import Perfil from './views/admin/layouts/perfil/Perfil';
 import CalendarioAdmin from './views/admin/Admin-Panel/calendarios/CalendarioAdmin';
 import FacturaElectronica from './views/admin/layouts/Factura Electronica/FacturaElectronica';
 import CalendarioAlcalde from './views/admin/Alcalde-Panel/Calendario/CalendarioAlcalde'
+import RegistroAdmin from './views/admin/layouts/RegistroAdmin/RegistroAdmin'
+import Inquietud from './views/admin/layouts/Inquietudes/Inquietud';
+import Adquiriente from './views/admin/layouts/Adquiriente y emisor/Adquiriente';
+import Emisor from './views/admin/layouts/Adquiriente y emisor/Emisor';
 
 import Alcalde from './views/admin/Admin-Panel/Roles/Alcalde/Alcalde';
 import Secretario from './views/admin/Alcalde-Panel/Roles/Secretario/Secretario';
@@ -38,11 +42,15 @@ function App() {
           <Route path="calendarioadmin" element={<CalendarioAdmin/>} />
           <Route path="calendarioalcalde" element={<CalendarioAlcalde/>} />
           <Route path="alcalde" element={<Alcalde/>} />
+          <Route path="registroadmin" element={<RegistroAdmin/>} />
           <Route path="secretario" element={<Secretario/>} />
           <Route path="personal" element={<Personal/>} />
           <Route path="tablaadminalcalde" element={<TablaAdminAlcalde/>} />
           <Route path="tabla" element={<Tabla/>} />
           <Route path="facturaelectronica" element={<FacturaElectronica/>} />
+          <Route path="inquietud" element={<Inquietud/>} />
+          <Route path="adquiriente" element={<Adquiriente/>} />
+          <Route path="emisor" element={<Emisor/>} />
           
         </Route>
 

@@ -14,6 +14,9 @@ import {
   RiAdminFill,
   RiArrowDropRightLine,
   RiBillFill,
+  RiQuestionAnswerFill,
+  RiShakeHandsFill,
+  RiBankFill
 } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +24,7 @@ const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const [userRoleId, setUserRoleId] = useState(null);
+  const [userRoleId, setuserRoleId] = useState(null);
 
   useEffect(() => {
     const token = window.localStorage.getItem("token");
@@ -31,7 +34,7 @@ const Sidebar = () => {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
         const roleId = decodedToken.role;
 
-        setUserRoleId(roleId);
+        setuserRoleId(roleId);
       } catch (error) {
         console.error("Error al decodificar el token:", error);
         window.localStorage.removeItem("token");
@@ -96,6 +99,30 @@ const Sidebar = () => {
                     </button>
 
                     <ul className={`my-2 ${!showSubMenu && "hidden"} `}>
+
+                    <li
+                        className={
+                          location.pathname === "/registroadmin"
+                            ? "bg-secundary text-white rounded-lg  "
+                            : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                        }
+                      >
+                        <Link
+                          to="/registroadmin"
+                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                        >
+                          <RiAddCircleFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/registroadmin"
+                                ? "text-white "
+                                : ""
+                            }`}
+                          />
+                          Agregar Admin
+                        </Link>
+                      </li>
+
+
                       <li
                         className={
                           location.pathname === "/alcalde"
@@ -158,6 +185,27 @@ const Sidebar = () => {
                           }`}
                         />
                         Calendario
+                      </Link>
+                    </li>
+                    <li
+                      className={
+                        location.pathname === "/inquietud"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/inquietud"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiQuestionAnswerFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/inquietud"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Inquietudes
                       </Link>
                     </li>
                   </li>
@@ -366,6 +414,50 @@ const Sidebar = () => {
 
               <li
                 className={
+                  location.pathname === "/adquiriente"
+                    ? "bg-secundary text-white rounded-lg"
+                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                }
+              >
+                <Link
+                  to="/adquiriente"
+                  className="flex items-center  gap-4 px-4 py-2 mb-2"
+                >
+                  <RiShakeHandsFill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/adquiriente"
+                        ? "text-white"
+                        : ""
+                    }`}
+                  />
+                  Adquiriente
+                </Link>
+              </li>
+
+              <li
+                className={
+                  location.pathname === "/emisor"
+                    ? "bg-secundary text-white rounded-lg"
+                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                }
+              >
+                <Link
+                  to="/emisor"
+                  className="flex items-center  gap-4 px-4 py-2 mb-2"
+                >
+                  <RiBankFill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/emisor"
+                        ? "text-white"
+                        : ""
+                    }`}
+                  />
+                  Emisor
+                </Link>
+              </li>
+
+              <li
+                className={
                   location.pathname === "/perfil"
                     ? "bg-secundary text-white rounded-lg"
                     : "rounded-lg hover:bg-tertiary-900 transition-colors "
@@ -387,7 +479,7 @@ const Sidebar = () => {
           </nav>
         </div>
         <nav>
-          <button className="flex items-center gap-4 px-4 py-2 rounded-lg bg-secundary/70 hover:bg-secundary hover:text-white transition-colors mb-2">
+          <button className="flex mb-2 justify-center items-center gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]">
             <RiPagesFill className="text-white" />
             <Link to={"/home"} className=" text-white  ">
               Landing Page

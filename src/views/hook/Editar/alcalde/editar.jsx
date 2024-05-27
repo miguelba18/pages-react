@@ -1,5 +1,5 @@
-import axios from "axios";
-
+import axios from 'axios';
+import {toast} from 'react-toastify'
 
 const actualizarUsuario = async (
   selectedMayor,
@@ -9,42 +9,47 @@ const actualizarUsuario = async (
   cedula,
   telefono,
   email,
+  mensaje,
   setMensaje,
-  setIsModalOpen,
-  
+  onClose,
+  setLocalMayors
 ) => {
-  if (!selectedMayor) {
-    setMensaje("No se ha seleccionado ningún usuario.");
-    return;
-  }
-  const datosUsuario = {
-    nombre,
-    apellido,
-    cedula,
-    telefono,
-    email,
-  };
-
   try {
     const response = await axios.put(
       `http://localhost:8080/api/V1/auth/admin/${selectedMayor.id}`,
-      datosUsuario,
+      {
+        nombre,
+        apellido,
+        cedula,
+        telefono,
+        email,
+        ciudadId: selectedMayor.ciudad.id,
+        departamentoId: selectedMayor.ciudad.departamento.id
+      },
       {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+          Authorization: `Bearer ${token}`
+        }
       }
     );
+    if (response.status === 200) {
+      toast.success("Usuario actualizado correctamente", {autoClose: 1200});
+      setLocalMayors((prevMayors) =>
+        prevMayors.map((mayor) =>
+          mayor.id === selectedMayor.id ? response.data : mayor
+        )
+      );
+      setTimeout(() => {
+        window.location.reload();
+      }, 1700);
 
-    const responseData = response.data;
-    setMensaje(responseData.message);
-    alert("Usuario editado correctamente");
-    setIsModalOpen(false);
-    
+      
+    } else {
+      setMensaje("Error al actualizar usuario");
+    }
   } catch (error) {
-    console.error("Error:", error);
-    setMensaje("Ocurrió un error al actualizar el usuario.");
+    console.error(error);
+    setMensaje("Error al actualizar usuario");
   }
 };
 

@@ -30,7 +30,7 @@ function Perfil() {
     <div className="py-6">
       {profile ? (
         <div className="bg-tertiary-100 p-8 rounded-xl mb-8">
-          <h1 className="text-xl text-black">Perfil</h1>
+          <h1 className="text-3xl text-secundary">Perfil</h1>
           <hr className="my-8 border-gray-500/30" />
           <form>
             <div className="flex items-center mb-8">
@@ -67,6 +67,18 @@ function Perfil() {
                     {profile.apellido}
                   </h2>
                 </div>
+              </div>
+            </div>
+            <div className="flex items-center mb-8">
+              <div className="w-1/4">
+                <p>
+                  Departamento <span className="text-red-500">*</span>
+                </p>
+              </div>
+              <div className="flex-1">
+                <h2 className="w-full outline-none rounded-lg py-2 px-4 bg-tertiary-900">
+                  {profile.departamento}
+                </h2>
               </div>
             </div>
 
@@ -124,7 +136,7 @@ function Perfil() {
           <hr className="my-8 border-gray-500/30" />
           <div className="flex justify-end">
             <button
-              className="bg-secundary/80 py-2 px-4 rounded-lg hover:bg-secundary transition-colors text-white"
+              className="flex mr-2 justify-center items-center gap-2 w-20 h-10 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
               onClick={handleEditClick}
             >
               Editar
