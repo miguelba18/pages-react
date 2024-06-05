@@ -67,12 +67,14 @@ const Tabla = () => {
 
   return (
     <>
+    <div className="overflow-auto">
       <div className="flex justify-center">
         <img src="../../../../../../src/assets/img/img2.png" alt="Imagen" />
       </div>
       
       <h1 className="text-2xl font-bold mb-4">Lista de Alcaldes y Admin</h1>
-      <table className="table-auto w-full mt-8">
+      <div className="overflow-x-auto">
+      <table className="table-auto w-full mt-8 ">
         <thead>
           <tr>
             <th className="px-4 py-2 bg-secundary text-white">NOMBRE</th>
@@ -111,6 +113,7 @@ const Tabla = () => {
           ))}
         </tbody>
       </table>
+      </div>
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -213,6 +216,7 @@ const Tabla = () => {
           
         </div>
       </Modal>
+      </div>
     </>
   );
 };

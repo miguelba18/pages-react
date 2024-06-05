@@ -9,6 +9,7 @@ import Inquietud from './views/admin/layouts/Inquietudes/Inquietud';
 import Adquiriente from './views/admin/layouts/Adquiriente y emisor/Adquiriente';
 import Emisor from './views/admin/layouts/Adquiriente y emisor/Emisor';
 
+
 import Alcalde from './views/admin/Admin-Panel/Roles/Alcalde/Alcalde';
 import Secretario from './views/admin/Alcalde-Panel/Roles/Secretario/Secretario';
 import Personal from './views/admin/Alcalde-Panel/Roles/Personal/Personal';
@@ -52,9 +53,11 @@ function App() {
           <Route path="adquiriente" element={<Adquiriente/>} />
           <Route path="emisor" element={<Emisor/>} />
           
+          
         </Route>
 
         <Route path="/login" element={<Login/>} />
+ 
         <Route path="/home" element={<Home/>} />
         <Route path="/registro" element={<Register/>} />
         <Route path="/olvidarcontraseña" element={<OlvidarContraseña/>} />

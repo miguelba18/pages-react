@@ -51,12 +51,12 @@ function Perfil() {
             </div>
 
             <div className="flex items-center mb-8">
-              <div className="w-1/4 text-sm">
+              <div className="md:w-1/4 text-sm">
                 <p>
                   Nombre Completo <span className="text-red-500">*</span>
                 </p>
               </div>
-              <div className="flex-1 flex items-center gap-4">
+              <div className="flex-1 flex items-center md:gap-4 gap-1">
                 <div className="w-full ">
                   <h2 className="w-full outline-none rounded-lg py-2 px-4 bg-tertiary-900">
                     {profile.nombre}
@@ -70,9 +70,9 @@ function Perfil() {
               </div>
             </div>
             <div className="flex items-center mb-8">
-              <div className="w-1/4">
-                <p>
-                  Departamento <span className="text-red-500">*</span>
+              <div className="w-1/8 md:w-1/4">
+                <p className= "mr-2">
+                  Departamento <span className="text-red-500 ">*</span>
                 </p>
               </div>
               <div className="flex-1">

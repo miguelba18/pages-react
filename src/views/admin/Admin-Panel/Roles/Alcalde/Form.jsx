@@ -271,7 +271,7 @@ const Form = () => {
           <>
             <button
               type="submit"
-              className="bg-green-500/80 hover:bg-green-500 transition-colors rounded-lg p-3 text-white"
+              className="flex justify-center items-center gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
             >
               Guardar Alcalde
             </button>

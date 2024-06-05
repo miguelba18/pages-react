@@ -1,4 +1,4 @@
-import useAuthToken from "../../Token/useAuthToken";
+import useAuthToken from "../../../Token/useAuthToken";
 import { useEffect, useState } from "react";
 
 const useListAdquiriente = () => {

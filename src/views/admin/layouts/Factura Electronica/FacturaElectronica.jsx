@@ -227,7 +227,7 @@ const FacturaElectronica = () => {
         Factura Electrónica
       </h1>
 
-      <div className="xl:flex xl:p-8">
+      <div className="xl:flex mt-8 xl:mt-0 xl:p-8">
         <div className="bg-tertiary-100 h-full xl:w-1/2 p-10 m-0 rounded-xl shadow-2xl">
           <h2 className="text-lg text-center font-semibold mb-2">
             Transforma tu factura electrónica (PDF) en un excel ordenado

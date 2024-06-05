@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useFetchRecordatorios from "../views/hook/Calendario/List";
-
+import { toast } from "react-toastify";
 const daysOfWeek = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"].map(
   (day) => day.toUpperCase()
 );
@@ -42,7 +42,7 @@ function useCalendarUtils() {
         window.localStorage.removeItem("token");
       }
     } else {
-      console.log("Error al token");
+      toast.error("Error al token");
     }
   }, []);
 
