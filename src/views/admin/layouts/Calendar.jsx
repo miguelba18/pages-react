@@ -112,8 +112,9 @@ const Calendar = ({
 Calendar.propTypes = {
   selectedMonth: PropTypes.number.isRequired,
   selectedYear: PropTypes.number.isRequired,
-  handleMonthChange: PropTypes.func.isRequired,
+  
   handleYearChange: PropTypes.func.isRequired,
+  handleMonthChange: PropTypes.func.isRequired,
   daysOfWeek: PropTypes.array.isRequired,
   monthsOfYear: PropTypes.array.isRequired,
   currentYear: PropTypes.number.isRequired,
