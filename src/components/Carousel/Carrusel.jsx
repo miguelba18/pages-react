@@ -13,7 +13,7 @@ import { RiCloseFill } from "react-icons/ri";
 
 const Carrusel = ({ className, style, onClick }) => {
 
-    const [selectedCard, setSelectedCard] = useState(null); // Estado para controlar qué tarjeta está seleccionada
+    const [selectedCard, setSelectedCard] = useState(null); 
     
 
     const settings = {
@@ -27,18 +27,18 @@ const Carrusel = ({ className, style, onClick }) => {
         nextArrow: <CustomNextArrow />
     };
 
-    // Función para manejar el clic en una tarjeta
+   
     const handleCardClick = (dato) => {
-        setSelectedCard(dato); // Establece la tarjeta seleccionada
+        setSelectedCard(dato); 
     };
 
-    // Función para cerrar la ventana emergente
+    
     const handleClosePopup = () => {
-        setSelectedCard(null); // Borra la tarjeta seleccionada
+        setSelectedCard(null); 
     };
 
     return (
-        <div className={`h-[30%] w-[60%] mb-[10%] mx-[22%] shadow-2xl relative ${className}`} style={style} onClick={onClick}>
+        <div className={`h-[30%] w-[60%] mb-[10%] mx-[22%] shadow-2xl relative cursor-pointer ${className}`} style={style} onClick={onClick}>
             <Slider {...settings}>
                 {Datos.map((dato) => (
                     <div key={dato.id} onClick={() => handleCardClick(dato)}>
@@ -60,42 +60,42 @@ const Carrusel = ({ className, style, onClick }) => {
     );
 };
 
-// Define PropTypes para Carrusel
+
 Carrusel.propTypes = {
-    className: PropTypes.string, // className es de tipo string
-    style: PropTypes.object, // style es de tipo object
-    onClick: PropTypes.func // onClick es de tipo función
+    className: PropTypes.string, 
+    style: PropTypes.object, 
+    onClick: PropTypes.func 
 };
 
-// Componente de flecha personalizada para retroceder
+
 const CustomPrevArrow = (props) => {
     const { className, style, onClick } = props;
     return (
         <div
-            className={`slick-arrow slick-prev ${className}`} // Agrega la clase slick-prev
-            style={{ ...style, left: '10px', zIndex: '1' }} // Personaliza el estilo
+            className={`slick-arrow slick-prev ${className}`} 
+            style={{ ...style, left: '10px', zIndex: '1' }}
             onClick={onClick}
         />
     );
 };
 
-// Componente de flecha personalizada para avanzar
+
 const CustomNextArrow = (props) => {
     const { className, style, onClick } = props;
     return (
         <div
-            className={`slick-arrow slick-next ${className}`} // Agrega la clase slick-next
-            style={{ ...style, right: '10px', zIndex: '1' }} // Personaliza el estilo
+            className={`slick-arrow slick-next ${className}`} 
+            style={{ ...style, right: '10px', zIndex: '1' }} 
             onClick={onClick}
         />
     );
 };
 
 
-// Componente de ventana emergente para mostrar la tarjeta seleccionada
+
 const PopupCard = ({ imagen, titulo, descripcion, onClose }) => {
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center  justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg p-6 max-w-[90%] xl:max-w-[60%]">
                 <div className="xl:flex items-center">
                     <img src={imagen} className=" xl:w-[300px] xl:h-[300px] object-cover mr-4 rounded-lg" />
@@ -114,7 +114,7 @@ const PopupCard = ({ imagen, titulo, descripcion, onClose }) => {
 };
 
 
-// Define PropTypes para PopupCard
+
 PopupCard.propTypes = {
     imagen: PropTypes.string.isRequired,
     titulo: PropTypes.string.isRequired,

@@ -3,12 +3,12 @@
 const Marcas = () => {
   return (
     <div className="bg-white  flex flex-col gap-8 items-center justify-center">
-        <h1 className="text-6xl font-bold mb-[5%] text-center">Our sponsors</h1>
+        <h1 className="text-6xl font-bold mb-[5%] text-center">Nuestros Aliados</h1>
         <div className="flex flex-col xl:flex-row items-center gap-8 mb-24 ">
-            <img src="/src/assets/img/Apple.png" className="w-14 xl:mr-32"/>
-            <img src="/src/assets/img/Microsoft.png" className="w-[250px] xl:mr-32"/>
-            <img src="/src/assets/img/Slack.png" className="w-[250px] xl:mr-32"/>
-            <img src="/src/assets/img/google.jpg" className="w-[250px]"/>
+            <img src="/src/assets/img/como-descargar-formulario-dian.png" className="w-[250px] xl:mr-32"/>
+            <img src="/src/assets/img/Logo_gobierno_de_Colombia_(2022-2026).png" className="w-[250px] xl:mr-32"/>
+            <img src="/src/assets/img/Logo UI.PNG" className="w-[250px] xl:mr-32"/>
+            <img src="/src/assets/img/download.png" className="w-[250px]"/>
         </div>
     </div>
   )

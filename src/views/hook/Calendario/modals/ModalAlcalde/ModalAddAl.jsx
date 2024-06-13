@@ -47,7 +47,7 @@ const ModalAddAl = ({
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        "http://localhost:8080/api/V1/recordatorio/alcalde",
+        "http://localhost:8080/api/V1/recordatorio",
         {
           method: "POST",
           headers: {

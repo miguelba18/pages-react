@@ -1,17 +1,17 @@
 import {useNavigate} from "react-router-dom";
 import { useState } from "react";
-const useDeleteNotificacion = () => {
+const useDeleteNotificacionReminder = () => {
     const navigate = useNavigate();
     const [notifications, setNotifications] = useState([]);
 
-    const handleNotificationClick = async (id) => {
+    const handleNotificationClickReminder = async (id) => {
         try {
           const token = localStorage.getItem("token");
           if (!token) {
             throw new Error("No hay token de autenticación.");
           }
     
-          const response = await fetch(`http://localhost:8080/notificacion/${id}`, {
+          const response = await fetch(`http://localhost:8080/notificaciones-recordatorios/${id}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -23,8 +23,11 @@ const useDeleteNotificacion = () => {
               (notification) => notification.id !== id
             );
             setNotifications(updatedNotifications);
-    
-            navigate("/inquietud");
+            setTimeout(() => {
+              window.location.reload();
+            }, 10);
+            navigate("/calendarioadmin");
+            
           } else {
             console.error("Error al eliminar la notificación:", response.status);
           }
@@ -33,9 +36,9 @@ const useDeleteNotificacion = () => {
         }
       };
     
-  return {handleNotificationClick, notifications, setNotifications}
+  return {handleNotificationClickReminder, notifications, setNotifications}
     
   
 }
 
-export default useDeleteNotificacion
+export default useDeleteNotificacionReminder

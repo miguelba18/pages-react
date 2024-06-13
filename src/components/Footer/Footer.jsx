@@ -1,5 +1,5 @@
 import {
-  RiArrowRightLine,
+
   RiAppsFill,
   RiArrowDownSLine,
   RiEarthFill,
@@ -11,22 +11,31 @@ import {
 
 const Footer = () => {
   return (
-    <div className="bg-primary text-white">
+    <div className="bg-cover bg-gradient-to-br from-blue-500/90 via-blue-500 to-blue-400   text-white">
       <div className=" text-center">
         <h1 id="Footer" className="text-6xl font-bold pt-32 leading-[72px]">
-          Try SIM SAS
-          <br /> today
+          Conoce a SIM SAS
+           hoy
         </h1>
-        <p className="text-xl p-7">
-          Get started for free. <br /> Add your whole teams as your needs grow.
+        <p className="text-xl p-5">
+          Inicia de forma gratuita. <br /> Agregamos todo lo que necesitas.
         </p>
-        <div className="flex justify-center pb-7">
-          <button className="bg-[#4f9cf9] py-3 px-6 text-white rounded-[10px] flex transform transition-transform duration-500 hover:scale-110">
-            Try Taskey free
-            <RiArrowRightLine className="ml-2 mt-1.5" />
-          </button>
-        </div>
-        <p className="text-xl pb-6">On a big team? Contact sales</p>
+        <div className=" flex justify-center items-center mb-2">
+                <button
+                  className="overflow-hidden w-32 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
+                
+                >
+                  Empieza!
+                  <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
+                  <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
+                  <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
+                  <span className="group-hover:opacity-100 group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
+                    Explora!
+                  </span>
+                </button>
+                
+              </div>
+        <p className="text-xl pb-6">Contactanos</p>
         <div className="flex justify-center">
           <img src="/src/assets/img/appleblanco.png" className="h-16 m-2" />
           <img src="/src/assets/img/winblanco.png" className="h-16 m-2" />
@@ -89,14 +98,25 @@ const Footer = () => {
             Get started for free. Add your
             <br /> whole teams as your needs grow.
           </p>
-          <button className="bg-[#4f9cf9] py-3 px-5  xl:py-3 md:px-5  text-white rounded-[7px] flex transform transition-transform duration-500 hover:scale-110">
-            Star today
-            <RiArrowRightLine className="ml-2 mt-1.5 xl:ml-2 xl:mt-1.5" />
-          </button>
+          <div className=" flex  items-center mb-2">
+                <button
+                  className="overflow-hidden w-32 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
+                
+                >
+                  Inicia!
+                  <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
+                  <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
+                  <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
+                  <span className="group-hover:opacity-100 group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
+                    Pronto!
+                  </span>
+                </button>
+                
+              </div>
         </div>
       </div>
 
-      <div className=" border-t-[1px] border-gray-600 my-2 "></div>
+      <div className=" border-t-[1px] border-white my-2 "></div>
 
       <div className="xl:flex justify-center text-center">
         <div className="border-w-2 my-2"></div>

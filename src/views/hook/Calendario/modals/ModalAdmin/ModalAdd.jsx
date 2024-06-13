@@ -47,7 +47,7 @@ const ModalAdd = ({
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/V1/recordatorio/admin",
+        "http://localhost:8080/api/V1/recordatorio",
         {
           method: "POST",
           headers: {

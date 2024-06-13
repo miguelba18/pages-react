@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   RiDashboardFill,
   RiLogoutBoxLine,
@@ -18,7 +18,6 @@ import {
   RiShakeHandsFill,
   RiBankFill
 } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);

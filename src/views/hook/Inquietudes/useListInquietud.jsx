@@ -12,7 +12,7 @@ const useListInquietud = () => {
     const obtenerInquietudes = async () => {
       try {
         
-        const response = await fetch('http://localhost:8080/inquietud/listar', {
+        const response = await fetch('http://localhost:8080/inquietud', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

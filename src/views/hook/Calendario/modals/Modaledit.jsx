@@ -54,12 +54,7 @@ const Modaledit = ({
                         Guardar cambios
                       </button>
 
-                      <button
-                        className="px-2 py-1 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 block mx-auto"
-                        onClick={() => setShowEditForm(false)}
-                      >
-                        Cancelar
-                      </button>
+                      
                     </div>
                   </div>
   )
@@ -68,9 +63,13 @@ const Modaledit = ({
 Modaledit.propTypes = {
     selectedRecordatorio: PropTypes.object.isRequired,
     setSelectedRecordatorio: PropTypes.func.isRequired,
+    setShowEditForm: PropTypes.func.isRequired,
+    showEditForm: PropTypes.func.isRequired,
+    
+      
     handleFechaHoraChange: PropTypes.func.isRequired,
     editRecordatorio: PropTypes.func.isRequired,
-    setShowEditForm: PropTypes.func.isRequired,
+    
 }
 
 export default Modaledit

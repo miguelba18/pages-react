@@ -1,82 +1,21 @@
-import { useState, useEffect } from "react";
+
 import { Link,  } from "react-router-dom";
 import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
-import { RiNotification3Line, RiArrowDownSLine, RiQuestionAnswerFill } from "react-icons/ri";
-
+import { RiNotification3Line, RiArrowDownSLine, RiQuestionAnswerFill,RiCalendarTodoFill } from "react-icons/ri";
 import DarkModeSwitch from "../Darkmode/DarkModeSwitch";
-import useAuthToken from "../../views/hook/Token/useAuthToken";
-import useDeleteNotificacion from "../../views/hook/Header-panel/useDeleteNotificacion";
+import useListNotificacion from "../../views/hook/Header-panel/useListNotificacion";
+
+import useDeleteNotificacionReminder from "../../views/hook/Header-panel/Recordatorio/useDeleteNotificacionReminder";
+import useDeleteNotificacion from "../../views/hook/Header-panel/Inquietud/useDeleteNotificacion";
 const Header = () => {
-  const { handleNotificationClick, notifications, setNotifications } = useDeleteNotificacion();
+  const { handleNotificationClick} = useDeleteNotificacion();
+  const { handleNotificationClickReminder} = useDeleteNotificacionReminder();
+  const {userName, email, imagen, notifications, reminderNotifications} = useListNotificacion();
+  const totalNotifications = notifications.length + reminderNotifications.length;
 
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [imagen, setImagen] = useState("");
   
-  const { token } = useAuthToken();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (!token) {
-          throw new Error("No hay token de autenticación.");
-        }
-
-        const response = await fetch(
-          "http://localhost:8080/api/V1/usuario/perfil",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const userData = await response.json();
-          const { nombre, apellido, email, imagen } = userData || {};
-          setUserName(`${nombre} ${apellido}`);
-          setEmail(email);
-          setImagen(imagen);
-        } else {
-          console.error("Error al obtener los datos:", response.status);
-        }
-      } catch (error) {
-        console.error("Error al obtener los datos del usuario:", error);
-      }
-    };
-
-    const fetchNotifications = async () => {
-      try {
-        if (!token) {
-          throw new Error("No hay token de autenticación.");
-        }
-
-        const response = await fetch(
-          "http://localhost:8080/notificacion/listar",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setNotifications(data);
-        } else {
-          console.error(
-            "Error al obtener las notificaciones:",
-            response.status
-          );
-        }
-      } catch (error) {
-        console.error("Error al obtener las notificaciones:", error);
-      }
-    };
-
-    fetchUserData();
-    fetchNotifications();
-  }, [token, setNotifications]);
 
   
   return (
@@ -90,7 +29,7 @@ const Header = () => {
               <MenuButton className="relative hover:bg-tertiary-100 p-4 rounded-lg transition-colors">
                 <RiNotification3Line className="h-6 w-6" />
                 <span className="absolute top-2 right-3 bg-secundary py-0.5 px-[5px] text-white rounded-full text-[8px] font-bold">
-                  {notifications.length}
+                  {totalNotifications}
                 </span>
               </MenuButton>
             }
@@ -113,6 +52,27 @@ const Header = () => {
                     </span>
                     <span className="text-sm text-white text-center bg-white/10 rounded-full px-2">
                       {notification.descripcion}
+                    </span>
+                  </div>
+                </div>
+              </MenuItem>
+            ))}
+            {reminderNotifications.map((reminder) => (
+              <MenuItem
+                key={reminder.id}
+                onClick={() => handleNotificationClickReminder(reminder.id)}
+                className="flex items-center rounded-lg py-3 px-7 mb-2 bg-yellow-500 cursor-pointer w-full h-full hover:bg-yellow-600 transition-colors"
+              >
+                <div className="flex gap-1 items-center w-full">
+                  <div className="bg-white/20 rounded-full w-auto p-3">
+                    <RiCalendarTodoFill className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-col flex">
+                    <span className="text-sm text-white text-center bg-white/10 rounded-full mb-1">
+                      {reminder.titulo}
+                    </span>
+                    <span className="text-sm text-white text-center bg-white/10 rounded-full px-2">
+                      {reminder.descripcion}
                     </span>
                   </div>
                 </div>

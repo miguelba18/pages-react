@@ -90,7 +90,9 @@ const Tabla = () => {
         </thead>
 
         <tbody>
-          {localMayors.map((mayor) => (
+          {localMayors
+          .filter((mayor) => mayor.rol?.name !== "ADMIN")
+          .map((mayor) => (
             <tr key={mayor.id}>
               <td className="border px-4 py-2">{mayor.nombre}</td>
               <td className="border px-4 py-2">{mayor.apellido}</td>

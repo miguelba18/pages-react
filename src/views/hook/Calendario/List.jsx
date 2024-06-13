@@ -12,7 +12,7 @@ const useFetchRecordatorios = () => {
     const obtenerRecordatorios = async () => {
       try {
         
-        const response = await fetch('http://localhost:8080/api/V1/recordatorio/listar', {
+        const response = await fetch('http://localhost:8080/api/V1/recordatorio', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
