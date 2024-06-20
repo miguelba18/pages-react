@@ -8,7 +8,7 @@ import {
   RiLoopRightLine,
   RiSave3Line,
 } from "react-icons/ri";
-import useAuthToken from "../../../hook/Token/useAuthToken";
+import useAuthToken from "../../../../hook/Token/useAuthToken";
 
 const FacturaElectronica = () => {
   const [pdfs, setPdfs] = useState([]);

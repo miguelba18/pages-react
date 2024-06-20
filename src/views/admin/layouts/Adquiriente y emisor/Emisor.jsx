@@ -4,11 +4,13 @@ import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../utils/HighlightedText";
 
+
 const Emisor = () => {
   const { emisores, searchEmisores } = useListEmisor();
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const { handleDownloadExcel } = useDescargarFacturas();
+
 
   useEffect(() => {
     const total = emisores.reduce((sum, emisor) => {
@@ -28,6 +30,8 @@ const Emisor = () => {
   const handleDownload = () => {
     handleDownloadExcel(searchQuery);
   };
+
+
 
   return (
     <div className="overflow-auto">
@@ -51,7 +55,7 @@ const Emisor = () => {
             required
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-            <RiSearchLine className="h-6 w-6" />
+            <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-secundary font-semibold" />
           </div>
         </div>
       </div>
@@ -72,9 +76,7 @@ const Emisor = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Número Documento del Emisor
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                País del Emisor
-              </th>
+          
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento del Emisor
               </th>
@@ -87,7 +89,7 @@ const Emisor = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo del Emisor
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">Total Bruto</th>
+              <th className="px-4 py-2 bg-secundary text-white">Total Factura</th>
             </tr>
           </thead>
           <tbody>
@@ -99,7 +101,7 @@ const Emisor = () => {
                       {emisor.nombreComercialEmisor}
                     </td>
                     <td className="border px-4 py-2">{emisor.nitEmisor}</td>
-                    <td className="border px-4 py-2">{emisor.paisEmisor}</td>
+        
                     <td className="border px-4 py-2">
                       {emisor.departamentoEmisor}
                     </td>
@@ -110,7 +112,12 @@ const Emisor = () => {
                       {emisor.direccionEmisor}
                     </td>
                     <td className="border px-4 py-2">{emisor.correoEmisor}</td>
-                    <td className="border px-4 py-2">{emisor.totalFactura}</td>
+                    <td className="border px-4 py-2">
+          
+                        ${emisor.subtotal}
+                     
+
+                    </td>
                   </tr>
                 ))
               : emisores.map((emisor, index) => (
@@ -139,11 +146,15 @@ const Emisor = () => {
                       {emisor.direccionEmisor}
                     </td>
                     <td className="border px-4 py-2">{emisor.correoEmisor}</td>
-                    <td className="border px-4 py-2">{emisor.totalFactura}</td>
+                    <td className="border px-4 py-2">
+                        ${emisor.totalFactura}
+                      
+                    </td>
                   </tr>
                 ))}
           </tbody>
         </table>
+        
       </div>
     </div>
   );

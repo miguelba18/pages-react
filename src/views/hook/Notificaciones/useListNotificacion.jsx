@@ -8,7 +8,7 @@ const useListNotificacion = () => {
   const [imagen, setImagen] = useState("");
   const [notifications, setNotifications] = useState([]);
   const [reminderNotifications, setReminderNotifications] = useState([]);
-    
+  const [profileNotifications, setProfileNotifications] = useState([]);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -89,13 +89,39 @@ const useListNotificacion = () => {
               console.error("Error al obtener las notificaciones de recordatorio:", error);
             }
           };
+
+          const fetchProfileNotifications = async () => {
+            try {
+              if (!token) {
+                throw new Error("No hay token de autenticación.");
+              }
+      
+              const response = await fetch("http://localhost:8080/notificaciones-perfil", {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              if (response.ok) {
+                const data = await response.json();
+                setProfileNotifications(data);
+                
+              } else {
+                console.error("Error al obtener las notificaciones de recordatorio:", response.status);
+              }
+            } catch (error) {
+              console.error("Error al obtener las notificaciones de recordatorio:", error);
+            }
+          };
     
         fetchUserData();
         fetchNotifications();
         fetchReminderNotifications();
+        fetchProfileNotifications();
       }, [token, setNotifications]);
 
-  return { userName, email, imagen, notifications, reminderNotifications}
+      
+
+  return { userName, email, imagen, notifications, reminderNotifications, profileNotifications}
 }
 
 export default useListNotificacion

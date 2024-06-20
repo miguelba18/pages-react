@@ -16,11 +16,15 @@ import {
   RiBillFill,
   RiQuestionAnswerFill,
   RiShakeHandsFill,
-  RiBankFill
+  RiBankFill,
+  RiArchiveFill,
 } from "react-icons/ri";
+import { MdManageAccounts } from "react-icons/md";
 
 const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
+  const [showSubMenuFactura, setShowSubMenuFactura] = useState(false);
+
   const location = useLocation();
   const navigate = useNavigate();
   const [userRoleId, setuserRoleId] = useState(null);
@@ -88,7 +92,7 @@ const Sidebar = () => {
                   <li className="">
                     <button
                       onClick={() => setShowSubMenu(!showSubMenu)}
-                      className="flex items-center  gap-4 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
+                      className="flex items-center  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg  "
                     >
                       <RiAdminFill className="text-xl text-secundary" />
                       Admin y Alcaldes
@@ -98,8 +102,7 @@ const Sidebar = () => {
                     </button>
 
                     <ul className={`my-2 ${!showSubMenu && "hidden"} `}>
-
-                    <li
+                      <li
                         className={
                           location.pathname === "/registroadmin"
                             ? "bg-secundary text-white rounded-lg  "
@@ -120,7 +123,6 @@ const Sidebar = () => {
                           Agregar Admin
                         </Link>
                       </li>
-
 
                       <li
                         className={
@@ -165,6 +167,7 @@ const Sidebar = () => {
                         </Link>
                       </li>
                     </ul>
+
                     <li
                       className={
                         location.pathname === "/calendarioadmin"
@@ -207,6 +210,131 @@ const Sidebar = () => {
                         Inquietudes
                       </Link>
                     </li>
+
+                    <button
+                      onClick={() => setShowSubMenuFactura(!showSubMenuFactura)}
+                      className="flex items-center w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
+                    >
+                      <RiAdminFill className="text-xl text-secundary" />
+                      Facturas
+                      <RiArrowDropRightLine
+                        className={`text-3xl ${
+                          showSubMenuFactura && "rotate-90"
+                        }`}
+                      />
+                    </button>
+
+                    <ul className={`my-2 ${!showSubMenuFactura && "hidden"} `}>
+                      <li
+                        className={
+                          location.pathname === "/administrarfacturas"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/administrarfacturas"
+                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                        >
+                          <MdManageAccounts
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/administrarfacturas"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Administrar Facturas
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/facturaelectronica"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/facturaelectronica"
+                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiBillFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/facturaelectronica"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Factura Electronica
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/facturasagrupadas"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/facturasagrupadas"
+                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiArchiveFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/facturasagrupadas"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Facturas Agrupadas
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/adquiriente"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/adquiriente"
+                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiShakeHandsFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/adquiriente"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Adquiriente
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/emisor"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/emisor"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiBankFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/emisor"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Emisor
+                        </Link>
+                      </li>
+                    </ul>
                   </li>
                 </>
               )}
@@ -289,30 +417,28 @@ const Sidebar = () => {
                           Ver Secretarios y Personal
                         </Link>
                       </li>
-
-                      
                     </ul>
                     <li
-                        className={
-                          location.pathname === "/calendarioalcalde"
-                            ? "bg-secundary text-white rounded-lg"
-                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                        }
+                      className={
+                        location.pathname === "/calendarioalcalde"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/calendarioalcalde"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
                       >
-                        <Link
-                          to="/calendarioalcalde"
-                          className="flex items-center  gap-4 px-4 py-2 mb-2"
-                        >
-                          <RiCalendarTodoFill
-                            className={`text-xl text-secundary ${
-                              location.pathname === "/calendarioalcalde"
-                                ? "text-white"
-                                : ""
-                            }`}
-                          />
-                          Calendario
-                        </Link>
-                      </li>
+                        <RiCalendarTodoFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/calendarioalcalde"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Calendario
+                      </Link>
+                    </li>
                   </li>
                 </>
               )}
@@ -395,6 +521,7 @@ const Sidebar = () => {
                     ? "bg-secundary text-white rounded-lg"
                     : "rounded-lg hover:bg-tertiary-900 transition-colors "
                 }
+                hidden={userRoleId === "ADMIN"}
               >
                 <Link
                   to="/facturaelectronica"
@@ -417,6 +544,7 @@ const Sidebar = () => {
                     ? "bg-secundary text-white rounded-lg"
                     : "rounded-lg hover:bg-tertiary-900 transition-colors "
                 }
+                hidden={userRoleId === "ADMIN"}
               >
                 <Link
                   to="/adquiriente"
@@ -424,9 +552,7 @@ const Sidebar = () => {
                 >
                   <RiShakeHandsFill
                     className={`text-xl text-secundary ${
-                      location.pathname === "/adquiriente"
-                        ? "text-white"
-                        : ""
+                      location.pathname === "/adquiriente" ? "text-white" : ""
                     }`}
                   />
                   Adquiriente
@@ -439,6 +565,7 @@ const Sidebar = () => {
                     ? "bg-secundary text-white rounded-lg"
                     : "rounded-lg hover:bg-tertiary-900 transition-colors "
                 }
+                hidden={userRoleId === "ADMIN"}
               >
                 <Link
                   to="/emisor"
@@ -446,9 +573,7 @@ const Sidebar = () => {
                 >
                   <RiBankFill
                     className={`text-xl text-secundary ${
-                      location.pathname === "/emisor"
-                        ? "text-white"
-                        : ""
+                      location.pathname === "/emisor" ? "text-white" : ""
                     }`}
                   />
                   Emisor

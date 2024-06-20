@@ -13,7 +13,7 @@ const Modal = ({
 
   const handleCancel = () => {
     onClose(); 
-    toast.info("Cancelacion Exitosa"); 
+    toast.info("Cancelacion Exitosa", {autoClose:1200}); 
   };
 Modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,

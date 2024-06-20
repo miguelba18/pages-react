@@ -3,17 +3,20 @@ import { Link,  } from "react-router-dom";
 import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
-import { RiNotification3Line, RiArrowDownSLine, RiQuestionAnswerFill,RiCalendarTodoFill } from "react-icons/ri";
+import { RiNotification3Line, RiArrowDownSLine, RiQuestionAnswerFill,RiCalendarTodoFill,RiUser6Fill } from "react-icons/ri";
 import DarkModeSwitch from "../Darkmode/DarkModeSwitch";
-import useListNotificacion from "../../views/hook/Header-panel/useListNotificacion";
+import useListNotificacion from "../../views/hook/Notificaciones/useListNotificacion";
 
-import useDeleteNotificacionReminder from "../../views/hook/Header-panel/Recordatorio/useDeleteNotificacionReminder";
-import useDeleteNotificacion from "../../views/hook/Header-panel/Inquietud/useDeleteNotificacion";
+import useDeleteNotificacionReminder from "../../views/hook/Notificaciones/Recordatorio/useDeleteNotificacionReminder";
+import useDeleteNotificacion from "../../views/hook/Notificaciones/Inquietud/useDeleteNotificacion";
+import useDeleteNotificacionProfile from "../../views/hook/Notificaciones/Perfil/useDeleteNotificacionProfile";
+
 const Header = () => {
   const { handleNotificationClick} = useDeleteNotificacion();
   const { handleNotificationClickReminder} = useDeleteNotificacionReminder();
-  const {userName, email, imagen, notifications, reminderNotifications} = useListNotificacion();
-  const totalNotifications = notifications.length + reminderNotifications.length;
+  const { handleNotificationClickProfile} = useDeleteNotificacionProfile();
+  const {userName, email, imagen, notifications, reminderNotifications, profileNotifications} = useListNotificacion();
+  const totalNotifications = notifications.length + reminderNotifications.length + profileNotifications.length;
 
   
 
@@ -73,6 +76,28 @@ const Header = () => {
                     </span>
                     <span className="text-sm text-white text-center bg-white/10 rounded-full px-2">
                       {reminder.descripcion}
+                    </span>
+                  </div>
+                </div>
+              </MenuItem>
+            ))}
+
+            {profileNotifications.map((profile) => (
+              <MenuItem
+                key={profile.id}
+                onClick={() => handleNotificationClickProfile(profile.id)}
+                className="flex items-center rounded-lg py-3 px-7 mb-2 bg-green-500 cursor-pointer w-full h-full hover:bg-green-600 transition-colors"
+              >
+                <div className="flex gap-1 items-center w-full">
+                  <div className="bg-white/20 rounded-full w-auto p-3">
+                    <RiUser6Fill className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-col flex">
+                    <span className="text-sm text-white text-center bg-white/10 rounded-full mb-1">
+                      {profile.titulo}
+                    </span>
+                    <span className="text-sm text-white text-center bg-white/10 rounded-full px-2">
+                      {profile.descripcion}
                     </span>
                   </div>
                 </div>
