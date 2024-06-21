@@ -20,17 +20,18 @@ import {
   RiArchiveFill,
 } from "react-icons/ri";
 import { MdManageAccounts } from "react-icons/md";
-
+import useAuthToken from "../../views/hook/Token/useAuthToken";
 const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showSubMenuFactura, setShowSubMenuFactura] = useState(false);
+  const { token } = useAuthToken();
 
   const location = useLocation();
   const navigate = useNavigate();
   const [userRoleId, setuserRoleId] = useState(null);
 
   useEffect(() => {
-    const token = window.localStorage.getItem("token");
+
 
     if (token) {
       try {
@@ -38,6 +39,7 @@ const Sidebar = () => {
         const roleId = decodedToken.role;
 
         setuserRoleId(roleId);
+       
       } catch (error) {
         console.error("Error al decodificar el token:", error);
         window.localStorage.removeItem("token");
@@ -46,7 +48,7 @@ const Sidebar = () => {
     } else {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, token]);
 
   const LimpiarToken = () => {
     window.localStorage.removeItem("token");

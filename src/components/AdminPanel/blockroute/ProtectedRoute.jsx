@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({children}) => {
     const token = localStorage.getItem('token');
+    
+    
+
     if(token){
         return children
     }else{

@@ -10,7 +10,7 @@ const useDeleteRecordatorio = ({ id, onDelete }) => {
     id: PropTypes.number.isRequired,
     onDelete: PropTypes.func.isRequired,
   };
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const { token } = useAuthToken();
 
@@ -18,7 +18,7 @@ const useDeleteRecordatorio = ({ id, onDelete }) => {
     const confirmDelete = window.confirm(
       "¿Estás seguro de que quieres eliminar este recordatorio?"
     );
-    
+
     if (!confirmDelete) return;
 
     setIsLoading(true);
@@ -38,14 +38,16 @@ const useDeleteRecordatorio = ({ id, onDelete }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Error al eliminar el registro.");
+       
+        const errorData = await response.text();
+        throw new Error(errorData);
       }
 
       onDelete(id);
-      toast.success("Recordatorio eliminado correctamente",{ autoClose: 1200 });
+      toast.success("Recordatorio eliminado correctamente", { autoClose: 1200 });
     } catch (error) {
-      console.error("Error al eliminar el recordatorio:", error);
-      toast.error("Error al eliminar el recordatorio");
+      
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

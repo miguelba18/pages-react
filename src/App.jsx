@@ -19,7 +19,7 @@ import Tabla from './views/admin/Alcalde-Panel/Tablas/Tabla'
 
 import Home from './views/landing/Home';
 import Login from './views/auth/login/Login';
-import Register from './views/auth/register/Register';
+
 import Error404 from './views/error/Error404';
 import OlvidarContraseña from './views/auth/olvidar contraseña/OlvidarContraseña';
 import CodigoOtp from './views/auth/olvidar contraseña/CodigOtp';
@@ -28,9 +28,14 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/AdminPanel/blockroute/ProtectedRoute';
-
+import RestrictedRouteAdmin from './components/AdminPanel/blockroute/RestrictedRouteAdmin';
+import RestrictedRouteAlcalde from './components/AdminPanel/blockroute/RestrictedRouteAlcalde';
+import RestrictedRouteSecretarioPersonal from './components/AdminPanel/blockroute/RestrictedRouteSecretarioPersonal';
 import "./styles/style.css"
 function App() {
+  
+  
+
   
   return (
     <BrowserRouter>
@@ -42,27 +47,31 @@ function App() {
         }>
           <Route index element={<Dashboard/>}/>
           <Route path="perfil" element={<Perfil/>} />
-          <Route path="calendarioadmin" element={<CalendarioAdmin/>} />
-          <Route path="calendarioalcalde" element={<CalendarioAlcalde/>} />
-          <Route path="alcalde" element={<Alcalde/>} />
-          <Route path="registroadmin" element={<RegistroAdmin/>} />
-          <Route path="secretario" element={<Secretario/>} />
-          <Route path="personal" element={<Personal/>} />
-          <Route path="tablaadminalcalde" element={<TablaAdminAlcalde/>} />
-          <Route path="tabla" element={<Tabla/>} />
-          <Route path="facturaelectronica" element={<FacturaElectronica/>} />
-          <Route path="inquietud" element={<Inquietud/>} />
+          <Route path="calendarioalcalde" element={<RestrictedRouteSecretarioPersonal><CalendarioAlcalde/></RestrictedRouteSecretarioPersonal>} />
           <Route path="adquiriente" element={<Adquiriente/>} />
           <Route path="emisor" element={<Emisor/>} />
-          <Route path="administrarfacturas" element={<AdministrarFacturas/>} />
-          <Route path="facturasagrupadas" element={<FacturasAgrupadas/>} />
+          <Route path="facturaelectronica" element={<FacturaElectronica/>} />
           
+            {/* Rutas que solo va a ver el Alcalde*/}
+          <Route path="secretario" element={<RestrictedRouteAlcalde><Secretario/></RestrictedRouteAlcalde> } />
+          <Route path="personal" element={<RestrictedRouteAlcalde><Personal/></RestrictedRouteAlcalde>} />
+          <Route path="tabla" element={<RestrictedRouteAlcalde><Tabla/></RestrictedRouteAlcalde>} />
+          
+          
+          
+          {/* Rutas que solo puede ver el ADMIN */}
+          <Route path="alcalde" element={<RestrictedRouteAdmin><Alcalde/></RestrictedRouteAdmin>} />
+          <Route path="registroadmin" element={<RestrictedRouteAdmin><RegistroAdmin/></RestrictedRouteAdmin>} />
+          <Route path="tablaadminalcalde" element={<RestrictedRouteAdmin><TablaAdminAlcalde/></RestrictedRouteAdmin>} />
+          <Route path="calendarioadmin" element={<RestrictedRouteAdmin><CalendarioAdmin/></RestrictedRouteAdmin>} />
+          <Route path="inquietud" element={<RestrictedRouteAdmin><Inquietud/></RestrictedRouteAdmin>} />
+          <Route path="administrarfacturas" element={<RestrictedRouteAdmin><AdministrarFacturas/></RestrictedRouteAdmin>}/>
+          <Route path="facturasagrupadas" element={<RestrictedRouteAdmin><FacturasAgrupadas/></RestrictedRouteAdmin>} />
           
         </Route>
 
         <Route path="/login" element={<Login/>} />
         <Route path="/home" element={<Home/>} />
-        <Route path="/registro" element={<Register/>} />
         <Route path="/olvidarcontraseña" element={<OlvidarContraseña/>} />
         <Route path="/codigo" element={<CodigoOtp/>} />
         <Route path="/nuevacontraseña" element={<NuevaContraseña/>} />

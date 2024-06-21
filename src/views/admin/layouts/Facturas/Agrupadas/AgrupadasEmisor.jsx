@@ -7,7 +7,8 @@ import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor
 const AgrupadasEmisor = () => {
   const [formData, setFormData] = useState({});
   const [facturas, setFacturas] = useState([]);
-  const [totalSubtotal, setTotalSubtotal] = useState(0);
+  const [totalSuma, setTotalSuma] = useState(0);
+ 
   const { handleDownloadExcel } = useDescargarFacturas();
 
   const { token } = useAuthToken();
@@ -42,7 +43,8 @@ const AgrupadasEmisor = () => {
         }
 
         const data = await response.json();
-        setFacturas(data);
+        setFacturas(data.facturasAgrupadas);
+        setTotalSuma(data.totalSuma);
       } catch (error) {
         console.error(error);
         setFacturas([]);
@@ -62,16 +64,7 @@ const AgrupadasEmisor = () => {
   useEffect(() => {
     setFacturas([]);
   }, [selectedDepartamento]);
-  useEffect(() => {
-    const total = facturas.reduce((sum, adquiriente) => {
-      let subtotalStr = adquiriente.subtotal.toString();
-      const subtotals = subtotalStr.replace(/\./g, "");
-      const subtotal = parseFloat(subtotals.replace(/[^0-9.-]+/g, ""));
-      return sum + (isNaN(subtotal) ? 0 : subtotal);
-    }, 0);
-
-    setTotalSubtotal(total);
-  }, [facturas]);
+  
 
   const handleDownload = () => {
     handleDownloadExcel(selectedCiudad);
@@ -148,7 +141,7 @@ const AgrupadasEmisor = () => {
       {facturas.length > 0 && (
         <>
           <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            <p>Total facturas: ${totalSuma}</p>
           </div>
           <div className="overflow-x-auto">
             <table className="table-auto w-full mt-6">

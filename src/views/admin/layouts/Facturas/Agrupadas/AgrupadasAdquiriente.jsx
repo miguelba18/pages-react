@@ -7,7 +7,7 @@ import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor
 const AgrupadasAdquiriente = () => {
   const [formData, setFormData] = useState({});
   const [facturas, setFacturas] = useState([]);
-  const [totalSubtotal, setTotalSubtotal] = useState(0);
+  const [totalSuma, setTotalSuma] = useState(0);
   const { handleDownloadExcel } = useDescargarFacturas();
 
   const { token } = useAuthToken();
@@ -42,7 +42,8 @@ const AgrupadasAdquiriente = () => {
         }
 
         const data = await response.json();
-        setFacturas(data);
+        setFacturas(data.facturasAgrupadas);
+        setTotalSuma(data.totalSuma); 
       } catch (error) {
         console.error(error);
         setFacturas([]);
@@ -66,17 +67,6 @@ const AgrupadasAdquiriente = () => {
   const handleDownload = () => {
     handleDownloadExcel(selectedCiudad);
   };
-
-  useEffect(() => {
-    const total = facturas.reduce((sum, adquiriente) => {
-      let subtotalStr = adquiriente.subtotal.toString();
-      const subtotals = subtotalStr.replace(/\./g, "");
-      const subtotal = parseFloat(subtotals.replace(/[^0-9.-]+/g, ""));
-      return sum + (isNaN(subtotal) ? 0 : subtotal);
-    }, 0);
-
-    setTotalSubtotal(total);
-  }, [facturas]);
 
   return (
     <div>
@@ -132,7 +122,7 @@ const AgrupadasAdquiriente = () => {
           </select>
         </div>
         <div className="xl:relative mt-4">
-          <button  onClick={handleDownload} className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
+          <button onClick={handleDownload} className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
             <span className="hidden md:inline">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
@@ -148,7 +138,7 @@ const AgrupadasAdquiriente = () => {
       {facturas.length > 0 && (
         <>
           <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            <p>Total facturas: ${totalSuma}</p>
           </div>
           <div className="overflow-x-auto">
             <table className="table-auto w-full mt-6">
@@ -167,7 +157,7 @@ const AgrupadasAdquiriente = () => {
               </thead>
               <tbody>
                 {facturas.map((factura, index) => (
-                  <tr key={factura.id} className="whitespace-nowrap">
+                  <tr key={index} className="whitespace-nowrap">
                     <td className="border px-4 py-2">{index + 1}</td>
                     <td className="border px-4">{factura.nombreAdquiriente}</td>
                     <td className="border px-4 py-2 text-center">
