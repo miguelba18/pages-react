@@ -1,8 +1,8 @@
-import useListEmisor from "../../../hook/Facturas/Adquiriente y emisor/Emisor/useListEmisor";
-import useDescargarFacturas from "../../../hook/Facturas/Adquiriente y emisor/Emisor/useDescargarFacturas";
+import useListEmisor from '../../../../../views/hook/Facturas/Adquiriente y emisor/Emisor/useListEmisor';
+import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/useDescargarFacturas";
 import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
-import HighlightedText from "../../../../utils/HighlightedText";
+import HighlightedText from "../../../../../utils/HighlightedText";
 
 
 const Emisor = () => {
@@ -71,24 +71,15 @@ const Emisor = () => {
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
               <th className="px-4 py-2 bg-secundary text-white">
+                Fecha
+              </th>
+              <th className="px-4 py-2 bg-secundary text-white">
                 Nombre o Razón Social del Emisor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Número Documento del Emisor
               </th>
-          
-              <th className="px-4 py-2 bg-secundary text-white">
-                Departamento del Emisor
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Municipio del Emisor
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Dirección del Emisor
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Correo del Emisor
-              </th>
+        
               <th className="px-4 py-2 bg-secundary text-white">Total Factura</th>
             </tr>
           </thead>
@@ -98,20 +89,14 @@ const Emisor = () => {
                   <tr key={emisor.id} className="whitespace-nowrap">
                     <td className="border px-4 py-2">{index + 1}</td>
                     <td className="border px-4">
+                      {emisor.fechaCreacion.substring(0, 4)}
+                    </td>
+                    <td className="border px-4">
                       {emisor.nombreComercialEmisor}
                     </td>
                     <td className="border px-4 py-2">{emisor.nitEmisor}</td>
         
-                    <td className="border px-4 py-2">
-                      {emisor.departamentoEmisor}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {emisor.municipioEmisor}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {emisor.direccionEmisor}
-                    </td>
-                    <td className="border px-4 py-2">{emisor.correoEmisor}</td>
+                    
                     <td className="border px-4 py-2">
           
                         ${emisor.subtotal}
@@ -124,6 +109,9 @@ const Emisor = () => {
                   <tr key={emisor.id} className="whitespace-nowrap">
                     <td className="border px-4 py-2">{index + 1}</td>
                     <td className="border px-4">
+                      {emisor.fechaCreacion.substring(0, 4)}
+                    </td>
+                    <td className="border px-4">
                       <HighlightedText
                         text={emisor.nombreComercialEmisor}
                         highlight={searchQuery}
@@ -135,17 +123,8 @@ const Emisor = () => {
                         highlight={searchQuery}
                       />
                     </td>
-                    <td className="border px-4 py-2">{emisor.paisEmisor}</td>
-                    <td className="border px-4 py-2">
-                      {emisor.departamentoEmisor}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {emisor.municipioEmisor}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {emisor.direccionEmisor}
-                    </td>
-                    <td className="border px-4 py-2">{emisor.correoEmisor}</td>
+                    
+                    
                     <td className="border px-4 py-2">
                         ${emisor.totalFactura}
                       
@@ -153,6 +132,10 @@ const Emisor = () => {
                   </tr>
                 ))}
           </tbody>
+          <tr>
+              <th className="px-4 py-2 bg-secundary text-white" colSpan={4}>Total</th>
+              <th className="border px-4 py-2">${totalSubtotal.toLocaleString("de-DE")}</th>
+            </tr>
         </table>
         
       </div>

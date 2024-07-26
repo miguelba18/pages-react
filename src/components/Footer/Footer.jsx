@@ -43,20 +43,20 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="pt-32 md:flex  items-center">
-        <div className="xl:w-1/6  ml-[11%] mb-8">
+      <div className="pt-32 md:flex grid justify-center md:px-10 items-center">
+        <div className="xl:w-1/6   mb-8">
           <a href="" className="text-2xl font-bold relative pl-6  ">
             <RiAppsFill className="absolute -left-2 m-1 " />
             SIM SAS
           </a>
-          <p className="pt-4">
+          <p className="pt-4 mr-2">
             SIM SAS was created for
             <br /> the new ways we live and
             <br /> work. We make a better
             <br /> workspace around the world
           </p>
         </div>
-        <div className="p-8 xl:p-16 -mt-[2%]">
+        <div className=" xl:p-16 md:-mt-8">
           <h1 className="text-lg font-bold ">Product</h1>
           <p className="pt-2 text-[15px] hover:text-yellow-300 cursor-pointer">
             Overview
@@ -68,7 +68,7 @@ const Footer = () => {
             Customer stories
           </p>
         </div>
-        <div className="p-8 xl:p-16 -mt-[2%]">
+        <div className=" xl:p-16 mt-4 md:-mt-8">
           <h1 className="text-lg font-bold">Resources</h1>
           <p className="pt-2 text-[15px] hover:text-yellow-300 cursor-pointer">
             Blog
@@ -80,7 +80,7 @@ const Footer = () => {
             Help center
           </p>
         </div>
-        <div className="p-8 -mt-[4%]">
+        <div className=" mt-4 md:-mt-8 md:mr-4">
           <h1 className="text-lg font-bold">Company</h1>
           <p className="pt-2 text-[15px] hover:text-yellow-300 cursor-pointer">
             About us
@@ -92,7 +92,7 @@ const Footer = () => {
             Media kit
           </p>
         </div>
-        <div className="p-10 -mt-[1%]">
+        <div className="mt-2 xl:ml-10 ">
           <h1 className="text-xl font-bold pb-4">Try It Today</h1>
           <p className="text-[13px] mb-4">
             Get started for free. Add your

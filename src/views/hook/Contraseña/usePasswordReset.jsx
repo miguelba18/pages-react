@@ -26,7 +26,7 @@ const usePasswordReset = () => {
     }
 
     try {
-      await axios.post(`http://localhost:8080/password-olvidada/cambio-password/${correo}`, {
+      await axios.post(`http://localhost:8080/forgot-password/change-password/${correo}`, {
         password: contraseña,
         repeatPassword: confirmarContraseña
       });

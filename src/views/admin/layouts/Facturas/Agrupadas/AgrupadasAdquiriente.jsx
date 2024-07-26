@@ -70,7 +70,7 @@ const AgrupadasAdquiriente = () => {
 
   return (
     <div>
-      <div className=" flex justify-around">
+      <div className=" xl:flex justify-around">
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Departamento
@@ -122,8 +122,8 @@ const AgrupadasAdquiriente = () => {
           </select>
         </div>
         <div className="xl:relative mt-4">
-          <button onClick={handleDownload} className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
-            <span className="hidden md:inline">Descargar facturas</span>
+          <button disabled={!selectedCiudad} onClick={handleDownload} className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
+            <span className="">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
         </div>
@@ -169,6 +169,10 @@ const AgrupadasAdquiriente = () => {
                   </tr>
                 ))}
               </tbody>
+              <tr>
+              <th className="px-4 py-2 bg-secundary text-white" colSpan={3}>Total</th>
+              <th className="border px-4 py-2">${totalSuma}</th>
+            </tr>
             </table>
           </div>
         </>

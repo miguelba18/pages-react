@@ -33,7 +33,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between xl:justify-start w-full p-4 h-[10vh] fixed xl:absolute  z-50 text-white bg-secundary/90">
+    <header className="flex items-center justify-between xl:justify-start w-full p-4 h-[10vh] fixed   z-50 text-white bg-secundary/90">
       <div className="xl:w-1/6 text-center ml-[6%]">
         <a href="" className="text-3xl font-bold relative ">
           <RiAppsFill className="absolute -left-8 m-1" />

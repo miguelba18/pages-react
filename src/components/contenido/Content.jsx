@@ -10,8 +10,8 @@ const Content = () => {
   };
   return (
     <>
-      <div className="relative min-h-[90vh] pt-[84px] md:pt-[13%] xl:pt-[73px]">
-        <div className="absolute inset-x-0 xl:bottom-4 -bottom-6 grid justify-center  z-10">
+      <div className="relative min-h-[90vh] ">
+        <div className="absolute inset-x-0 xl:bottom-4 -bottom-6 grid justify-center  z-10 ">
           <div className="flex justify-center ">
             <RxSwitch
               className="h-8 w-8 rounded-md text-white rotate-90  "
@@ -23,7 +23,7 @@ const Content = () => {
           </div>
         </div>
 
-        <section className="min-h-[90vh] grid grid-cols-1 xl:grid-cols-8 bg-cover bg-gradient-to-br from-blue-500/90 via-blue-500 to-blue-400">
+        <section className="min-h-[90vh] w-full grid grid-cols-1 xl:grid-cols-8 bg-cover bg-gradient-to-br from-blue-500/90 via-blue-500 to-blue-400">
           <div className="md:col-span-4 flex items-center justify-center xl:p-24 p-4">
             <div className="flex flex-col gap-6">
               <h1
@@ -31,12 +31,14 @@ const Content = () => {
                 className="text-4xl md:text-6xl font-bold leading-[5rem] md:leading-[6.5rem] text-white"
               >
                 Disfruta de la mejor experiencia con
-                <span className="text-white py-2 px-6 border-8 border-white relative ml-4">
+                <span className="text-white py-2 xl:px-6 border-8 border-white relative ml-4">
                   SIM SAS
+                  <div className="hidden xl:inline">
                   <RiCheckboxBlankCircleFill className="text-base absolute -left-5 -top-5 rounded-full text-secundary/90 p-2 box-content bg-white" />
                   <RiCheckboxBlankCircleFill className="text-base absolute -right-5 -top-5 rounded-full text-secundary/90 p-2 box-content bg-white" />
                   <RiCheckboxBlankCircleFill className="text-base absolute -left-5 -bottom-5 rounded-full text-secundary/90 p-2 box-content bg-white" />
                   <RiCheckboxBlankCircleFill className="text-base absolute -right-5 -bottom-5 rounded-full text-secundary/90 p-2 box-content bg-white" />
+                  </div>
                 </span>
               </h1>
               <p className="text-gray-300 text-lg leading-8">

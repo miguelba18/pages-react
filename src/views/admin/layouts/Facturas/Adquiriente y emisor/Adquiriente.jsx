@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { RiSearchLine, RiDownloadLine,   } from "react-icons/ri";
-import useListAdquiriente from "../../../hook/Facturas/Adquiriente y emisor/adquiriente/useListAdquiriente";
-import useDescargarFacturas from "../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
-import HighlightedText from "../../../../utils/HighlightedText";
+import useListAdquiriente from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useListAdquiriente";
+import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
+import HighlightedText from "../../../../../utils/HighlightedText";
 
 
 
@@ -37,7 +37,7 @@ const Adquiriente = () => {
   
 
   return (
-    <div className="overflow-auto">
+    <div className=" ">
       <div className="flex xl:justify-end items-center">
       
         <div className="xl:relative mr-4">
@@ -76,6 +76,9 @@ const Adquiriente = () => {
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
               <th className="px-4 py-2 bg-secundary text-white">
+                Fecha
+              </th>
+              <th className="px-4 py-2 bg-secundary text-white">
                 Nombre o Razón Social del Adquiriente
               </th>
               
@@ -83,18 +86,7 @@ const Adquiriente = () => {
                 Número Documento del Adquiriente
               </th>
               
-              <th className="px-4 py-2 bg-secundary text-white">
-                Departamento del Adquiriente
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Municipio del Adquiriente
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Dirección del Adquiriente
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Correo del Adquiriente
-              </th>
+        
               <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
       
             </tr>
@@ -105,6 +97,9 @@ const Adquiriente = () => {
                   <tr key={adquiriente.id} className="whitespace-nowrap">
                     <td className="border px-4 py-2">{index + 1}</td>
                     <td className="border px-4">
+                      {adquiriente.fechaCreacion.substring(0, 4)}
+                    </td>
+                    <td className="border px-4">
                       {adquiriente.nombreAdquiriente}
                     </td>
                     
@@ -112,18 +107,7 @@ const Adquiriente = () => {
                       {adquiriente.numeroDocumentoAdquiriente}
                     </td>
                     
-                    <td className="border px-4 py-2">
-                      {adquiriente.departamentoAdquiriente}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.municipioAdquiriente}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.direccionAdquiriente}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.correoAdquiriente}
-                    </td>
+                    
                     <td className="border px-4 py-2">
                     <div className="flex justify-between">
                         ${adquiriente.subtotal}
@@ -137,38 +121,22 @@ const Adquiriente = () => {
                   <tr key={adquiriente.id} className="whitespace-nowrap">
                     <td className="border px-4 py-2">{index + 1}</td>
                     <td className="border px-4">
+                      
+                    </td>
+                    <td className="border px-4">
                       <HighlightedText
                         text={adquiriente.nombreAdquiriente}
                         highlight={searchQuery}
                       />
                     </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.tipoDocumentoAdquiriente}
-                    </td>
+                   
                     <td className="border px-4 py-2">
                       <HighlightedText
                         text={adquiriente.numeroDocumentoAdquiriente}
                         highlight={searchQuery}
                       />
                     </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.paisAdquiriente}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.departamentoAdquiriente}
-                    </td>
-                    <td className="border px-4 py-2">
-                      <HighlightedText
-                      text={adquiriente.municipioAdquiriente}
-                      highlight={searchQuery}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.direccionAdquiriente}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {adquiriente.correoAdquiriente}
-                    </td>
+                  
                     <td className="border px-4 py-2">
                     <div className="flex justify-between">
                         ${adquiriente.subtotal}
@@ -178,6 +146,10 @@ const Adquiriente = () => {
                   </tr>
                 ))}
           </tbody>
+          <tr>
+              <th className="px-4 py-2 bg-secundary text-white" colSpan={4}>Total</th>
+              <th className="border px-4 py-2">${totalSubtotal.toLocaleString("de-DE")}</th>
+            </tr>
         </table>
         
       </div>

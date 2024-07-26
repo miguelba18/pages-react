@@ -17,7 +17,7 @@ const useOtpVerification = () => {
   const handleSubmitCodigo = async (e, navigate) => {
     e.preventDefault();
     try {
-      await axios.post(`http://localhost:8080/password-olvidada/verificar-otp/${codigo}/${correo}`);
+      await axios.post(`http://localhost:8080/forgot-password/verificar-otp/${codigo}/${correo}`);
       toast.success("Codigo verificado exitosamente", { position: "top-center" });
       navigate("/nuevacontraseña", { state: { codigo, correo } });
     } catch (error) {

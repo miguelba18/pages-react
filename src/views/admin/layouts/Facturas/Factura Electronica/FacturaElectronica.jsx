@@ -70,10 +70,13 @@ const FacturaElectronica = () => {
         const errorMessage = await response.text();
         throw new Error(errorMessage || "No se pudo guardar los archivos PDF.");
       }
-
+      setTimeout(() => {
+              window.location.reload();
+            }, 3000);
       toast.success(
         "Los archivos PDF se han guardado correctamente en la base de datos."
       );
+      
     } catch (error) {
       console.error("Error al guardar los archivos PDF:", error);
       toast.error(error.message);

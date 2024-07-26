@@ -17,7 +17,7 @@ const useForgotPassword = () => {
     setIsLoading(true);
     try {
       await axios.post(
-        `http://localhost:8080/password-olvidada/verificar-mail/${correo}`
+        `http://localhost:8080/forgot-password/verificar-mail/${correo}`
       );
       toast.success("Codigo enviado a tu correo exitosamente", {
         position: "top-center",

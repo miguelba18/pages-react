@@ -119,7 +119,7 @@ const AdministrarAdquiriente = () => {
 
   return (
     <div>
-      <div className="mb-4 flex justify-around">
+      <div className="mb-4 mt-4 xl:flex justify-around">
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Departamento
@@ -205,7 +205,7 @@ const AdministrarAdquiriente = () => {
                   Correo del Adquiriente
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
-                <th className="px-4 py-2 bg-secundary text-white">Acciones</th>
+               
               </tr>
             </thead>
             <tbody>
@@ -226,9 +226,8 @@ const AdministrarAdquiriente = () => {
                     {factura.direccionAdquiriente}
                   </td>
                   <td className="border px-4 py-2">{factura.correoAdquiriente}</td>
-                  <td className="border px-4 py-2">${factura.subtotal}</td>
-                  <td className="border px-4 py-2">
-                    <div className="flex justify-center">
+                  <td className="border px-4 py-2 flex justify-between">${factura.subtotal}
+                  <div className="flex justify-center">
                       <button
                         onClick={() => handleEdit(factura)}
                         className="text-blue-500"
@@ -237,9 +236,14 @@ const AdministrarAdquiriente = () => {
                       </button>
                     </div>
                   </td>
+                  
                 </tr>
               ))}
             </tbody>
+            <tr>
+              <th className="px-4 py-2 bg-secundary text-white" colSpan={7}>Total</th>
+              <th className="border px-4 py-2" >${totalSubtotal.toLocaleString("de-DE")}</th>
+            </tr>
           </table>
         </div>
         </>

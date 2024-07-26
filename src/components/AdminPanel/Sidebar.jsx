@@ -18,12 +18,17 @@ import {
   RiShakeHandsFill,
   RiBankFill,
   RiArchiveFill,
+  RiMoneyDollarCircleFill,
+  RiTeamFill,
 } from "react-icons/ri";
 import { MdManageAccounts } from "react-icons/md";
+import { IoFileTrayFull } from "react-icons/io5";
 import useAuthToken from "../../views/hook/Token/useAuthToken";
 const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showSubMenuFactura, setShowSubMenuFactura] = useState(false);
+  const [showSubMenuFacturaElectronica, setShowSubMenuFacturaElectronica] =
+    useState(false);
   const { token } = useAuthToken();
 
   const location = useLocation();
@@ -31,15 +36,12 @@ const Sidebar = () => {
   const [userRoleId, setuserRoleId] = useState(null);
 
   useEffect(() => {
-
-
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
         const roleId = decodedToken.role;
 
         setuserRoleId(roleId);
-       
       } catch (error) {
         console.error("Error al decodificar el token:", error);
         window.localStorage.removeItem("token");
@@ -87,6 +89,7 @@ const Sidebar = () => {
               </span>
             )}
           </h1>
+
           <nav>
             <ul className="list-none">
               {userRoleId === "ADMIN" && (
@@ -213,6 +216,50 @@ const Sidebar = () => {
                       </Link>
                     </li>
 
+                    <li
+                      className={
+                        location.pathname === "/consorcios"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/consorcios"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiTeamFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/consorcios"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Consorcios
+                      </Link>
+                    </li>
+
+                    <li
+                      className={
+                        location.pathname === "/contribuyente"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/contribuyente"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiMoneyDollarCircleFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/contribuyente"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Contribuyente
+                      </Link>
+                    </li>
+
                     <button
                       onClick={() => setShowSubMenuFactura(!showSubMenuFactura)}
                       className="flex items-center w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
@@ -267,7 +314,7 @@ const Sidebar = () => {
                                 : ""
                             }`}
                           />
-                          Factura Electronica
+                          Agregar Facturas
                         </Link>
                       </li>
 
@@ -295,45 +342,67 @@ const Sidebar = () => {
 
                       <li
                         className={
-                          location.pathname === "/adquiriente"
+                          location.pathname === "/facturacompleta"
                             ? "bg-secundary text-white rounded-lg"
                             : "rounded-lg hover:bg-tertiary-900 transition-colors "
                         }
                       >
                         <Link
-                          to="/adquiriente"
-                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                          to="/facturacompleta"
+                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
                         >
-                          <RiShakeHandsFill
+                          <IoFileTrayFull
                             className={`text-xl text-secundary ${
-                              location.pathname === "/adquiriente"
+                              location.pathname === "/facturacompleta"
                                 ? "text-white"
                                 : ""
                             }`}
                           />
-                          Adquiriente
+                          Todas las facturas
                         </Link>
                       </li>
 
                       <li
                         className={
-                          location.pathname === "/emisor"
+                          location.pathname === "/adquirienteadmin"
                             ? "bg-secundary text-white rounded-lg"
                             : "rounded-lg hover:bg-tertiary-900 transition-colors "
                         }
                       >
                         <Link
-                          to="/emisor"
-                          className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                          to="/adquirienteadmin"
+                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
                         >
-                          <RiBankFill
+                          <RiShakeHandsFill
                             className={`text-xl text-secundary ${
-                              location.pathname === "/emisor"
+                              location.pathname === "/adquirienteadmin"
                                 ? "text-white"
                                 : ""
                             }`}
                           />
-                          Emisor
+                          Cliente Municipio
+                        </Link>
+                      </li>
+
+                      <li
+                        className={
+                          location.pathname === "/emisoradmin"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                      >
+                        <Link
+                          to="/emisoradmin"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <RiBankFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/emisoradmin"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Vendedor Municipio
                         </Link>
                       </li>
                     </ul>
@@ -516,71 +585,139 @@ const Sidebar = () => {
                   </li>
                 </>
               )}
-
-              <li
-                className={
-                  location.pathname === "/facturaelectronica"
-                    ? "bg-secundary text-white rounded-lg"
-                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                }
-                hidden={userRoleId === "ADMIN"}
-              >
-                <Link
-                  to="/facturaelectronica"
-                  className="flex items-center  gap-4 px-4 py-2 mb-2"
+              <div hidden={userRoleId === "ADMIN"}>
+                <button
+                  onClick={() =>
+                    setShowSubMenuFacturaElectronica(
+                      !showSubMenuFacturaElectronica
+                    )
+                  }
+                  className="flex items-center w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
                 >
-                  <RiBillFill
-                    className={`text-xl text-secundary ${
-                      location.pathname === "/facturaelectronica"
-                        ? "text-white"
-                        : ""
+                  <RiAdminFill className="text-xl text-secundary" />
+                  Facturas
+                  <RiArrowDropRightLine
+                    className={`text-3xl ${
+                      showSubMenuFacturaElectronica && "rotate-90"
                     }`}
                   />
-                  Factura Electronica
-                </Link>
-              </li>
+                </button>
+              </div>
 
-              <li
-                className={
-                  location.pathname === "/adquiriente"
-                    ? "bg-secundary text-white rounded-lg"
-                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                }
-                hidden={userRoleId === "ADMIN"}
+              <ul
+                className={`my-2 ${
+                  !showSubMenuFacturaElectronica && "hidden"
+                } `}
               >
-                <Link
-                  to="/adquiriente"
-                  className="flex items-center  gap-4 px-4 py-2 mb-2"
-                >
-                  <RiShakeHandsFill
-                    className={`text-xl text-secundary ${
-                      location.pathname === "/adquiriente" ? "text-white" : ""
-                    }`}
-                  />
-                  Adquiriente
-                </Link>
-              </li>
+                 <li
+                        className={
+                          location.pathname === "/facturacompletaalcalde"
+                            ? "bg-secundary text-white rounded-lg"
+                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                        }
+                        hidden={userRoleId !== "Alcalde" }
+                      >
+                        <Link
+                          to="/facturacompletaalcalde"
+                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                        >
+                          <IoFileTrayFull
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/facturacompletaalcalde"
+                                ? "text-white"
+                                : ""
+                            }`}
+                          />
+                          Todas las facturas
+                        </Link>
+                      </li>
 
-              <li
-                className={
-                  location.pathname === "/emisor"
-                    ? "bg-secundary text-white rounded-lg"
-                    : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                }
-                hidden={userRoleId === "ADMIN"}
-              >
-                <Link
-                  to="/emisor"
-                  className="flex items-center  gap-4 px-4 py-2 mb-2"
+                <li
+                  className={
+                    location.pathname === "/facturaelectronica"
+                      ? "bg-secundary text-white rounded-lg"
+                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                  }
                 >
-                  <RiBankFill
-                    className={`text-xl text-secundary ${
-                      location.pathname === "/emisor" ? "text-white" : ""
-                    }`}
-                  />
-                  Emisor
-                </Link>
-              </li>
+                  <Link
+                    to="/facturaelectronica"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiBillFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/facturaelectronica"
+                          ? "text-white"
+                          : ""
+                      }`}
+                    />
+                    Agregar Facturas
+                  </Link>
+                </li>
+
+                <li
+                  className={
+                    location.pathname === "/agrupadasalcalde"
+                      ? "bg-secundary text-white rounded-lg"
+                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                  }
+                  hidden={userRoleId !== "Alcalde"}
+                >
+                  <Link
+                    to="/agrupadasalcalde"
+                    className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                  >
+                    <RiArchiveFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/agrupadasalcalde"
+                          ? "text-white"
+                          : ""
+                      }`}
+                    />
+                    Facturas Agrupadas
+                  </Link>
+                </li>
+
+                <li
+                  className={
+                    location.pathname === "/adquiriente"
+                      ? "bg-secundary text-white rounded-lg"
+                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                  }
+                  hidden={userRoleId === "ADMIN"}
+                >
+                  <Link
+                    to="/adquiriente"
+                    className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                  >
+                    <RiShakeHandsFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/adquiriente" ? "text-white" : ""
+                      }`}
+                    />
+                    Cliente Municipio
+                  </Link>
+                </li>
+
+                <li
+                  className={
+                    location.pathname === "/emisor"
+                      ? "bg-secundary text-white rounded-lg"
+                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                  }
+                >
+                  <Link
+                    to="/emisor"
+                    className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                  >
+                    <RiBankFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/emisor" ? "text-white" : ""
+                      }`}
+                    />
+                    Vendedor Municipio
+                  </Link>
+                </li>
+              </ul>
 
               <li
                 className={
@@ -605,7 +742,8 @@ const Sidebar = () => {
           </nav>
         </div>
         <nav>
-          <button className="flex mb-2 justify-center items-center gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]">
+          <hr className="border-gray-300 my-4" />
+          <button className="flex mb-2  items-center w-full gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]">
             <RiPagesFill className="text-white" />
             <Link to={"/home"} className=" text-white  ">
               Landing Page
@@ -614,7 +752,7 @@ const Sidebar = () => {
 
           <button
             onClick={LimpiarToken}
-            className="flex items-center  gap-4 px-4 py-2 rounded-lg hover:bg-tertiary-900 transition-colors"
+            className="flex items-center  gap-4 px-4 py-2 rounded-lg w-full hover:bg-tertiary-900 transition-colors "
           >
             <RiLogoutBoxLine className="text-secundary" />
             Cerrar Sesión
