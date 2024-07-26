@@ -210,23 +210,27 @@ const AdministrarAdquiriente = () => {
             </thead>
             <tbody>
               {facturas.map((factura, index) => (
-                <tr key={factura.id} className="whitespace-nowrap">
-                  <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4">{factura.nombreAdquiriente}</td>
-                  <td className="border px-4 py-2">
+                <tr key={factura.id} className={
+                  index % 2 === 0
+                    ? "bg-gray-100 whitespace-nowrap"
+                    : "bg-white whitespace-nowrap"
+                }>
+                  <td className="border px-4 py-2 text-center">{index + 1}</td>
+                  <td className="border px-4 text-center">{factura.nombreAdquiriente}</td>
+                  <td className="border px-4 py-2 text-center">
                     {factura.numeroDocumentoAdquiriente}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 text-center">
                     {factura.departamentoAdquiriente}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 text-center">
                     {factura.municipioAdquiriente}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 text-center">
                     {factura.direccionAdquiriente}
                   </td>
-                  <td className="border px-4 py-2">{factura.correoAdquiriente}</td>
-                  <td className="border px-4 py-2 flex justify-between">${factura.subtotal}
+                  <td className="border px-4 py-2 text-center">{factura.correoAdquiriente}</td>
+                  <td className="border px-4 py-2 flex justify-between text-center">${factura.subtotal}
                   <div className="flex justify-center">
                       <button
                         onClick={() => handleEdit(factura)}

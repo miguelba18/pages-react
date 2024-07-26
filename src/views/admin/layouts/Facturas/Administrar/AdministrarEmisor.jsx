@@ -219,26 +219,30 @@ const AdministrarEmisor = () => {
                 </thead>
                 <tbody>
                   {facturas.map((factura, index) => (
-                    <tr key={factura.id} className="whitespace-nowrap">
-                      <td className="border px-4 py-2">{index + 1}</td>
-                      <td className="border px-4">
+                    <tr key={factura.id} className={
+                      index % 2 === 0
+                        ? "bg-gray-100 whitespace-nowrap"
+                        : "bg-white whitespace-nowrap"
+                    }>
+                      <td className="border px-4 py-2x text-center">{index + 1}</td>
+                      <td className="border px-4 text-center">
                         {factura.nombreComercialEmisor}
                       </td>
-                      <td className="border px-4 py-2">{factura.nitEmisor}</td>
-                      <td className="border px-4 py-2">{factura.paisEmisor}</td>
-                      <td className="border px-4 py-2">
+                      <td className="border px-4 py-2 text-center">{factura.nitEmisor}</td>
+                      <td className="border px-4 py-2 text-center">{factura.paisEmisor}</td>
+                      <td className="border px-4 py-2 text-center">
                         {factura.departamentoEmisor}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="border px-4 py-2 text-center">
                         {factura.municipioEmisor}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="border px-4 py-2 text-center">
                         {factura.direccionEmisor}
                       </td>
-                      <td className="border px-4 py-2">
+                      <td className="border px-4 py-2 text-center">
                         {factura.correoEmisor}
                       </td>
-                      <td className="border px-4 py-2 flex justify-between">${factura.subtotal}
+                      <td className="border px-4 py-2 flex justify-between text-center">${factura.subtotal}
                   <div className="flex justify-center">
                       <button
                         onClick={() => handleEdit(factura)}

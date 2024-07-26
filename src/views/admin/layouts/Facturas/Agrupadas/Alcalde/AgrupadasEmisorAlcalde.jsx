@@ -26,9 +26,13 @@ const AgrupadasEmisorAlcalde = () => {
               </thead>
               <tbody>
                 {facturas.map((factura, index) => (
-                  <tr key={factura.id} className="whitespace-nowrap">
+                  <tr key={factura.id} className={
+                    index % 2 === 0
+                      ? "bg-gray-100 whitespace-nowrap"
+                      : "bg-white whitespace-nowrap"
+                  }>
                     <td className="border px-4 py-2 text-center">{index + 1}</td>
-                    <td className="border px-4">
+                    <td className="border px-4 text-center">
                       {factura.nombreComercialEmisor}
                     </td>
                     <td className="border px-4 py-2 text-center">

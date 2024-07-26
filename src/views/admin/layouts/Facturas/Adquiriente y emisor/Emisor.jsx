@@ -1,16 +1,24 @@
-import useListEmisor from '../../../../../views/hook/Facturas/Adquiriente y emisor/Emisor/useListEmisor';
+import useListEmisor from "../../../../../views/hook/Facturas/Adquiriente y emisor/Emisor/useListEmisor";
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/useDescargarFacturas";
 import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
-
 
 const Emisor = () => {
   const { emisores, searchEmisores } = useListEmisor();
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const { handleDownloadExcel } = useDescargarFacturas();
+  const [selectedAnio, setSelectedAnio] = useState("");
 
+  const handleAnioChange = (anio) => {
+    setSelectedAnio(anio);
+    searchEmisores(searchQuery, anio);
+  };
+
+  useEffect(() => {
+    searchEmisores(searchQuery, selectedAnio);
+  }, [searchQuery, selectedAnio, searchEmisores]);
 
   useEffect(() => {
     const total = emisores.reduce((sum, emisor) => {
@@ -22,16 +30,9 @@ const Emisor = () => {
     setTotalSubtotal(total);
   }, [emisores]);
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    searchEmisores(query);
-  };
-
   const handleDownload = () => {
     handleDownloadExcel(searchQuery);
   };
-
-
 
   return (
     <div className="overflow-auto">
@@ -49,7 +50,10 @@ const Emisor = () => {
           <input
             type="text"
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              searchEmisores(e.target.value, selectedAnio);
+            }}
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
             placeholder="Search"
             required
@@ -71,7 +75,31 @@ const Emisor = () => {
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Fecha
+                Fecha <br />
+                <select
+                  id="anio"
+                  value={selectedAnio}
+                  onChange={(e) => handleAnioChange(e.target.value)}
+                  className="p-1 rounded border border-gray-300 text-black"
+                >
+                  <option value="">Todos</option>
+                  <option value="2015">2015</option>
+                  <option value="2016">2016</option>
+                  <option value="2017">2017</option>
+                  <option value="2018">2018</option>
+                  <option value="2019">2019</option>
+                  <option value="2020">2020</option>
+                  <option value="2021">2021</option>
+                  <option value="2022">2022</option>
+                  <option value="2023">2023</option>
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                  <option value="2028">2028</option>
+                  <option value="2029">2029</option>
+                  <option value="2030">2030</option>
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre o Razón Social del Emisor
@@ -79,65 +107,59 @@ const Emisor = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Número Documento del Emisor
               </th>
-        
-              <th className="px-4 py-2 bg-secundary text-white">Total Factura</th>
+
+              <th className="px-4 py-2 bg-secundary text-white">
+                Total Factura
+              </th>
             </tr>
           </thead>
           <tbody>
-            {searchQuery === ""
-              ? emisores.map((emisor, index) => (
-                  <tr key={emisor.id} className="whitespace-nowrap">
-                    <td className="border px-4 py-2">{index + 1}</td>
-                    <td className="border px-4">
-                      {emisor.fechaCreacion.substring(0, 4)}
-                    </td>
-                    <td className="border px-4">
-                      {emisor.nombreComercialEmisor}
-                    </td>
-                    <td className="border px-4 py-2">{emisor.nitEmisor}</td>
-        
-                    
-                    <td className="border px-4 py-2">
-          
-                        ${emisor.subtotal}
-                     
+            {emisores.length === 0 && selectedAnio ? (
+              <tr>
+                <td colSpan="17" className="px-4 py-2 text-red-500 text-center">
+                  Este año no tiene facturas disponibles
+                </td>
+              </tr>
+            ) : (
+              emisores.map((emisor, index) => (
+                <tr
+                  key={emisor.id}
+                  className={
+                    index % 2 === 0
+                      ? "bg-gray-100 whitespace-nowrap"
+                      : "bg-white whitespace-nowrap"
+                  }
+                >
+                  <td className="border px-4 py-2">{index + 1}</td>
+                  <td className="border px-4 text-center">{emisor.fechaEmision}</td>
+                  <td className="border px-4 text-center">
+                    <HighlightedText
+                      text={emisor.nombreComercialEmisor}
+                      highlight={searchQuery}
+                    />
+                  </td>
 
-                    </td>
-                  </tr>
-                ))
-              : emisores.map((emisor, index) => (
-                  <tr key={emisor.id} className="whitespace-nowrap">
-                    <td className="border px-4 py-2">{index + 1}</td>
-                    <td className="border px-4">
-                      {emisor.fechaCreacion.substring(0, 4)}
-                    </td>
-                    <td className="border px-4">
-                      <HighlightedText
-                        text={emisor.nombreComercialEmisor}
-                        highlight={searchQuery}
-                      />
-                    </td>
-                    <td className="border px-4 py-2">
-                      <HighlightedText
-                        text={emisor.nitEmisor}
-                        highlight={searchQuery}
-                      />
-                    </td>
-                    
-                    
-                    <td className="border px-4 py-2">
-                        ${emisor.totalFactura}
-                      
-                    </td>
-                  </tr>
-                ))}
+                  <td className="border px-4 py-2 text-center">
+                    <HighlightedText
+                      text={emisor.nitEmisor}
+                      highlight={searchQuery}
+                    />
+                  </td>
+
+                  <td className="border px-4 py-2 text-center">${emisor.subtotal}</td>
+                </tr>
+              ))
+            )}
           </tbody>
           <tr>
-              <th className="px-4 py-2 bg-secundary text-white" colSpan={4}>Total</th>
-              <th className="border px-4 py-2">${totalSubtotal.toLocaleString("de-DE")}</th>
-            </tr>
+            <th className="px-4 py-2 bg-secundary text-white" colSpan={4}>
+              Total
+            </th>
+            <th className="border px-4 py-2">
+              ${totalSubtotal.toLocaleString("de-DE")}
+            </th>
+          </tr>
         </table>
-        
       </div>
     </div>
   );

@@ -25,9 +25,13 @@ const AgrupadasAdquirienteAlcalde = () => {
           </thead>
           <tbody>
             {facturas.map((factura, index) => (
-              <tr key={index} className="whitespace-nowrap">
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4">{factura.nombreAdquiriente}</td>
+              <tr key={index} className={
+                index % 2 === 0
+                  ? "bg-gray-100 whitespace-nowrap"
+                  : "bg-white whitespace-nowrap"
+              }>
+                <td className="border px-4 py-2 text-center">{index + 1}</td>
+                <td className="border px-4 text-center">{factura.nombreAdquiriente}</td>
                 <td className="border px-4 py-2 text-center">
                   {factura.numeroDocumentoAdquiriente}
                 </td>

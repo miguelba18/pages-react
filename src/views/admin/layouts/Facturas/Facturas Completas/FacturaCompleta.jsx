@@ -1,14 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import useListFacturaCompleta from "../../../../hook/Facturas/Factura Completa/admin/useListFacturaCompleta";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
-
 import { toast } from "react-toastify";
 
 const FacturaCompleta = () => {
   const [formData, setFormData] = useState({});
+  const [setFacturasDisponibles] = useState(true);
   const { handleDownloadExcel } = useDescargarFacturas();
+  const [resetAnio, setResetAnio] = useState(false);
+
+  const handleSearchWithResetAnio = (query) => {
+    setSelectedAnio("");
+    handleSearch(query, "");
+    setResetAnio(true);
+  };
+
+  useEffect(() => {
+    if (resetAnio) {
+      setResetAnio(false);
+    }
+  }, [resetAnio]);
 
   const {
     handleSearch,
@@ -38,9 +51,20 @@ const FacturaCompleta = () => {
     }
   };
 
+  const handleAnioChange = (anio) => {
+    setSelectedAnio(anio);
+    fetchFacturas(selectedCiudad, searchQuery, anio)
+      .then((facturas) => {
+        setFacturasDisponibles(facturas.length > 0);
+      })
+      .catch(() => {
+        setFacturasDisponibles(false);
+      });
+  };
+
   return (
     <div>
-      <div className=" xl:flex justify-around">
+      <div className="xl:flex justify-around">
         <div>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Departamento
@@ -79,7 +103,13 @@ const FacturaCompleta = () => {
                 ...formData,
                 ciudadId: e.target.value,
               });
-              fetchFacturas(e.target.value, searchQuery, selectedAnio);
+              fetchFacturas(e.target.value, searchQuery, selectedAnio)
+                .then((facturas) => {
+                  setFacturasDisponibles(facturas.length > 0);
+                })
+                .catch(() => {
+                  setFacturasDisponibles(false);
+                });
             }}
             disabled={!selectedDepartamento}
             className="border-b mb-4 px-2 text-secundary border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
@@ -108,7 +138,7 @@ const FacturaCompleta = () => {
               disabled={!selectedCiudad}
               type="text"
               value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
+              onChange={(e) => handleSearchWithResetAnio(e.target.value)}
               className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
               placeholder="Search"
               required
@@ -119,235 +149,158 @@ const FacturaCompleta = () => {
           </div>
         </div>
       </div>
-      {facturas.length === 0 && selectedCiudad && (
-        <p className="text-red-500">
-          No hay facturas disponibles para la ciudad seleccionada.
-        </p>
-      )}
 
-      {facturas.length > 0 && (
-        <>
-          <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSuma}</p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full mt-6">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2 bg-secundary text-white">#</th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Fecha
-                    <select
-                      onChange={(e) => {
-                        setSelectedAnio(e.target.value);
-                        fetchFacturas(
-                          selectedCiudad,
-                          searchQuery,
-                          e.target.value
-                        );
-                      }}
-                      className="text-black"
-                    >
-                      <option value="">Todos</option>
-                      <option value="2015">2015</option>
-                      <option value="2016">2016</option>
-                      <option value="2017">2017</option>
-                      <option value="2018">2018</option>
-                      <option value="2019">2019</option>
-                      <option value="2020">2020</option>
-                      <option value="2021">2021</option>
-                      <option value="2022">2022</option>
-                      <option value="2023">2023</option>
-                      <option value="2024">2024</option>
-                      <option value="2025">2025</option>
-                      <option value="2026">2026</option>
-                      <option value="2027">2027</option>
-                      <option value="2028">2028</option>
-                      <option value="2029">2029</option>
-                      <option value="2030">2030</option>
-                    </select>
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre Comercial Emisor o vendedor
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    NIT Emisor o vendedor
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Departamento Emisor o vendedor
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Municipio Emisor o vendedor
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Dirección Emisor o vendedor
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Correo Emisor o vendedor
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Telefono
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre adquiriente o comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    NIT adquiriente o comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Departamento adquiriente o comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Municipio adquiriente o comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Dirección adquiriente o comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Correo adquiriente o comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Telefono
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Subtotal
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {searchQuery === ""
-                  ? facturas.map((factura, index) => (
-                      <tr key={index} className="whitespace-nowrap">
-                        <td className="border px-4 py-2">{index + 1}</td>
-                        <td className="border px-4">
-                          {factura.fechaEmision.substring(0, 4)}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.codigoUnico}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.nombreComercialEmisor}
-                        </td>
-                        <td className="border px-4">{factura.nitEmisor}</td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.departamentoEmisor}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.municipioEmisor}
-                        </td>
-                        <td className="border px-4">
-                          {factura.direccionEmisor}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.correoEmisor}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.telefonoEmisor}
-                        </td>
-                        <td className="border px-4">
-                          {factura.nombreAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.numeroDocumentoAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.departamentoAdquiriente}
-                        </td>
-                        <td className="border px-4">
-                          {factura.municipioAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.direccionAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.correoAdquiriente}
-                        </td>
-                        <td className="border px-4">
-                          {factura.telefonoAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          ${factura.subtotal}
-                        </td>
-                      </tr>
-                    ))
-                  : facturas.map((factura, index) => (
-                      <tr key={index} className="whitespace-nowrap">
-                        <td className="border px-4 py-2">{index + 1}</td>
-                        <td className="border px-4">{factura.fechaEmision}</td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.codigoUnico}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          <HighlightedText
-                            text={factura.nombreComercialEmisor}
-                            highlight={searchQuery}
-                          />
-                        </td>
-                        <td className="border px-4">
-                          <HighlightedText
-                            text={factura.nitEmisor}
-                            highlight={searchQuery}
-                          />
-                        </td>
-
-                        <td className="border px-4 py-2 text-center">
-                          {factura.departamentoEmisor}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.municipioEmisor}
-                        </td>
-                        <td className="border px-4">
-                          {factura.direccionEmisor}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.correoEmisor}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.telefonoEmisor}
-                        </td>
-                        <td className="border px-4">
-                          <HighlightedText
-                            text={factura.nombreAdquiriente}
-                            highlight={searchQuery}
-                          />
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          <HighlightedText
-                            text={factura.numeroDocumentoAdquiriente}
-                            highlight={searchQuery}
-                          />
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.departamentoAdquiriente}
-                        </td>
-                        <td className="border px-4">
-                          {factura.municipioAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.direccionAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          {factura.correoAdquiriente}
-                        </td>
-                        <td className="border px-4">
-                          {factura.telefonoAdquiriente}
-                        </td>
-                        <td className="border px-4 py-2 text-center">
-                          ${factura.subtotal}
-                        </td>
-                      </tr>
-                    ))}
-              </tbody>
+      {selectedCiudad && (
+        <div className="overflow-x-auto mt-4">
+          <table className="table-auto w-full">
+            <thead>
               <tr>
-                <th className="px-4 py-2 bg-secundary text-white" colSpan={17}>
-                  Total
+                <th className="px-4 py-2 bg-secundary text-white">#</th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Fecha
+                  <select
+                    onChange={(e) => handleAnioChange(e.target.value)}
+                    value={selectedAnio}
+                    className="text-black"
+                  >
+                    <option value="">Todos</option>
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                    <option value="2029">2029</option>
+                    <option value="2030">2030</option>
+                  </select>
                 </th>
-                <th className="border px-4 py-2">${totalSuma}</th>
+                <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Nombre Comercial Emisor o vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  NIT Emisor o vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Departamento Emisor o vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Municipio Emisor o vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Dirección Emisor o vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Correo Emisor o vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">Telefono</th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Nombre adquiriente o comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  NIT adquiriente o comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Departamento adquiriente o comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Municipio adquiriente o comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Dirección adquiriente o comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Correo adquiriente o comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">Teléfono</th>
+                <th className="px-4 py-2 bg-secundary text-white">Total</th>
               </tr>
-            </table>
-          </div>
-        </>
+            </thead>
+            <tbody>
+              {facturas.length > 0 ? (
+                facturas.map((factura, index) => (
+                  <tr key={index} className={
+                    index % 2 === 0
+                      ? "bg-gray-100 whitespace-nowrap"
+                      : "bg-white whitespace-nowrap"
+                  }>
+                    <td className="border px-4 py-2 text-center">{index + 1}</td>
+                    <td className="border px-4 text-center">{factura.fechaEmision}</td>
+                    <td className="border px-4 text-center">{factura.codigoUnico}</td>
+                    <td className="border px-4 text-center">
+                      <HighlightedText
+                        text={factura.nombreComercialEmisor}
+                        highlight={searchQuery}
+                      />
+                    </td>
+                    <td className="border px-4 text-center">
+                      <HighlightedText
+                        text={factura.nitEmisor}
+                        highlight={searchQuery}
+                      />
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.departamentoEmisor}
+                    </td>
+                    <td className="border px-4 text-center">{factura.municipioEmisor}</td>
+                    <td className="border px-4 text-center">{factura.direccionEmisor}</td>
+                    <td className="border px-4 text-center">{factura.correoEmisor}</td>
+                    <td className="border px-4 text-center">{factura.telefonoEmisor}</td>
+                    <td className="border px-4 text-center">{factura.nombreAdquiriente}</td>
+                    <td className="border px-4 py-2 text-center">
+                      {factura.numeroDocumentoAdquiriente}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {factura.departamentoAdquiriente}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.municipioAdquiriente}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {factura.direccionAdquiriente}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {factura.correoAdquiriente}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {factura.telefonoAdquiriente}
+                    </td>
+                    <td className="border px-4">${factura.subtotal}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={17} className="text-center py-4 text-red-500">
+                    {selectedAnio
+                      ? "No hay facturas para el año seleccionado."
+                      : "Esta ciudad no tiene facturas."}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+            {facturas.length > 0 && (
+              <tfoot>
+                <tr>
+                  <th
+                    className="px-4 py-2 bg-secundary text-white"
+                    colSpan={17}
+                  >
+                    Total
+                  </th>
+                  <th className="border px-4 py-2">${totalSuma}</th>
+                </tr>
+              </tfoot>
+            )}
+          </table>
+        </div>
       )}
     </div>
   );

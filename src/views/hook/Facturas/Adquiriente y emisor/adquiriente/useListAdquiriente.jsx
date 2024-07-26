@@ -1,35 +1,28 @@
 import useAuthToken from "../../../Token/useAuthToken";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const useListAdquiriente = () => {
   const { token } = useAuthToken();
   const [adquirientes, setAdquirientes] = useState([]);
 
-  const searchAdquirientes = async (query) => {
-    try {
-      const response = await fetch(`http://localhost:8080/factura/adquiriente?filtro=${query}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al obtener los adquirientes");
-      }
-
-      const data = await response.json();
-      setAdquirientes(data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  useEffect(() => {
-    const obtenerAdquirientes = async () => {
+  const searchAdquirientes = useCallback(
+    async ( query, anio) => {
       try {
-        const response = await fetch("http://localhost:8080/factura/adquiriente", {
+        let url = `http://localhost:8080/factura/adquiriente`;
+        const params = new URLSearchParams();
+        
+        if (query) {
+          params.append("filtro", query);
+        }
+        if (anio) {
+          params.append("anio", anio);
+        }
+
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
+
+        const response = await fetch(url, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -38,18 +31,19 @@ const useListAdquiriente = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Error al obtener los adquirientes");
+          throw new Error("Error al obtener las facturas");
         }
 
         const data = await response.json();
         setAdquirientes(data);
+      
       } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
+        setAdquirientes([]);
       }
-    };
-
-    obtenerAdquirientes();
-  }, [token]);
+    },
+    [token]
+  );
 
   return { adquirientes, searchAdquirientes };
 };
