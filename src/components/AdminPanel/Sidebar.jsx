@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
-  RiDashboardFill,
-  RiLogoutBoxLine,
   RiCalendarTodoFill,
   RiUser6Fill,
   RiAppsFill,
@@ -27,6 +25,7 @@ import useAuthToken from "../../views/hook/Token/useAuthToken";
 const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showSubMenuFactura, setShowSubMenuFactura] = useState(false);
+  const [showSubMenuConsorcio, setShowSubMenuConsorcio] = useState(false);
   const [showSubMenuFacturaElectronica, setShowSubMenuFacturaElectronica] =
     useState(false);
   const { token } = useAuthToken();
@@ -52,12 +51,10 @@ const Sidebar = () => {
     }
   }, [navigate, token]);
 
-  const LimpiarToken = () => {
-    window.localStorage.removeItem("token");
-    navigate("/home");
-  };
+  
 
   const [showMenu, setShowMenu] = useState(false);
+
   return (
     <>
       <div
@@ -65,31 +62,38 @@ const Sidebar = () => {
           showMenu ? "left-0" : "-left-full"
         }`}
       >
-        <div>
-          <h1 className="text-center text-2xl font-normal mb-10 flex items-center ">
-            <RiAppsFill className="text-secundary mr-4" />
-            {userRoleId === "ADMIN" && (
-              <span>
-                SIM Admin<span className="text-4xl text-secundary">.</span>
-              </span>
-            )}
-            {userRoleId === "Alcalde" && (
-              <span>
-                SIM Alcalde<span className="text-4xl text-secundary">.</span>
-              </span>
-            )}
-            {userRoleId === "Secretario" && (
-              <span>
-                SIM Secretario<span className="text-4xl text-secundary">.</span>
-              </span>
-            )}
-            {userRoleId === "Personal" && (
-              <span>
-                SIM Personal<span className="text-4xl text-secundary">.</span>
-              </span>
-            )}
-          </h1>
-
+        <div className="">
+          <div className="flex mb-4 ">
+            <div className=" rounded-md bg-blue-500 w-full flex justify-center items-center pb-2">
+              <RiAppsFill className="text-white mt-2 h-6 w-6 mr-2" />
+              <h1 className=" text-2xl font-normal   ">
+                {userRoleId === "ADMIN" && (
+                  <span className="text-white">
+                    SIM ADMIN<span className="text-4xl text-secundary">.</span>
+                  </span>
+                )}
+                {userRoleId === "Alcalde" && (
+                  <span className="text-white">
+                    SIM Alcalde
+                    <span className="text-4xl text-secundary">.</span>
+                  </span>
+                )}
+                {userRoleId === "Secretario" && (
+                  <span className="text-white">
+                    SIM Secretario
+                    <span className="text-4xl text-secundary">.</span>
+                  </span>
+                )}
+                {userRoleId === "Personal" && (
+                  <span className="text-white">
+                    SIM Personal
+                    <span className="text-4xl text-secundary">.</span>
+                  </span>
+                )}
+              </h1>
+            </div>
+          </div>
+          <hr className="mb-4 border-blue-500"></hr>
           <nav>
             <ul className="list-none">
               {userRoleId === "ADMIN" && (
@@ -97,7 +101,7 @@ const Sidebar = () => {
                   <li className="">
                     <button
                       onClick={() => setShowSubMenu(!showSubMenu)}
-                      className="flex items-center  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg  "
+                      className="flex items-center w-full mb-2  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg  "
                     >
                       <RiAdminFill className="text-xl text-secundary" />
                       Admin y Alcaldes
@@ -216,55 +220,11 @@ const Sidebar = () => {
                       </Link>
                     </li>
 
-                    <li
-                      className={
-                        location.pathname === "/consorcios"
-                          ? "bg-secundary text-white rounded-lg"
-                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                      }
-                    >
-                      <Link
-                        to="/consorcios"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2"
-                      >
-                        <RiTeamFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/consorcios"
-                              ? "text-white"
-                              : ""
-                          }`}
-                        />
-                        Consorcios
-                      </Link>
-                    </li>
-
-                    <li
-                      className={
-                        location.pathname === "/contribuyente"
-                          ? "bg-secundary text-white rounded-lg"
-                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                      }
-                    >
-                      <Link
-                        to="/contribuyente"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2"
-                      >
-                        <RiMoneyDollarCircleFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/contribuyente"
-                              ? "text-white"
-                              : ""
-                          }`}
-                        />
-                        Contribuyente
-                      </Link>
-                    </li>
-
                     <button
                       onClick={() => setShowSubMenuFactura(!showSubMenuFactura)}
                       className="flex items-center w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
                     >
-                      <RiAdminFill className="text-xl text-secundary" />
+                      <RiBillFill className="text-xl text-secundary" />
                       Facturas
                       <RiArrowDropRightLine
                         className={`text-3xl ${
@@ -307,7 +267,7 @@ const Sidebar = () => {
                           to="/facturaelectronica"
                           className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
                         >
-                          <RiBillFill
+                          <RiAddCircleFill
                             className={`text-xl text-secundary ${
                               location.pathname === "/facturaelectronica"
                                 ? "text-white"
@@ -516,21 +476,21 @@ const Sidebar = () => {
 
               <li
                 className={
-                  location.pathname === "/"
+                  location.pathname === "/contribuyente"
                     ? "bg-secundary text-white rounded-lg"
                     : "rounded-lg hover:bg-tertiary-900 transition-colors "
                 }
               >
                 <Link
-                  to="/"
+                  to="/contribuyente"
                   className="flex items-center  gap-4 px-4 py-2 mb-2"
                 >
-                  <RiDashboardFill
+                  <RiMoneyDollarCircleFill
                     className={`text-xl text-secundary ${
-                      location.pathname === "/" ? "text-white" : ""
+                      location.pathname === "/contribuyente" ? "text-white" : ""
                     }`}
                   />
-                  Dashboard
+                  Contribuyente
                 </Link>
               </li>
 
@@ -594,7 +554,7 @@ const Sidebar = () => {
                   }
                   className="flex items-center w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
                 >
-                  <RiAdminFill className="text-xl text-secundary" />
+                  <RiBillFill className="text-xl text-secundary" />
                   Facturas
                   <RiArrowDropRightLine
                     className={`text-3xl ${
@@ -609,28 +569,28 @@ const Sidebar = () => {
                   !showSubMenuFacturaElectronica && "hidden"
                 } `}
               >
-                 <li
-                        className={
-                          location.pathname === "/facturacompletaalcalde"
-                            ? "bg-secundary text-white rounded-lg"
-                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                        }
-                        hidden={userRoleId !== "Alcalde" }
-                      >
-                        <Link
-                          to="/facturacompletaalcalde"
-                          className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
-                        >
-                          <IoFileTrayFull
-                            className={`text-xl text-secundary ${
-                              location.pathname === "/facturacompletaalcalde"
-                                ? "text-white"
-                                : ""
-                            }`}
-                          />
-                          Todas las facturas
-                        </Link>
-                      </li>
+                <li
+                  className={
+                    location.pathname === "/facturacompletaalcalde"
+                      ? "bg-secundary text-white rounded-lg"
+                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                  }
+                  hidden={userRoleId !== "Alcalde"}
+                >
+                  <Link
+                    to="/facturacompletaalcalde"
+                    className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                  >
+                    <IoFileTrayFull
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/facturacompletaalcalde"
+                          ? "text-white"
+                          : ""
+                      }`}
+                    />
+                    Todas las facturas
+                  </Link>
+                </li>
 
                 <li
                   className={
@@ -643,7 +603,7 @@ const Sidebar = () => {
                     to="/facturaelectronica"
                     className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
                   >
-                    <RiBillFill
+                    <RiAddCircleFill
                       className={`text-xl text-secundary ${
                         location.pathname === "/facturaelectronica"
                           ? "text-white"
@@ -738,25 +698,93 @@ const Sidebar = () => {
                   Perfil
                 </Link>
               </li>
+
+              <button
+                onClick={() => setShowSubMenuConsorcio(!showSubMenuConsorcio)}
+                className="flex items-center  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg w-full  "
+              >
+                <RiTeamFill className="text-xl text-secundary" />
+                Consorcios
+                <RiArrowDropRightLine
+                  className={`text-3xl ${showSubMenuConsorcio && "rotate-90"}`}
+                />
+              </button>
+
+              <ul className={`my-2 ${!showSubMenuConsorcio && "hidden"} `}>
+                <li
+                  className={
+                    location.pathname === "/consorcios"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/consorcios"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <IoFileTrayFull
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/consorcios" ? "text-white " : ""
+                      }`}
+                    />
+                    Todos los consorcios
+                  </Link>
+                </li>
+
+                <li
+                  className={
+                    location.pathname === "/consorcioclientemunicipio"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/consorcioclientemunicipio"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiShakeHandsFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/consorcioclientemunicipio"
+                          ? "text-white "
+                          : ""
+                      }`}
+                    />
+                    Cliente Municipio
+                  </Link>
+                </li>
+                <li
+                  className={
+                    location.pathname === "/consorciovendedormunicipio"
+                      ? "bg-secundary text-white rounded-lg "
+                      : "hover:bg-tertiary-900 transition-colors text-gray-500  rounded-lg"
+                  }
+                >
+                  <Link
+                    to="/consorciovendedormunicipio"
+                    className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
+                  >
+                    <RiBankFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/consorciovendedormunicipio"
+                          ? "text-white"
+                          : ""
+                      }`}
+                    />
+                    Vendedor Municipio
+                  </Link>
+                </li>
+              </ul>
             </ul>
           </nav>
         </div>
         <nav>
           <hr className="border-gray-300 my-4" />
-          <button className="flex mb-2  items-center w-full gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]">
+          <a href="https://www.dian.gov.co/" target="BLANK" className="flex mb-2  items-center w-full gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]">
             <RiPagesFill className="text-white" />
-            <Link to={"/home"} className=" text-white  ">
-              Landing Page
-            </Link>
-          </button>
+            DIAN
+          </a>
 
-          <button
-            onClick={LimpiarToken}
-            className="flex items-center  gap-4 px-4 py-2 rounded-lg w-full hover:bg-tertiary-900 transition-colors "
-          >
-            <RiLogoutBoxLine className="text-secundary" />
-            Cerrar Sesión
-          </button>
+          
         </nav>
       </div>
 

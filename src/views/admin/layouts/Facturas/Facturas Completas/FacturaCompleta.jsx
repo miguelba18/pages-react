@@ -1,15 +1,42 @@
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import { RiSearchLine, RiDownloadLine, RiDeleteBin5Fill } from "react-icons/ri";
 import useListFacturaCompleta from "../../../../hook/Facturas/Factura Completa/admin/useListFacturaCompleta";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
 import { toast } from "react-toastify";
+import useDeleteFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDeleteFacturas";
+import Modal from "../../../../modal/Modal";
 
 const FacturaCompleta = () => {
   const [formData, setFormData] = useState({});
   const [setFacturasDisponibles] = useState(true);
   const { handleDownloadExcel } = useDescargarFacturas();
   const [resetAnio, setResetAnio] = useState(false);
+
+  const { deleteFactura } = useDeleteFacturas();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [facturaToDelete, setFacturaToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (facturaToDelete) {
+      deleteFactura(facturaToDelete.id);
+      setIsDeleteModalOpen(false); 
+    }
+  };
+
+  const openDeleteModal = (factura) => {
+    setFacturaToDelete(factura);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    handleDelete();
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setFacturaToDelete(null);
+  };
 
   const handleSearchWithResetAnio = (query) => {
     setSelectedAnio("");
@@ -221,7 +248,10 @@ const FacturaCompleta = () => {
                   Correo adquiriente o comprador
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">Teléfono</th>
-                <th className="px-4 py-2 bg-secundary text-white">Total</th>
+                <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Eliminar
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -274,6 +304,15 @@ const FacturaCompleta = () => {
                       {factura.telefonoAdquiriente}
                     </td>
                     <td className="border px-4">${factura.subtotal}</td>
+                    <td className="border px-4 py-2 text-center">
+                      <div className="flex justify-center items-center">
+                      <button
+                        onClick={() => openDeleteModal(factura)}
+                        className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                      >
+                        <RiDeleteBin5Fill className="" />
+                      </button></div>
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -300,6 +339,17 @@ const FacturaCompleta = () => {
               </tfoot>
             )}
           </table>
+          <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Eliminar Factura"
+        confirmText="Confirmar"
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+      >
+        <p>¿Estás seguro de eliminar esta factura?</p>
+      </Modal>
+      
         </div>
       )}
     </div>

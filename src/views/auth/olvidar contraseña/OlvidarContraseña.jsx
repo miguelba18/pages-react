@@ -1,31 +1,46 @@
-import { RiKey2Line, RiMailLine, RiLoader4Line, RiShieldUserLine } from "react-icons/ri";
+import {
+  RiKey2Line,
+  RiMailLine,
+  RiLoader4Line,
+  RiShieldUserLine,
+} from "react-icons/ri";
 import { Link } from "react-router-dom";
 import useForgotPassword from "../../hook/Contraseña/useForgotPassword";
 
 const OlvidarContraseña = () => {
-  const { correo, isLoading, handleChangeCorreo, handleSubmitCorreo } = useForgotPassword();
+  const { correo, isLoading, handleChangeCorreo, handleSubmitCorreo } =
+    useForgotPassword();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 flex items-center justify-center">
-      <div className="xl:flex p-6 xl:p-10 relative justify-center">
-        <div className="w-[90%] xl:w-[40%] xl:h-[60%] py-[10px] ml-2 xl:px-[10px] ">
-          <h1 className="text-3xl md:text-5xl font-light-700 text-white text-center mb-8 ">
-            Bienvenido al Sistema de Impuestos Municipal
-          </h1>
+    <div className="   xl:flex items-center justify-center  ">
+
+<div className=" xl:min-h-screen xl:w-[70%] relative flex justify-center py-4 xl:py-0 ">
+  <img
+    src="../../../src/assets/img/fondologin.png"
+    className="xl:absolute inset-0 w-[50%] h-[50%] xl:w-full xl:h-full rounded-xl xl:rounded-r-3xl"
+    alt="background"
+  />
+</div>
+
+
+      <div className="  grid justify-center items-center   xl:min-h-screen">
+        <div className="   rounded-3xl py-[10px] ml-2 px-10 ">
+         
           <section>
             <h1
               id="Form"
-              className="text-3xl md:text-5xl font-semibold text-white xl:px-8 text-center mt-10 xl:mt-15"
+              className="text-3xl md:text-5xl font-semibold text-blue-500 xl:px-8 text-center mt-10 xl:mt-15"
             >
               Restablece la contraseña
             </h1>
-            <h2 className="text-sm md:text-xl font-semibold text-white xl:px-8 text-center mt-10 xl:mt-10">
-              Ingresa tu correo para restablecer la contraseña, solo se admite (@gmail.com)
+            <h2 className="text-sm md:text-xl font-semibold text-black xl:px-8 text-center mt-10 xl:mt-10">
+              Ingresa tu correo para restablecer la contraseña, solo se admite
+              <span className="text-[#FF432A]">(@gmail.com)</span>
             </h2>
             {isLoading ? (
               <div className="flex justify-center">
-                <RiLoader4Line className="text-white animate-spin text-4xl mt-6" />
-                <p className="text-white mt-8 ">Enviando código...</p>
+                <RiLoader4Line className="text-black animate-spin text-4xl mt-6" />
+                <p className="text-black mt-8 ">Enviando código...</p>
               </div>
             ) : (
               <form
@@ -36,29 +51,29 @@ const OlvidarContraseña = () => {
                   <div className="relative">
                     <input
                       type="email"
-                      className="rounded-full h-[50px] w-[100%] p-4 pl-12 bg-gray-500 bg-opacity-40 text-white placeholder-white placeholder-opacity-70"
-                      placeholder="CORREO"
+                      className="  border-b-2 border-black w-full  p-4 pl-12 focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
+                      placeholder="Ingresa tu Correo"
                       value={correo}
                       onChange={handleChangeCorreo}
                       required
                     />
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                      <RiMailLine className="text-white ml-2" />
+                      <RiMailLine className="text-black ml-2 " />
                     </div>
                   </div>
                 </div>
 
-                <div className="md:flex justify-center items-center">
+                <div className="px-8">
                   <button
                     type="submit"
-                    className="md:w-[60%] w-full mr-8 px-2 py-3 rounded-full mt-8 bg-white text-[#716c66] hover:bg-green-400 hover:text-white transition duration-300 ease-in-out cursor-pointer flex justify-center"
+                    className=" w-full py-3 rounded-full mt-8 bg-[#FF432A] text-xl text-white hover:shadow-xl hover:shadow-[#FF432A] transition duration-300 ease-in-out cursor-pointer flex justify-center"
                   >
                     <RiKey2Line className="mr-2 mt-1" />
                     Enviar Codigo
                   </button>
                   <Link
                     to="/login"
-                    className="md:w-[60%] w-full mr-8 px-2 py-3 rounded-full mt-8 bg-white text-[#716c66] hover:bg-blue-600 hover:text-white transition duration-300 ease-in-out cursor-pointer flex justify-center"
+                    className=" w-full mr-8 px-2 py-3 rounded-full mt-8 bg-blue-500 text-xl hover:shadow-xl hover:shadow-blue-500 text-white transition duration-300 ease-in-out cursor-pointer flex justify-center"
                   >
                     <RiShieldUserLine className="mr-2 mt-1" />
                     Inciar Sesíon
@@ -68,12 +83,8 @@ const OlvidarContraseña = () => {
             )}
           </section>
         </div>
-        <img
-          src="../../../src/assets/img/fondo-login.png"
-          className="xl:w-[40%] xl:h-[30%] w-[70%] ml-[15%] "
-          alt="background"
-        ></img>
       </div>
+      
     </div>
   );
 };

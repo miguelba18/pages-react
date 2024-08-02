@@ -82,6 +82,7 @@ const useListFacturaCompleta = () => {
       setFacturas([]); 
     }, [selectedDepartamento]);
     
+    
       return { handleSearch, totalSuma, facturas, departamentos, filteredCiudades, handleCiudadChange, handleDepartamentoChange, selectedCiudad, selectedDepartamento, searchQuery, fetchFacturas, selectedAnio, setSelectedAnio };
     };
 

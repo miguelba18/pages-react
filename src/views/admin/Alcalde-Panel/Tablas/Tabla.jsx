@@ -97,13 +97,13 @@ const Tabla = () => {
               <td className="border px-4 py-2 text-center">{mayor.rol.name}</td>
               <td className="border px-4 py-2 flex justify-center items-center">
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 mr-2 rounded"
+                  className="flex mr-2 justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
                   onClick={() => openEditModal(mayor)}
                 >
                   <RiEdit2Fill />
                 </button>
                 <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
                   onClick={() => openDeleteModal(mayor)}
                 >
                   <RiDeleteBin5Fill />

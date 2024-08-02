@@ -43,7 +43,7 @@ Modal.propTypes = {
             <button
               onClick={onConfirm}
               type="button"
-              className="w-full inline-flex justify-center rounded-md mb-4 md:mb-0 border border-transparent shadow-sm px-4 py-2 bg-secundary/80 text-base font-medium text-white hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm hover:bg-secundary transition-colors"
+              className="flex mr-2 justify-center items-center gap-2 px-3 ml-2 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
             >
               {confirmText}
             </button>
@@ -51,7 +51,7 @@ Modal.propTypes = {
               <button
                 onClick={handleCancel}
                 type="button"
-                className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white/80 text-base font-medium text-gray-700 hover:bg-red-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+                className="flex justify-center items-center gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
               >
                 {cancelText}
               </button>

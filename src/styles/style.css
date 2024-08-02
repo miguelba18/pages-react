@@ -2,3 +2,38 @@
 ::-webkit-scrollbar {
     display: none;
 }
+
+.wave-bg {
+    position: relative;
+     
+  }
+  
+  .wave-bg::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: url('/src/assets/svg/wave.svg') no-repeat center bottom;
+    background-size: cover;
+    z-index: -1;
+    
+   
+  
+  }
+
+  .wave-mask {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .wave-mask img {
+    display: block;
+    width: 90%;
+    height: auto;
+    mask-image: url('/src/assets/svg/wave-mask.svg');
+    -webkit-mask-image: url('/src/assets/svg/wave-mask.svg');
+  }
+  
+  

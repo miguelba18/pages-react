@@ -10,8 +10,30 @@ const usePasswordReset = () => {
   const { state } = useLocation();
   const correo = state ? state.correo : null;
 
+  const [validations, setValidations] = useState({
+    length: false,
+    number: false,
+    uppercase: false,
+    symbol: false,
+  });
+
+  const validatePassword = (password) => {
+    const lengthValid = password.length >= 8;
+    const numberValid = /[0-9]/.test(password);
+    const uppercaseValid = /[A-Z]/.test(password);
+    const symbolValid = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    setValidations({
+      length: lengthValid,
+      number: numberValid,
+      uppercase: uppercaseValid,
+      symbol: symbolValid,
+    });
+  };
+
   const handleChangeContraseña = (e) => {
-    setContraseña(e.target.value);
+    const newPassword = e.target.value;
+    setContraseña(newPassword);
+    validatePassword(newPassword);
   };
 
   const handleChangeConfirmarContraseña = (e) => {
@@ -22,6 +44,11 @@ const usePasswordReset = () => {
     e.preventDefault();
     if (contraseña !== confirmarContraseña) {
         toast.error("Las contraseñas no coinciden", { position: "top-center" });
+      return;
+    }
+
+    if (!validations.length ||!validations.number ||!validations.uppercase ||!validations.symbol) {
+      toast.error("La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un símbolo", { position: "top-center" });
       return;
     }
 
@@ -39,7 +66,7 @@ const usePasswordReset = () => {
     }
   };
 
-  return { contraseña, confirmarContraseña, handleChangeContraseña, handleChangeConfirmarContraseña, handleSubmitContraseña };
+  return {contraseña, confirmarContraseña, handleChangeContraseña, handleChangeConfirmarContraseña, handleSubmitContraseña, validations };
 };
 
 export default usePasswordReset;

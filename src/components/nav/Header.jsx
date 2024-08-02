@@ -33,7 +33,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between xl:justify-start w-full p-4 h-[10vh] fixed   z-50 text-white bg-secundary/90">
+    <header className="flex items-center justify-between xl:justify-start w-full p-4 h-[10vh] fixed   z-10 text-white bg-[#0146cf]/90">
       <div className="xl:w-1/6 text-center ml-[6%]">
         <a href="" className="text-3xl font-bold relative ">
           <RiAppsFill className="absolute -left-8 m-1" />
@@ -94,9 +94,9 @@ const Header = () => {
             <div className=" flex">
               <button className="overflow-hidden w-42 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group">
                 Inicia Sesion
-                <span className="absolute w-36 h-32 -top-8 -left-2 bg-yellow-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
-                <span className="absolute w-36 h-32 -top-8 -left-2 bg-yellow-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
-                <span className="absolute w-36 h-32 -top-8 -left-2 bg-yellow-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
+                <span className="absolute w-36 h-32 -top-8 -left-2 bg-orange-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
+                <span className="absolute w-36 h-32 -top-8 -left-2 bg-orange-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
+                <span className="absolute w-40 h-32 -top-8 -left-2 bg-orange-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
                 <span className="group-hover:opacity-100 text-center group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
                   Ingresa!
                 </span>

@@ -13,11 +13,12 @@ import FacturasAgrupadas from './views/admin/layouts/Facturas/Agrupadas/Facturas
 import FacturaCompleta from './views/admin/layouts/Facturas/Facturas Completas/FacturaCompleta';
 import FacturaCompletaAlcalde from './views/admin/layouts/Facturas/Facturas Completas/FacturaCompletaAlcalde';
 import AgrupadasAlcalde from './views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAlcalde';
-import Consorcios from './views/admin/layouts/Consorcios/Consorcios';
+import Consorcios from './views/admin/layouts/Consorcios/todos los consorcios/Consorcios'
 import Contribuyente from './views/admin/layouts/Contribuyente/Contribuyente';
 import AdquirienteAdmin from './views/admin/layouts/Facturas/Adquiriente y emisor/admin/AdquirienteAdmin';
 import EmisorAdmin from './views/admin/layouts/Facturas/Adquiriente y emisor/admin/EmisorAdmin';
-
+import ConsorcioClienteMunicipio from './views/admin/layouts/Consorcios/adquiriente/ConsorcioClienteMunicipio';
+import ConsorcioVendedorMunicipio from './views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio';
 
 import Alcalde from './views/admin/Admin-Panel/Roles/Alcalde/Alcalde';
 import Secretario from './views/admin/Alcalde-Panel/Roles/Secretario/Secretario';
@@ -56,6 +57,11 @@ function App() {
         }>
           <Route index element={<Dashboard/>}/>
           <Route path="perfil" element={<Perfil/>} />
+          <Route path="consorcios" element={<Consorcios/>} />
+          <Route path="consorcioclientemunicipio" element={<ConsorcioClienteMunicipio/>} />
+          <Route path="consorciovendedormunicipio" element={<ConsorcioVendedorMunicipio/>} />
+          <Route path="contribuyente" element={<Contribuyente/>} />
+
           <Route path="calendarioalcalde" element={<RestrictedRouteSecretarioPersonal><CalendarioAlcalde/></RestrictedRouteSecretarioPersonal>} />
           <Route path="adquiriente" element={<Adquiriente/>} />
           <Route path="emisor" element={<Emisor/>} />
@@ -81,8 +87,8 @@ function App() {
           <Route path="administrarfacturas" element={<RestrictedRouteAdmin><AdministrarFacturas/></RestrictedRouteAdmin>}/>
           <Route path="facturasagrupadas" element={<RestrictedRouteAdmin><FacturasAgrupadas/></RestrictedRouteAdmin>} />
           <Route path="facturacompleta" element={<RestrictedRouteAdmin><FacturaCompleta/></RestrictedRouteAdmin>} />
-          <Route path="consorcios" element={<RestrictedRouteAdmin><Consorcios/></RestrictedRouteAdmin>} />
-          <Route path="contribuyente" element={<RestrictedRouteAdmin><Contribuyente/></RestrictedRouteAdmin>} />
+          
+          
           <Route path="adquirienteadmin" element={<RestrictedRouteAdmin><AdquirienteAdmin/></RestrictedRouteAdmin>} />
           <Route path="emisoradmin" element={<RestrictedRouteAdmin><EmisorAdmin/></RestrictedRouteAdmin>} />
           
