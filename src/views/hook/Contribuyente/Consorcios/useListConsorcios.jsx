@@ -7,7 +7,7 @@ const useListConsorcios = () => {
 
     const searchConsorcios = async (query) => {
         try {
-            const response = await fetch(`http://localhost:8080/consorcio?filtro=${query}`, {
+            const response = await fetch(`http://localhost:8080/factura/consorcio?filtro=${query}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -25,7 +25,7 @@ const useListConsorcios = () => {
     useEffect(() => {
         const obtenerConsorcios = async () => {
             try {
-                const response = await fetch("http://localhost:8080/consorcio", {
+                const response = await fetch("http://localhost:8080/factura/consorcio", {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`
