@@ -1,57 +1,56 @@
+import { useState } from "react";
 import useAuthToken from "../Token/useAuthToken";
-import { useEffect, useState } from "react";
 
 const useListContribuyente = () => {
-    const { token } = useAuthToken();
-    const [contribuyentes, setContribuyente] = useState([]);
+  const { token } = useAuthToken();
+  const [contribuyentes, setContribuyentes] = useState([]);
+  const [factura, setFactura] = useState([]); 
   
-    const searchContribuyentes = async (query) => {
-      try {
-        const response = await fetch(`http://localhost:8080/contribuyente/listar?filtro=${query}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
   
-        if (!response.ok) {
-          throw new Error("Error al obtener los contribuyentes");
-        }
-  
-        const data = await response.json();
-        setContribuyente(data);
-      } catch (error) {
-        console.error("Error:", error);
+  const fetchContribuyentes = async (query) => {
+    try {
+      const response = await fetch(`http://localhost:8080/contribuyente/listar?filtro=${query}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al obtener los contribuyentes");
       }
-    };
-  
-    useEffect(() => {
-      const obtenercontribuyente = async () => {
-        try {
-          const response = await fetch("http://localhost:8080/contribuyente/listar", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-  
-          if (!response.ok) {
-            throw new Error("Error al obtener los adquirientes");
-          }
-  
-          const data = await response.json();
-          setContribuyente(data);
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      };
-  
-      obtenercontribuyente();
-    }, [token]);
-  
-    return { contribuyentes, searchContribuyentes };
+      
+      const data = await response.json();
+      setContribuyentes(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
-  
-  export default useListContribuyente;
+
+  const fetchFacturaById = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/contribuyente/listar?nombre=${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al obtener la factura");
+      }
+
+      const data = await response.json();
+      
+      setFactura(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  return { contribuyentes, fetchContribuyentes, fetchFacturaById, factura };
+};
+
+export default useListContribuyente;

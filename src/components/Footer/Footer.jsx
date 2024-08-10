@@ -13,7 +13,7 @@ const Footer = () => {
   };
 
   return (
-    <div className="bg-cover bg-[#0146cf]/90 text-white relative">
+    <div id="Politicas" className="bg-cover bg-[#0146cf]/90 text-white relative">
       <div className="text-center">
         <h1 id="Footer" className="text-6xl font-bold pt-32 leading-[72px]">
           Conoce a SIM SAS hoy

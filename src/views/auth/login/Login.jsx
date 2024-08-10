@@ -7,10 +7,11 @@ import {
   RiErrorWarningFill,
 } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import { Link } from "react-router-dom";
+import axios from "../Interceptores/Interceptor";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,8 +37,12 @@ const Login = () => {
           password: password,
         }
       );
+      const expirationTime = 3000000;
+      const expirationDate = new Date().getTime() + expirationTime;
+
       window.localStorage.setItem("token", response.data.message);
       window.localStorage.setItem("role", response.data.role);
+      localStorage.setItem("tokenExpiration", expirationDate);
       setEmail("");
       setPassword("");
       setError("");

@@ -20,7 +20,7 @@ const FacturaCompleta = () => {
   const handleDelete = () => {
     if (facturaToDelete) {
       deleteFactura(facturaToDelete.id);
-      setIsDeleteModalOpen(false); 
+      setIsDeleteModalOpen(false);
     }
   };
 
@@ -149,6 +149,7 @@ const FacturaCompleta = () => {
             ))}
           </select>
         </div>
+        
         <div className="flex justify-around">
           <div className="xl:relative mr-4 xl:mt-6">
             <button
@@ -176,8 +177,13 @@ const FacturaCompleta = () => {
           </div>
         </div>
       </div>
+      
 
       {selectedCiudad && (
+        <>
+        <div className="mt-4 text-right font-bold">
+        <p>Total facturas: ${totalSuma}</p>
+      </div>
         <div className="overflow-x-auto mt-4">
           <table className="table-auto w-full">
             <thead>
@@ -249,22 +255,29 @@ const FacturaCompleta = () => {
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">Teléfono</th>
                 <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Eliminar
-                </th>
+                <th className="px-4 py-2 bg-secundary text-white">Eliminar</th>
               </tr>
             </thead>
             <tbody>
               {facturas.length > 0 ? (
                 facturas.map((factura, index) => (
-                  <tr key={index} className={
-                    index % 2 === 0
-                      ? "bg-gray-100 whitespace-nowrap"
-                      : "bg-white whitespace-nowrap"
-                  }>
-                    <td className="border px-4 py-2 text-center">{index + 1}</td>
-                    <td className="border px-4 text-center">{factura.fechaEmision}</td>
-                    <td className="border px-4 text-center">{factura.codigoUnico}</td>
+                  <tr
+                    key={index}
+                    className={
+                      index % 2 === 0
+                        ? "bg-gray-100 whitespace-nowrap"
+                        : "bg-white whitespace-nowrap"
+                    }
+                  >
+                    <td className="border px-4 py-2 text-center">
+                      {index + 1}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.fechaEmision}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.codigoUnico}
+                    </td>
                     <td className="border px-4 text-center">
                       <HighlightedText
                         text={factura.nombreComercialEmisor}
@@ -280,11 +293,21 @@ const FacturaCompleta = () => {
                     <td className="border px-4 text-center">
                       {factura.departamentoEmisor}
                     </td>
-                    <td className="border px-4 text-center">{factura.municipioEmisor}</td>
-                    <td className="border px-4 text-center">{factura.direccionEmisor}</td>
-                    <td className="border px-4 text-center">{factura.correoEmisor}</td>
-                    <td className="border px-4 text-center">{factura.telefonoEmisor}</td>
-                    <td className="border px-4 text-center">{factura.nombreAdquiriente}</td>
+                    <td className="border px-4 text-center">
+                      {factura.municipioEmisor}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.direccionEmisor}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.correoEmisor}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.telefonoEmisor}
+                    </td>
+                    <td className="border px-4 text-center">
+                      {factura.nombreAdquiriente}
+                    </td>
                     <td className="border px-4 py-2 text-center">
                       {factura.numeroDocumentoAdquiriente}
                     </td>
@@ -306,12 +329,13 @@ const FacturaCompleta = () => {
                     <td className="border px-4">${factura.subtotal}</td>
                     <td className="border px-4 py-2 text-center">
                       <div className="flex justify-center items-center">
-                      <button
-                        onClick={() => openDeleteModal(factura)}
-                        className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                      >
-                        <RiDeleteBin5Fill className="" />
-                      </button></div>
+                        <button
+                          onClick={() => openDeleteModal(factura)}
+                          className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                        >
+                          <RiDeleteBin5Fill className="" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -340,17 +364,17 @@ const FacturaCompleta = () => {
             )}
           </table>
           <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        title="Eliminar Factura"
-        confirmText="Confirmar"
-        onConfirm={confirmDelete}
-        onCancel={cancelDelete}
-      >
-        <p>¿Estás seguro de eliminar esta factura?</p>
-      </Modal>
-      
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            title="Eliminar Factura"
+            confirmText="Confirmar"
+            onConfirm={confirmDelete}
+            onCancel={cancelDelete}
+          >
+            <p>¿Estás seguro de eliminar esta factura?</p>
+          </Modal>
         </div>
+        </>
       )}
     </div>
   );

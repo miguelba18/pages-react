@@ -61,18 +61,18 @@ const Header = () => {
           Contacto
         </a>
         <a
-          href="#Plans"
+          href="#Aliados"
           onClick={handleMenuClick}
           className="relative text-xl inline-block hover:after:absolute hover:after:w-full hover:after:h-0.5 hover:after:bg-white hover:after:bottom-0 hover:after:left-0"
         >
-          Planes
+          Aliados
         </a>
         <a
-          href="#Galeria"
+          href="#Politicas"
           onClick={handleMenuClick}
           className="relative text-xl inline-block hover:after:absolute hover:after:w-full hover:after:h-0.5 hover:after:bg-white hover:after:bottom-0 hover:after:left-0"
         >
-          Galeria
+          Politicas
         </a>
         {token ? (
           <>
