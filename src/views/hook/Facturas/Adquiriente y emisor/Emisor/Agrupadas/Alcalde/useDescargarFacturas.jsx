@@ -1,6 +1,6 @@
-import useAuthToken from "../../../../Token/useAuthToken";
-import { toast } from "react-toastify";
 
+import { toast } from "react-toastify";
+import useAuthToken from "../../../../../Token/useAuthToken";
 const useDescargarFacturas = () => {
     const { token } = useAuthToken();
 
@@ -8,16 +8,12 @@ const useDescargarFacturas = () => {
         
       let url = "http://localhost:8080/factura/descargar-excel-emisor-agrupar";
 
-  
-      if (ciudad) {
-        url += `?ciudad=${ciudad}`;
-      }
       if (filtro) {
         url += ciudad ? `&filtro=${filtro}` : `?filtro=${filtro}`;
       }
-      if (anio) {
-        url += ciudad ? `&anio=${anio}` : `?anio=${anio}`;
-    }
+        if (anio) {
+            url += ciudad ? `&anio=${anio}` : `?anio=${anio}`;
+        }
   
       try {
         const response = await fetch(url, {

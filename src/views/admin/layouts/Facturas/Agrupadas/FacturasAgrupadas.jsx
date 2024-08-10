@@ -9,7 +9,7 @@ const FacturasAgrupadas = () => {
   return (
     <div>
     <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-      Administrar facturas
+      Facturas Agrupadas
     </h1>
 
     <div>

@@ -88,22 +88,23 @@ const RegistroAdmin = () => {
       <div className="flex justify-center items-center">
         <div className="md:p-10 xl:w-[50%] w-[100%]">
           <form
-            className="shadow-xl py-10 bg-tertiary-100 px-[20%]"
+            className="shadow-2xl shadow-blue-500 rounded-2xl  py-10 bg-tertiary-100 px-[20%]"
             onSubmit={handleSubmit}
           >
+            <div className="flex justify-center">
             <img
-              src="../../../../../../src/assets/img/img1.png"
+              src="../../../../../../src/assets/img/fondologin.png"
               alt=""
-              className="mb-0"
-            />
-            <h4 className="text-center text-2xl font-bold py-8">
+              className="mb-0 rounded-2xl w-[60%] h-1/2 "
+            /></div>
+            <h4 className="text-center text-[#FF432A] text-2xl font-bold py-8">
               Registro de Admin Nuevo
             </h4>
 
             <div className="mb-4">
               <label
                 htmlFor="nombre"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Nombre:
               </label>
@@ -111,7 +112,7 @@ const RegistroAdmin = () => {
                 type="text"
                 name="nombre"
                 required
-                className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                className="border-b px-2 border-black  py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
                 onChange={handleChange}
                 value={formData.nombre}
               />
@@ -120,14 +121,14 @@ const RegistroAdmin = () => {
             <div className="mb-4">
               <label
                 htmlFor="apellido"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Apellido:
               </label>
               <input
                 type="text"
                 name="apellido"
-                className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                className="border-b px-2 border-black  py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
                 required
                 onChange={handleChange}
                 value={formData.apellido}
@@ -137,14 +138,14 @@ const RegistroAdmin = () => {
             <div className="mb-4">
               <label
                 htmlFor="cedula"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Cédula:
               </label>
               <input
                 type="number"
                 name="cedula"
-                className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                className="border-b px-2 border-black  py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
                 required
                 onChange={handleChange}
                 value={formData.cedula}
@@ -154,14 +155,14 @@ const RegistroAdmin = () => {
             <div className="mb-4">
               <label
                 htmlFor="telefono"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Teléfono:
               </label>
               <input
                 type="number"
                 name="telefono"
-                className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                className="border-b px-2 border-black  py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
                 required
                 onChange={handleChange}
                 value={formData.telefono}
@@ -171,14 +172,14 @@ const RegistroAdmin = () => {
             <div className="mb-4">
               <label
                 htmlFor="email"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Correo electrónico:
               </label>
               <input
                 type="email"
                 name="email"
-                className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                className="border-b px-2 border-black  py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
                 required
                 onChange={handleChange}
                 value={formData.email}
@@ -188,7 +189,7 @@ const RegistroAdmin = () => {
             <div className="mb-4">
               <label
                 htmlFor="password"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Contraseña:
               </label>
@@ -196,7 +197,7 @@ const RegistroAdmin = () => {
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                  className="border-b px-2 border-black  py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500 text-black placeholder-black placeholder-opacity-70"
                   required
                   onChange={handleChange}
                   value={formData.password}
@@ -204,12 +205,12 @@ const RegistroAdmin = () => {
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                   {showPassword ? (
                     <RiEyeOffFill
-                      className="cursor-pointer"
+                      className="cursor-pointer text-blue-500"
                       onClick={togglePasswordVisibility}
                     />
                   ) : (
                     <RiEyeFill
-                      className="cursor-pointer"
+                      className="cursor-pointer text-blue-500"
                       onClick={togglePasswordVisibility}
                     />
                   )}
@@ -218,7 +219,7 @@ const RegistroAdmin = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
+              <label className="block text-blue-500 text-sm font-bold mb-2">
                 Departamento
               </label>
               <select
@@ -242,7 +243,7 @@ const RegistroAdmin = () => {
 
               <label
                 htmlFor="ciudad"
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-blue-500 text-sm font-bold mb-2"
               >
                 Ciudad:
               </label>
@@ -269,7 +270,7 @@ const RegistroAdmin = () => {
 
             <button
               type="submit"
-              className="flex justify-center items-center gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+              className="flex justify-center items-center gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb8871] via-[#e15e1d] to-[#be6e12] hover:shadow-xl hover:shadow-orange-500 hover:scale-105 duration-300 hover:from-[#be4612] hover:to-[#fba871]"
             >
               Guardar Administrador
             </button>
