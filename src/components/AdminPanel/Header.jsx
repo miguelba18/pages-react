@@ -9,6 +9,7 @@ import {
   RiQuestionAnswerFill,
   RiCalendarTodoFill,
   RiUser6Fill,
+  RiMailUnreadFill,
 } from "react-icons/ri";
 
 import useListNotificacion from "../../views/hook/Notificaciones/useListNotificacion";
@@ -16,11 +17,13 @@ import useListNotificacion from "../../views/hook/Notificaciones/useListNotifica
 import useDeleteNotificacionReminder from "../../views/hook/Notificaciones/Recordatorio/useDeleteNotificacionReminder";
 import useDeleteNotificacion from "../../views/hook/Notificaciones/Inquietud/useDeleteNotificacion";
 import useDeleteNotificacionProfile from "../../views/hook/Notificaciones/Perfil/useDeleteNotificacionProfile";
+import useDeleteNotificacionEmail from "../../views/hook/Notificaciones/Enviar correo/useDeleteNotificacionEmail";
 
 const Header = () => {
   const { handleNotificationClick } = useDeleteNotificacion();
   const { handleNotificationClickReminder } = useDeleteNotificacionReminder();
   const { handleNotificationClickProfile } = useDeleteNotificacionProfile();
+  const { handleNotificationClickEmail } = useDeleteNotificacionEmail();
   const {
     userName,
     email,
@@ -28,11 +31,16 @@ const Header = () => {
     notifications,
     reminderNotifications,
     profileNotifications,
+    emailNotifications,
   } = useListNotificacion();
+
   const totalNotifications =
     notifications.length +
     reminderNotifications.length +
-    profileNotifications.length;
+    profileNotifications.length +
+    emailNotifications.length;
+
+
   const { removeToken } = useAuthToken();
 
   return (
@@ -214,6 +222,27 @@ const Header = () => {
                     </span>
                     <span className="text-sm text-white text-center bg-white/10 rounded-full px-2">
                       {profile.descripcion}
+                    </span>
+                  </div>
+                </div>
+              </MenuItem>
+            ))}
+            {emailNotifications.map((email) => (
+              <MenuItem
+                key={email.id}
+                onClick={() => handleNotificationClickEmail(email.id)}
+                className="flex items-center rounded-lg py-3 px-7 mb-2 bg-red-500 cursor-pointer w-full h-full hover:bg-red-600 transition-colors"
+              >
+                <div className="flex gap-1 items-center w-full">
+                  <div className="bg-white/20 rounded-full w-auto p-3">
+                    <RiMailUnreadFill className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-col flex">
+                    <span className="text-sm text-white text-center bg-white/10 rounded-full mb-1">
+                      {email.titulo}
+                    </span>
+                    <span className="text-sm text-white text-center bg-white/10 rounded-full px-2">
+                      {email.descripcion}
                     </span>
                   </div>
                 </div>

@@ -1,7 +1,7 @@
-import {useNavigate} from "react-router-dom";
+
 import { useState } from "react";
 const useDeleteNotificacionProfile = () => {
-    const navigate = useNavigate();
+
     const [notifications, setNotifications] = useState([]);
 
     const handleNotificationClickProfile = async (id) => {
@@ -26,7 +26,7 @@ const useDeleteNotificacionProfile = () => {
             setTimeout(() => {
               window.location.reload();
             }, 10);
-            navigate("/perfil");
+           
             
           } else {
             console.error("Error al eliminar la notificación:", response.status);

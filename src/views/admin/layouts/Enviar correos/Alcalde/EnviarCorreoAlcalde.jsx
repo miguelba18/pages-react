@@ -1,9 +1,9 @@
-import useSelectCityDepaUtils from "../../../../utils/useSelectCityDepaUtils";
+import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 
 import { useState, useEffect } from "react";
-import useListUsers from "../../../hook/Enviar correo/useListUsers";
-import useAuthToken from "../../../hook/Token/useAuthToken";
-const EnviarCorreos = () => {
+import useListUsers from "../../../../hook/Enviar correo/useListUsers";
+import useAuthToken from "../../../../hook/Token/useAuthToken";
+const EnviarCorreoAlcalde = () => {
   const { users, fetchUsers, setUsers } = useListUsers();
   const [formData, setFormData] = useState({});
   const { token } = useAuthToken();
@@ -230,4 +230,5 @@ const EnviarCorreos = () => {
   );
 };
 
-export default EnviarCorreos;
+export default EnviarCorreoAlcalde;
+

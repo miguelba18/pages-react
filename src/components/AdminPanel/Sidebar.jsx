@@ -476,6 +476,27 @@ const Sidebar = () => {
                     </ul>
                     <li
                       className={
+                        location.pathname === "/enviarcorreoalcalde"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/enviarcorreoalcalde"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiMailSendFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/enviarcorreoalcalde"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Enviar Correos
+                      </Link>
+                    </li>
+                    <li
+                      className={
                         location.pathname === "/calendarioalcalde"
                           ? "bg-secundary text-white rounded-lg"
                           : "rounded-lg hover:bg-tertiary-900 transition-colors "
