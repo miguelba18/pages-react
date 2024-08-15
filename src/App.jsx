@@ -19,6 +19,7 @@ import AdquirienteAdmin from './views/admin/layouts/Facturas/Adquiriente y emiso
 import EmisorAdmin from './views/admin/layouts/Facturas/Adquiriente y emisor/admin/EmisorAdmin';
 import ConsorcioClienteMunicipio from './views/admin/layouts/Consorcios/adquiriente/ConsorcioClienteMunicipio';
 import ConsorcioVendedorMunicipio from './views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio';
+import EnviarCorreos from './views/admin/layouts/Enviar correos/EnviarCorreos'
 
 import Alcalde from './views/admin/Admin-Panel/Roles/Alcalde/Alcalde';
 import Secretario from './views/admin/Alcalde-Panel/Roles/Secretario/Secretario';
@@ -87,6 +88,7 @@ function App() {
           <Route path="administrarfacturas" element={<RestrictedRouteAdmin><AdministrarFacturas/></RestrictedRouteAdmin>}/>
           <Route path="facturasagrupadas" element={<RestrictedRouteAdmin><FacturasAgrupadas/></RestrictedRouteAdmin>} />
           <Route path="facturacompleta" element={<RestrictedRouteAdmin><FacturaCompleta/></RestrictedRouteAdmin>} />
+          <Route path="enviarcorreos" element={<RestrictedRouteAdmin><EnviarCorreos/></RestrictedRouteAdmin>} />
           
           
           <Route path="adquirienteadmin" element={<RestrictedRouteAdmin><AdquirienteAdmin/></RestrictedRouteAdmin>} />

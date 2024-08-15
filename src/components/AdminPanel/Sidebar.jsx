@@ -18,6 +18,7 @@ import {
   RiArchiveFill,
   RiMoneyDollarCircleFill,
   RiTeamFill,
+  RiMailSendFill,
 } from "react-icons/ri";
 import { MdManageAccounts } from "react-icons/md";
 import { IoFileTrayFull } from "react-icons/io5";
@@ -133,6 +134,8 @@ const Sidebar = () => {
                         </Link>
                       </li>
 
+                      
+
                       <li
                         className={
                           location.pathname === "/alcalde"
@@ -176,6 +179,28 @@ const Sidebar = () => {
                         </Link>
                       </li>
                     </ul>
+
+                    <li
+                      className={
+                        location.pathname === "/enviarcorreos"
+                          ? "bg-secundary text-white rounded-lg"
+                          : "rounded-lg hover:bg-tertiary-900 transition-colors "
+                      }
+                    >
+                      <Link
+                        to="/enviarcorreos"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiMailSendFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/enviarcorreos"
+                              ? "text-white"
+                              : ""
+                          }`}
+                        />
+                        Enviar Correos
+                      </Link>
+                    </li>
 
                     <li
                       className={

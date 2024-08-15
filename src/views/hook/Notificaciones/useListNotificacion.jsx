@@ -9,6 +9,7 @@ const useListNotificacion = () => {
   const [notifications, setNotifications] = useState([]);
   const [reminderNotifications, setReminderNotifications] = useState([]);
   const [profileNotifications, setProfileNotifications] = useState([]);
+  
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -112,6 +113,7 @@ const useListNotificacion = () => {
               console.error("Error al obtener las notificaciones de recordatorio:", error);
             }
           };
+
     
         fetchUserData();
         fetchNotifications();
