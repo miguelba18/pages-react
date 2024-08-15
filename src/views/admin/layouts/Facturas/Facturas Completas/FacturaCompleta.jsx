@@ -93,9 +93,7 @@ const FacturaCompleta = () => {
     <div>
       <div className="xl:flex justify-around">
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Departamento
-          </label>
+          
           <select
             value={selectedDepartamento}
             onChange={(e) => {
@@ -105,7 +103,7 @@ const FacturaCompleta = () => {
                 departamentoId: e.target.value,
               });
             }}
-            className="mb-4 text-secundary border-b px-2 border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
           >
             <option value="">Selecciona un departamento</option>
             {departamentos.map((departamento) => (
@@ -116,12 +114,7 @@ const FacturaCompleta = () => {
           </select>
         </div>
         <div>
-          <label
-            htmlFor="ciudad"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Ciudad:
-          </label>
+         
           <select
             value={selectedCiudad}
             onChange={(e) => {
@@ -139,7 +132,7 @@ const FacturaCompleta = () => {
                 });
             }}
             disabled={!selectedDepartamento}
-            className="border-b mb-4 px-2 text-secundary border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
           >
             <option value="">Selecciona una ciudad</option>
             {filteredCiudades.map((ciudad) => (
@@ -151,7 +144,7 @@ const FacturaCompleta = () => {
         </div>
         
         <div className="flex justify-around">
-          <div className="xl:relative mr-4 xl:mt-6">
+          <div className="xl:relative mr-4 xl:mt-0">
             <button
               onClick={handleDownload}
               className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
@@ -161,7 +154,7 @@ const FacturaCompleta = () => {
             </button>
           </div>
 
-          <div className="relative xl:right-0 xl:mt-6">
+          <div className="relative xl:right-0 xl:mt-0">
             <input
               disabled={!selectedCiudad}
               type="text"

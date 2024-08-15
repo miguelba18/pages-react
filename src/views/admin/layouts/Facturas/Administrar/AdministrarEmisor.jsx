@@ -125,9 +125,7 @@ const AdministrarEmisor = () => {
     <div>
       <div className="mb-4 mt-4 xl:flex justify-around">
         <div>
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Departamento
-          </label>
+          
           <select
             value={selectedDepartamento}
             onChange={(e) => {
@@ -138,7 +136,7 @@ const AdministrarEmisor = () => {
               });
               setFacturas([]);
             }}
-            className="mb-4 text-secundary border-b px-2 border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
           >
             <option value="">Selecciona un departamento</option>
             {departamentos.map((departamento) => (
@@ -149,12 +147,7 @@ const AdministrarEmisor = () => {
           </select>
         </div>
         <div>
-          <label
-            htmlFor="ciudad"
-            className="block text-gray-700 text-sm font-bold mb-2"
-          >
-            Ciudad:
-          </label>
+          
           <select
             value={selectedCiudad}
             onChange={(e) => {
@@ -166,7 +159,7 @@ const AdministrarEmisor = () => {
               setFacturas([]);
             }}
             disabled={!selectedDepartamento}
-            className="border-b mb-4 px-2 text-secundary border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
           >
             <option value="">Selecciona una ciudad</option>
             {filteredCiudades.map((ciudad) => (

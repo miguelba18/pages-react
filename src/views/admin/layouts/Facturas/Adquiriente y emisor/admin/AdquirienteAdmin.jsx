@@ -71,9 +71,7 @@ const AdquirienteAdmin = () => {
       <div className="flex xl:justify-between items-center ">
         <div className="flex justify-around  ">
           <div className="ml-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Departamento
-            </label>
+            
             <select
               value={selectedDepartamento}
               onChange={(e) => {
@@ -83,7 +81,7 @@ const AdquirienteAdmin = () => {
                   departamentoId: e.target.value,
                 });
               }}
-              className="mb-4 text-secundary border-b px-2 border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+              className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
             >
               <option value="">Selecciona un departamento</option>
               {departamentos.map((departamento) => (
@@ -94,12 +92,7 @@ const AdquirienteAdmin = () => {
             </select>
           </div>
           <div className="ml-20">
-            <label
-              htmlFor="ciudad"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Ciudad:
-            </label>
+            
             <select
               value={selectedCiudad}
               onChange={(e) => {
@@ -111,7 +104,7 @@ const AdquirienteAdmin = () => {
                 fetchFacturas(e.target.value, searchQuery, selectedAnio);
               }}
               disabled={!selectedDepartamento}
-              className="border-b mb-4 px-2 text-secundary border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+              className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
             >
               <option value="">Selecciona una ciudad</option>
               {filteredCiudades.map((ciudad) => (

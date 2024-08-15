@@ -84,7 +84,7 @@ const AgrupadasAdquiriente = () => {
                 departamentoId: e.target.value,
               });
             }}
-            className="mb-4 text-secundary border-b px-2 border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
           >
             <option value="">Selecciona un departamento</option>
             {departamentos.map((departamento) => (
@@ -111,7 +111,7 @@ const AgrupadasAdquiriente = () => {
               });
             }}
             disabled={!selectedDepartamento}
-            className="border-b mb-4 px-2 text-secundary border-black py-1 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
           >
             <option value="">Selecciona una ciudad</option>
             {filteredCiudades.map((ciudad) => (
