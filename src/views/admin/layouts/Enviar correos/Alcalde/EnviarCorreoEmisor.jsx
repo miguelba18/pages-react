@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
-import useListUsers from "../../../hook/Enviar correo/useListUsers";
-import useAuthToken from "../../../hook/Token/useAuthToken";
+
+import { useState,useEffect } from "react"
+import useAuthToken from "../../../../hook/Token/useAuthToken"
+import useListEmisor from "../../../../hook/Enviar correo/Alcalde/useListEmisor";
 import { RiLoader4Line } from "react-icons/ri";
 import { toast } from "react-toastify";
-const EnviarCorreos = () => {
-  const { users, fetchUsers } = useListUsers();
-
-  const { token } = useAuthToken();
-  const [selectedUsers, setSelectedUsers] = useState([]);
+const EnviarCorreoSecrePer = () => {
+    const { token } = useAuthToken();
+    const { users, fetchUsers } = useListEmisor()
+    const [selectedUsers, setSelectedUsers] = useState([]);
   const [emailSubject, setEmailSubject] = useState("");
   const [emailContent, setEmailContent] = useState("");
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showCheckboxes, setShowCheckboxes] = useState(false); 
   const [showModal, setShowModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -21,26 +21,29 @@ const EnviarCorreos = () => {
   const handleUserSelect = (userId) => {
     setSelectedUsers((prevSelectedUsers) =>
       prevSelectedUsers.includes(userId)
-        ? prevSelectedUsers.filter((id) => id !== userId)
-        : [...prevSelectedUsers, userId]
+        ? prevSelectedUsers.filter((id) => id !== userId) 
+        : [...prevSelectedUsers, userId] 
     );
   };
-  const handleSendEmails = async () => {
+  const handleSendEmails = async (tipo="emisores") => {
     setIsLoading(true);
     try {
-      const url = "http://localhost:8080/correo/enviar";
+      const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+
+   
+    const url = `http://localhost:8080/correo/enviar/?tipo=${encodeURIComponent(tipoString)}`;
       const body = {
         para: selectedUsers,
         asunto: emailSubject,
         contenido: emailContent,
       };
-
+      console.log(url);
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-        },
+        },  
         body: JSON.stringify(body),
       });
 
@@ -48,94 +51,81 @@ const EnviarCorreos = () => {
         throw new Error("Error al enviar el correo");
       }
 
-      toast.success("Correos enviados correctamente");
+      toast.success("Correos enviados correctamente");  
       setShowModal(false);
       setShowCheckboxes(false);
       setSelectedUsers([false]);
+      
+
     } catch (error) {
       console.error(error);
       toast.error("Hubo un error al enviar los correos.");
     }
     setIsLoading(false);
   };
-
   return (
     <div>
-      <div className="flex justify-center">
-        <img src="../../../../../../src/assets/img/img2.png" alt="Imagen" />
-      </div>
-      <h1 className="mb-2 text-bold text-3xl">Enviar correos </h1>
-
-      <div className="mb-4">
-        {!showCheckboxes ? (
-          <button
-            onClick={() => setShowCheckboxes(true)}
-            className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
-          >
-            Seleccionar usuarios
-          </button>
+        <div className="mt-4">
+            {!showCheckboxes ? (
+               <button
+          onClick={() => setShowCheckboxes(true)}
+          className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
+        >
+          Seleccionar usuarios
+        </button> 
+            
         ) : (
-          <button
+            <button
             onClick={() => setShowCheckboxes(false)}
             className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
           >
             Salir del seleccionar
-          </button>
+          </button> 
         )}
+        
       </div>
-      <div className="overflow-x-auto">
+        <div className="overflow-x-auto">
         <table className="table-auto w-full mt-4 ">
           <thead>
             <tr>
-              {showCheckboxes && (
-                <th className="px-4 py-2 bg-secundary text-white">
-                  SELECCIONAR
-                </th>
-              )}
+               {showCheckboxes && (
+                <th className="px-4 py-2 bg-secundary text-white">SELECCIONAR</th>
+              )} 
               <th className="px-4 py-2 bg-secundary text-white">#</th>
-
+              
+              
               <th className="px-4 py-2 bg-secundary text-white">
                 CORREO ELECTRONICO
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">ROL</th>
-              <th className="px-4 py-2 bg-secundary text-white">CIUDAD</th>
+              
             </tr>
           </thead>
 
           <tbody>
-            {users
-              .filter((user) => user.rol !== "Secretario")
-              .filter((user) => user.rol !== "Personal")
-              .map((user, index) => (
-                <tr key={user.id}>
-                  {showCheckboxes && (
-                    <td className="border px-4 py-2 text-center h-6 w-6">
-                      <input
-                        className="h-6 w-6"
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.email)}
-                        onChange={() => handleUserSelect(user.email)}
-                      />
-                    </td>
-                  )}
-                  <td className="border px-4 py-2 text-center">{index + 1}</td>
-
-                  <td className="border px-4 py-2 text-center">{user.email}</td>
-                  <td className="border px-4 py-2 text-center">{user.rol}</td>
+            {users.map((user, index) => (
+              <tr key={user.id}>
+                {showCheckboxes && (
                   <td className="border px-4 py-2 text-center">
-                    {user.ciudad}
+                    <input
+                      type="checkbox"
+                      checked={selectedUsers.includes(user.correoEmisor)}
+                      onChange={() => handleUserSelect(user.correoEmisor)}
+                    />
                   </td>
-                </tr>
-              ))}
+                )}
+                <td className="border px-4 py-2 text-center">{index+1}</td>
+                <td className="border px-4 py-2 text-center">{user.correoEmisor}</td>
+                
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-
       {showCheckboxes && (
         <div className="mt-8">
           <button
             onClick={() => setShowModal(true)}
-            hidden={selectedUsers.length === 0}
+            disabled={selectedUsers.length === 0}
             className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
           >
             Enviar correo
@@ -161,7 +151,7 @@ const EnviarCorreos = () => {
               className="mb-4 px-2 py-3 rounded-xl shadow-md shadow-blue-500 text-secundary bg-tertiary-100 w-full h-32 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
             />
             <div className="flex justify-end">
-              {!isLoading ? (
+            {!isLoading ? (
                 <>
                   <button
                     onClick={() => setShowModal(false)}
@@ -187,8 +177,10 @@ const EnviarCorreos = () => {
           </div>
         </div>
       )}
-    </div>
-  );
-};
 
-export default EnviarCorreos;
+      
+    </div>
+  )
+}
+
+export default EnviarCorreoSecrePer

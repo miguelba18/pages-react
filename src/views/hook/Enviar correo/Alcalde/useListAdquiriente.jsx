@@ -1,12 +1,12 @@
-import useAuthToken from "../Token/useAuthToken";
+import useAuthToken from "../../Token/useAuthToken";
 import { useState, useCallback } from "react";
-const useListUsers = () => {
+const useListAdquiriente = () => {
     const { token } = useAuthToken();
     const [users, setUsers] = useState([]);
   
     const fetchUsers = useCallback(async () => {
         try {
-          let url =`http://localhost:8080/correo/usuarios-admin`;
+          let url =`http://localhost:8080/correo/usuarios-alcalde/adquiriente`;
           
     
           const response = await fetch(url, {
@@ -28,7 +28,7 @@ const useListUsers = () => {
           setUsers([]); 
         }
       }, [token]);
-    return { users, fetchUsers, setUsers };
+    return { users, fetchUsers };
   }
 
-export default useListUsers
+export default useListAdquiriente
