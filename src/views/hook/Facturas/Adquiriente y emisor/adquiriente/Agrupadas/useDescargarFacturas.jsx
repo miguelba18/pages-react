@@ -4,12 +4,20 @@ import { toast } from "react-toastify";
 const useDescargarFacturas = () => {
     const { token } = useAuthToken();
 
-    const handleDownloadExcel = async (ciudad) => {
-        
+    const handleDownloadExcel = async (ciudad,filtro,anio) => {
+      let url = "http://localhost:8080/factura/descargar-excel-adquiriente-agrupar";
+      if (ciudad) {
+        url += `?ciudad=${ciudad}`;
+      }
+      if (filtro) {
+        url += ciudad ? `&filtro=${filtro}` : `?filtro=${filtro}`;
+      }
+      if (anio) {
+        url += ciudad ? `&anio=${anio}` : `?anio=${anio}`;
+    }
         try {
-          const response = await fetch(
-            `http://localhost:8080/factura/descargar-excel-adquiriente-agrupar?ciudad=${ciudad}`,
-            {
+          const response = await fetch(url,{
+            
               method: "POST",
               headers: {
                 Authorization: `Bearer ${token}`,

@@ -1,39 +1,73 @@
-import { useState } from 'react';
-import { FaHome, FaSearch, FaCog } from 'react-icons/fa'; 
+import { useEffect } from "react";
+import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
 const ConsorcioClienteMunicipio = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { consorcios, listConsorcios } = useListConsorcios();
+
+  useEffect(() => {
+    listConsorcios();
+  }, [listConsorcios]);
 
   return (
-      <div
-          className={`fixed  h-full bg-gray-800 text-white transition-width duration-300 ${
-              isOpen ? 'w-64' : 'w-16'
-          }`}
-          onMouseEnter={() => setIsOpen(true)}
-          onMouseLeave={() => setIsOpen(false)}
-      >
-          <ul className="space-y-4 p-4">
-              <li>
-                  <a href="#" className="flex items-center space-x-4">
-                      <FaHome className="text-2xl" />
-                      {isOpen && <span>Inicio</span>}
-                  </a>
-              </li>
-              <li>
-                  <a href="#" className="flex items-center space-x-4">
-                      <FaSearch className="text-2xl" />
-                      {isOpen && <span>Buscar</span>}
-                  </a>
-              </li>
-              <li>
-                  <a href="#" className="flex items-center space-x-4">
-                      <FaCog className="text-2xl" />
-                      {isOpen && <span>Configuración</span>}
-                  </a>
-              </li>
-              {/* Añade más elementos aquí */}
-          </ul>
-      </div>
+    <div>
+      <table className="table-auto w-full mt-6">
+        <thead>
+          <tr>
+            <th className="px-4 py-2 bg-secundary text-white">#</th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Fecha <br />
+            </th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Nombre o Razón Social del Adquiriente
+            </th>
+
+            <th className="px-4 py-2 bg-secundary text-white">
+              Número Documento del Adquiriente
+            </th>
+
+            <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {consorcios.length === 0 ? (
+            <tr>
+              <td colSpan="17" className="px-4 py-2 text-red-500 text-center">
+                No hay facturas disponibles
+              </td>
+            </tr>
+          ) : (
+            consorcios.map((consorcio, index) => (
+              <tr
+                key={consorcio.id}
+                className={
+                  index % 2 === 0
+                    ? "bg-gray-100 whitespace-nowrap"
+                    : "bg-white whitespace-nowrap"
+                }
+              >
+                <td className="border px-4 py-2 text-center">{index + 1}</td>
+                <td className="border px-4 text-center">
+                  {consorcio.fechaEmision}
+                </td>
+                <td className="border px-4 text-center">
+                  {consorcio.nombreAdquiriente}
+                </td>
+
+                <td className="border px-4 py-2 text-center">
+                  {consorcio.numeroDocumentoAdquiriente}
+                </td>
+
+                <td className="border px-4 py-2 text-center">
+                  <div className="flex justify-between">
+                    ${consorcio.subtotal}
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
-export default ConsorcioClienteMunicipio
+export default ConsorcioClienteMunicipio;
