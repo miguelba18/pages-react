@@ -39,6 +39,7 @@ const AgrupadasEmisorAlcalde = () => {
       setResetAnio(false);
     }
   }, [resetAnio]);
+  
   const handleSearch = (query, anio) => {
     setSearchQuery(query);
     fetchFacturas("", query, anio);

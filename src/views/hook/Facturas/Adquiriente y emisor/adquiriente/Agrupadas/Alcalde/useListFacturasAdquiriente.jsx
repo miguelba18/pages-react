@@ -8,10 +8,25 @@ const useListFacturasAdquiriente = () => {
     const [totalSuma, setTotalSuma] = useState(0);
 
     const fetchFacturas = useCallback(
-        async () => {
+        async (ciudad, query = "", anio = "") => {
           try {
             let url = "http://localhost:8080/factura/adquiriente-agrupar";
             
+            const params = new URLSearchParams();
+
+        if (ciudad) {
+          params.append("ciudad", ciudad);
+        }
+        if (query) {
+          params.append("filtro", query);
+        }
+        if (anio) {
+          params.append("anio", anio);
+        }
+
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
     
             const response = await fetch(url, {
               method: "GET",
