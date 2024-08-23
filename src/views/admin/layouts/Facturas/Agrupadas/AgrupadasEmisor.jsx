@@ -46,7 +46,15 @@ const AgrupadasEmisor = () => {
   }, [selectedDepartamento, setFacturas]);
 
   const handleDownload = () => {
-    handleDownloadExcel(selectedCiudad, searchQuery, selectedAnio);
+    if (selectedCiudad || searchQuery || selectedAnio) {
+      handleDownloadExcel({
+        ciudad: selectedCiudad || undefined,
+        filtro: searchQuery || undefined,
+        anio: selectedAnio || undefined,
+      });
+    } else {
+      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
+    }
   };
 
   const handleAnioChange = (anio) => {
@@ -75,17 +83,14 @@ const AgrupadasEmisor = () => {
     fetchFacturas(selectedCiudad, query, anio);
   };
 
-  const handleDesagrupar = async (facturas) => {
-    console.log(facturas)
-    if (!Array.isArray(facturas)) {
-      throw new Error("El parámetro `facturas` no es un array");
-    }
-    else {
-      console.log("es array");
-    }
+  const handleDesagrupar = async (facturas, tipo="emisores") => {
+
+    
+    const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+
 
     try {
-      const url = new URL("http://localhost:8080/factura/emisor-desagrupar");
+      const url = new URL("http://localhost:8080/factura/persona-desagrupar");
       const params = new URLSearchParams();
 
       if (selectedCiudad) {
@@ -100,9 +105,12 @@ const AgrupadasEmisor = () => {
           params.append("anios", factura.fechaEmision);
         }
       });
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
 
       url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
+   
 
       const response = await fetch(url, {
         method: "GET",
@@ -118,7 +126,7 @@ const AgrupadasEmisor = () => {
 
       const data = await response.json();
       setFacturasDesagrupadas(data.facturas);
-      setTotalSumaDesagrupadas(data.totalSuma);
+      setTotalSumaDesagrupadas(data.subtotalSuma);
       setIsDesagrupado(true);
     } catch (error) {
       console.error("Error en handleDesagrupar:", error);
@@ -126,14 +134,13 @@ const AgrupadasEmisor = () => {
   };
 
 
-  const handleDownloadExcelDesagrupadas = async (factura) => {
+  const handleDownloadExcelDesagrupadas = async (factura,tipo="emisores") => {
    
-    if (!Array.isArray(factura)) {
-      factura = [factura];
-    }
+    const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+
     try {
       const url = new URL(
-        "http://localhost:8080/factura/descargar-excel-emisor-desagrupar"
+        "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
       
@@ -153,6 +160,10 @@ const AgrupadasEmisor = () => {
           params.append("anios", facturaItem.fechaEmision);
         }
       });
+
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
         
 
       url.search = params.toString();
@@ -350,8 +361,8 @@ const AgrupadasEmisor = () => {
                     <select
                       onChange={(e) => handleAnioChange(e.target.value)}
                       value={selectedAnio}
-                      className="text-black"
-                    >
+                      className="p-1 rounded border border-gray-300 text-black"
+                      >
                       <option value="">Todos</option>
                       <option value="2015">2015</option>
                       <option value="2016">2016</option>

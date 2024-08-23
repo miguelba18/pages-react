@@ -22,16 +22,15 @@ const Emisor = () => {
 
   useEffect(() => {
     const total = emisores.reduce((sum, emisor) => {
-      const subtotalStr = emisor.totalFactura.replace(/\./g, "");
+      const subtotalStr = emisor.subtotal.replace(/\./g, "");
       const subtotal = parseFloat(subtotalStr.replace(/[^0-9.-]+/g, ""));
       return sum + (isNaN(subtotal) ? 0 : subtotal);
     }, 0);
 
     setTotalSubtotal(total);
   }, [emisores]);
-
   const handleDownload = () => {
-    handleDownloadExcel(searchQuery);
+    handleDownloadExcel(searchQuery, selectedAnio);
   };
 
   return (
@@ -40,7 +39,7 @@ const Emisor = () => {
         <div className="xl:relative mr-4">
           <button
             onClick={handleDownload}
-            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
           >
             <span className="hidden md:inline">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />

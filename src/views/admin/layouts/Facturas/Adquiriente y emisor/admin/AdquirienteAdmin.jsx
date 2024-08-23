@@ -1,9 +1,8 @@
 import useListAdquiriente from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/admin/useListAdquiriente";
-import useDescargarFacturas from "../../../../../hook/Facturas/Adquiriente y emisor/Emisor/useDescargarFacturas";
 import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../../utils/HighlightedText";
-
+import useDescargarFacturas from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
 const AdquirienteAdmin = () => {
   const [formData, setFormData] = useState({});
 
@@ -63,7 +62,7 @@ const AdquirienteAdmin = () => {
   }, [facturas]);
 
   const handleDownload = () => {
-    handleDownloadExcel(searchQuery);
+    handleDownloadExcel(selectedCiudad, searchQuery, selectedAnio);
   };
 
   return (

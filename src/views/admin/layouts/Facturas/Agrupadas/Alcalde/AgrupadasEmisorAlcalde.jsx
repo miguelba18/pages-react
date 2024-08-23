@@ -26,7 +26,15 @@ const AgrupadasEmisorAlcalde = () => {
   }, [fetchFacturas]);
 
   const handleDownload = () => {
-    handleDownloadExcel("", searchQuery, selectedAnio);
+    if (searchQuery || selectedAnio) {
+      handleDownloadExcel({
+     
+        filtro: searchQuery || undefined,
+        anio: selectedAnio || undefined,
+      });
+    } else {
+      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
+    }
   };
 
   const handleSearchWithResetAnio = (query) => {
@@ -56,14 +64,15 @@ const AgrupadasEmisorAlcalde = () => {
       });
   };
 
-  const handleDesagrupar = async (facturas) => {
+  const handleDesagrupar = async (facturas, tipo="emisores") => {
     if (!Array.isArray(facturas)) {
       throw new Error("El parámetro `facturas` no es un array");
     } else {
       console.log("es un array");
     }
     try {
-      const url = new URL("http://localhost:8080/factura/emisor-desagrupar");
+      const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+      const url = new URL("http://localhost:8080/factura/persona-desagrupar");
       const params = new URLSearchParams();
 
       facturas.forEach((factura) => {
@@ -74,6 +83,9 @@ const AgrupadasEmisorAlcalde = () => {
           params.append("anios", factura.fechaEmision);
         }
       });
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
 
       url.search = params.toString();
 
@@ -330,7 +342,7 @@ const AgrupadasEmisorAlcalde = () => {
                             highlight={searchQuery}
                           />
                         </td>
-                        <td className="border px-4">${factura.subtotal}</td>
+                        <td className="border px-4 text-center">${factura.subtotal}</td>
                         <td className="border px-4 py-2 text-center">
                           <div className="grid justify-center">
                             <button
@@ -447,14 +459,15 @@ const AgrupadasEmisorAlcalde = () => {
                                           {factura.telefonoEmisor}
                                         </td>
                                         <td className="border px-4 text-center">
+                                          {factura.tipoContribuyenteEmisor}
+                                        </td>
+                                        <td className="border px-4 text-center">
                                           {factura.nombreComercialEmisor}
                                         </td>
                                         <td className="border px-4 text-center">
                                           {factura.nitEmisor}
                                         </td>
-                                        <td className="border px-4 text-center">
-                                          {factura.tipoContribuyenteEmisor}
-                                        </td>
+                                      
                                         <td className="border px-4">
                                           ${factura.subtotal}
                                         </td>

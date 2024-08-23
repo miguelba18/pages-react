@@ -5,9 +5,11 @@ const useListFacturas = () => {
     const [facturas, setFacturas] = useState([]);
     const [totalSuma, setTotalSuma] = useState(0);
     const fetchFacturas = useCallback(
-        async (ciudad, query = "", anio = "") => {
+        async (ciudad, query = "", anio = "", tipo="adquirientes") => {
           try {
-            let url = "http://localhost:8080/factura/adquiriente-agrupar";
+            const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+
+            let url = "http://localhost:8080/factura/persona-agrupar";
             const params = new URLSearchParams();
             
             if (ciudad) {
@@ -18,6 +20,9 @@ const useListFacturas = () => {
               }
               if (anio) {
                 params.append("anio", anio);
+              }
+              if (tipo) {
+                params.append("tipo", tipoString);
               }
       
               if (params.toString()) {
@@ -38,7 +43,7 @@ const useListFacturas = () => {
     
             const data = await response.json();
             setFacturas(data.facturasAgrupadas);
-            setTotalSuma(data.totalSuma); 
+            setTotalSuma(data.subTotalSuma); 
           } catch (error) {
             console.error(error);
             setFacturas([]);

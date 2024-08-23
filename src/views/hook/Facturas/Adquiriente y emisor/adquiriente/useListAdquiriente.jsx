@@ -6,9 +6,11 @@ const useListAdquiriente = () => {
   const [adquirientes, setAdquirientes] = useState([]);
 
   const searchAdquirientes = useCallback(
-    async ( query, anio) => {
+    async ( query, anio, tipo="adquirientes") => {
       try {
-        let url = `http://localhost:8080/factura/adquiriente`;
+        const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+
+        let url = `http://localhost:8080/factura/persona`;
         const params = new URLSearchParams();
         
         if (query) {
@@ -16,6 +18,9 @@ const useListAdquiriente = () => {
         }
         if (anio) {
           params.append("anio", anio);
+        }
+        if (tipo) {
+          params.append("tipo", tipoString);
         }
 
         if (params.toString()) {

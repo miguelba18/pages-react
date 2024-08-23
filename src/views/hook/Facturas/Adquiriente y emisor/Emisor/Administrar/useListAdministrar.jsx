@@ -1,15 +1,13 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import useAuthToken from "../../../../Token/useAuthToken";
 
 const useListAdministrar = () => {
     const { token } = useAuthToken();
     const [facturas, setFacturas] = useState([]);
-    
-
     const fetchFacturas = useCallback(
-        async (ciudad, tipo="adquirientes") => {
+        async (ciudad, tipo="emisores") => {
           try {
-            const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+            const tipoString = typeof tipo === 'string' ? tipo : "emisores";
             let url = "http://localhost:8080/factura/persona-admin";
             if (ciudad) {
               url += `?ciudad=${ciudad}`;
@@ -39,9 +37,6 @@ const useListAdministrar = () => {
         },
         [token]
       );
-
-      
-
   return {facturas, fetchFacturas, setFacturas}
 }
 

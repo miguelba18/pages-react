@@ -1,17 +1,19 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import useAuthToken from "../../../../hook/Token/useAuthToken";
 import { RiEditBoxFill } from "react-icons/ri";
 import Modal from "../../../../modal/Modal";
 import { toast } from "react-toastify";
+import useListAdministrar from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Administrar/useListAdministrar";
 
 const AdministrarAdquiriente = () => {
   const [formData, setFormData] = useState({});
-  const [facturas, setFacturas] = useState([]);
+  
   const [selectedFactura, setSelectedFactura] = useState(null);
   const { token } = useAuthToken();
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { facturas,fetchFacturas, setFacturas } = useListAdministrar();
 
   const {
     departamentos,
@@ -22,32 +24,7 @@ const AdministrarAdquiriente = () => {
     handleCiudadChange,
   } = useSelectCityDepaUtils();
 
-  const fetchFacturas = useCallback(async (ciudad) => {
-    try {
-      let url = "http://localhost:8080/factura/adquiriente-admin";
-      if (ciudad) {
-        url += `?ciudad=${ciudad}`;
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al obtener las facturas");
-      }
-
-      const data = await response.json();
-      setFacturas(data);
-    } catch (error) {
-      console.error(error);
-      setFacturas([]); 
-    }
-  }, [token]);
+  
 
   useEffect(() => {
     if (selectedCiudad) {
@@ -55,12 +32,12 @@ const AdministrarAdquiriente = () => {
     } else {
       setFacturas([]);
     }
-  }, [fetchFacturas, selectedCiudad]);
+  }, [fetchFacturas, selectedCiudad, setFacturas]);
 
   useEffect(() => {
 
     setFacturas([]);
-  }, [selectedDepartamento]);
+  }, [selectedDepartamento, setFacturas]);
 
   const handleEdit = (factura) => {
     setSelectedFactura({
@@ -105,7 +82,7 @@ const AdministrarAdquiriente = () => {
   useEffect(() => {
 
     setFacturas([]);
-  }, [selectedDepartamento]);
+  }, [selectedDepartamento,setFacturas]);
   useEffect(() => {
     const total = facturas.reduce((sum, adquiriente) => {
       const subtotalStr = adquiriente.subtotal.replace(/\./g, "");

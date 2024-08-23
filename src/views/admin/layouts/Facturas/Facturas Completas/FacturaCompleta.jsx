@@ -24,7 +24,7 @@ const FacturaCompleta = () => {
   const { addConsorcio } = useAddConsorcio();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [facturaToDelete, setFacturaToDelete] = useState(null);
-  /*const [mostrarBoton, setMostrarBoton] = useState(false);*/
+
   const [processedFacturas, setProcessedFacturas] = useState(new Set());
   const {
     handleSearch,
@@ -41,24 +41,6 @@ const FacturaCompleta = () => {
     selectedAnio,
     setSelectedAnio,
   } = useListFacturaCompleta();
-
-  /*useEffect(() => {
-    if (facturas.length > 0) {
-      const todosValidos = facturas.every((factura) => {
-        const nombreValidoAdquiriente =
-          factura.nombreAdquiriente.toLowerCase() === "Consorcio";
-        const nombreValidoEmisor =
-          factura.nombreComercialEmisor.toLowerCase() === "Consorcio";
-        return nombreValidoAdquiriente && nombreValidoEmisor;
-      });
-      console.log(todosValidos)
-      setMostrarBoton(todosValidos);
-    } else {
-      setMostrarBoton(false);
-    }
-  }, [facturas]);*/
-  
-  
 
   const handleDelete = () => {
     if (facturaToDelete) {
@@ -100,16 +82,17 @@ const FacturaCompleta = () => {
   }, [resetAnio]);
 
   const handleDownload = () => {
-    if (selectedCiudad && searchQuery) {
-      handleDownloadExcel({ ciudad: selectedCiudad, filtro: searchQuery });
-    } else if (selectedCiudad) {
-      handleDownloadExcel({ ciudad: selectedCiudad });
-    } else if (searchQuery) {
-      handleDownloadExcel({ filtro: searchQuery });
+    if (selectedCiudad || searchQuery || selectedAnio) {
+      handleDownloadExcel({
+        ciudad: selectedCiudad || undefined,
+        filtro: searchQuery || undefined,
+        anio: selectedAnio || undefined,
+      });
     } else {
       toast.error("Por favor selecciona una ciudad o introduce un filtro.");
     }
   };
+  
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -217,7 +200,7 @@ const FacturaCompleta = () => {
                     <select
                       onChange={(e) => handleAnioChange(e.target.value)}
                       value={selectedAnio}
-                      className="text-black"
+                      className="p-1 rounded border border-gray-300 text-black"
                     >
                       <option value="">Todos</option>
                       <option value="2015">2015</option>
@@ -370,16 +353,17 @@ const FacturaCompleta = () => {
                           <button
                             onClick={() => handleAddConsorcio(factura.id)}
                             disabled={processedFacturas.has(factura.id)}
-                      
-                            className={` ${
+                            className={`  ${
                               processedFacturas.has(factura.id)
-                                ? "flex  justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#71fb86] cursor-not-allowed"
-                                : "flex  justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl hover:shadow-blue-500 hover:scale-105 duration-300 hover:from-[#1512be] hover:to-[#717cfb]"
+                                ? "flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#71fb86] cursor-not-allowed"
+                                : "flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl hover:shadow-blue-500 hover:scale-105 duration-300 hover:from-[#1512be] hover:to-[#717cfb]"
                             }`}
                           >
-                            {processedFacturas.has(factura.id)
-                              ? <RiCheckboxCircleFill  />
-                              : <RiAddCircleFill className=" " />}
+                            {processedFacturas.has(factura.id) ? (
+                              <RiCheckboxCircleFill />
+                            ) : (
+                              <RiAddCircleFill className=" " />
+                            )}
                           </button>
                         </div>
                       </td>

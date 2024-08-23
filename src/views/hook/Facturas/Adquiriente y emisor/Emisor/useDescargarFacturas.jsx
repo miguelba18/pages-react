@@ -4,17 +4,26 @@ import { toast } from "react-toastify";
 const useDescargarFacturas = () => {
     const { token } = useAuthToken();
 
-    const handleDownloadExcel = async (filtro) => {
-        if (!token) {
-          toast.error(
-            "No se encontró el token de autorización en el localStorage."
-          );
-          return;
-        }
+    const handleDownloadExcel = async (ciudad,filtro,anio,tipo="emisores") => {
+      const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+      let url = "http://localhost:8080/factura/descargar-excel-persona";
+      if (ciudad) {
+        url += `?ciudad=${ciudad}`;
+      }
+      if (filtro) {
+        url += ciudad ? `&filtro=${filtro}` : `?filtro=${filtro}`;
+      }
+      if (anio) {
+        url += ciudad ? `&anio=${anio}` : `?anio=${anio}`;
+      }
+      if (tipoString) {
+        url += ciudad ? `&tipo=${tipoString}` : `?tipo=${tipoString}`;
+      }
+        
     
         try {
           const response = await fetch(
-            `http://localhost:8080/factura/descargar-excel-emisor?filtro=${filtro}`,
+            url,
             {
               method: "POST",
               headers: {

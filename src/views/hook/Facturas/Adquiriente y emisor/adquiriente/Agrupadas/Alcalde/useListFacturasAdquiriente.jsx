@@ -8,9 +8,10 @@ const useListFacturasAdquiriente = () => {
     const [totalSuma, setTotalSuma] = useState(0);
 
     const fetchFacturas = useCallback(
-        async (ciudad, query = "", anio = "") => {
+        async (ciudad, query = "", anio = "",tipo="adquirientes") => {
           try {
-            let url = "http://localhost:8080/factura/adquiriente-agrupar";
+            const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+            let url = "http://localhost:8080/factura/persona-agrupar";
             
             const params = new URLSearchParams();
 
@@ -22,6 +23,9 @@ const useListFacturasAdquiriente = () => {
         }
         if (anio) {
           params.append("anio", anio);
+        }
+        if (tipo) {
+          params.append("tipo", tipoString);
         }
 
         if (params.toString()) {

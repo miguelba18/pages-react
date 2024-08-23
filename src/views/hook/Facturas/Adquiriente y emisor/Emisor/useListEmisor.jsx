@@ -6,9 +6,10 @@ const useListEmisor = () => {
   const [emisores, setEmisores] = useState([]);
 
   const searchEmisores = useCallback(
-    async ( query, anio) => {
+    async ( query, anio, tipo="emisores") => {
       try {
-        let url = `http://localhost:8080/factura/emisor`;
+        const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+        let url = `http://localhost:8080/factura/persona`;
         const params = new URLSearchParams();
         
         if (query) {
@@ -16,6 +17,9 @@ const useListEmisor = () => {
         }
         if (anio) {
           params.append("anio", anio);
+        }
+        if (tipo) {
+          params.append("tipo", tipoString);
         }
 
         if (params.toString()) {

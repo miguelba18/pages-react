@@ -22,8 +22,17 @@ const ConsorcioVendedorMunicipio = () => {
             <th className="px-4 py-2 bg-secundary text-white">
               Número Documento del Emisor
             </th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Departamento del Emisor
+            </th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Municipio del Emisor
+            </th>
 
-            <th className="px-4 py-2 bg-secundary text-white">Total Factura</th>
+            <th className="px-4 py-2 bg-secundary text-white">Subtotal Factura</th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Nombre Comprador
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -54,9 +63,18 @@ const ConsorcioVendedorMunicipio = () => {
                 <td className="border px-4 py-2 text-center">
                   {consorcio.nitEmisor}
                 </td>
+                <td className="border px-4 py-2 text-center">
+                  {consorcio.departamentoEmisor}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {consorcio.municipioEmisor}
+                </td>
 
                 <td className="border px-4 py-2 text-center">
                   ${consorcio.subtotal}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {consorcio.nombreAdquiriente}
                 </td>
               </tr>
             ))

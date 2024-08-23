@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
-
+import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
+import { toast } from "react-toastify";
 const FacturaCompleta = () => {
   const { facturas, searchFacturas, totalSuma } = useListAlcalde();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAnio, setSelectedAnio] = useState("");
+  const { handleDownloadExcel } = useDescargarFacturas();
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -17,11 +19,26 @@ const FacturaCompleta = () => {
     searchFacturas(searchQuery, selectedAnio);
   }, [searchQuery, selectedAnio, searchFacturas]);
 
+  const handleDownload = () => {
+    if ( searchQuery || selectedAnio) {
+      handleDownloadExcel({
+       
+        filtro: searchQuery || undefined,
+        anio: selectedAnio || undefined,
+      });
+    } else {
+      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
+    }
+  };
+
   return (
     <div>
       <div className="xl:flex justify-end">
         <div className="xl:relative mr-4 xl:mt-6">
-          <button className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
+          <button
+            onClick={handleDownload}
+            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+          >
             <span className="hidden md:inline">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
@@ -33,14 +50,14 @@ const FacturaCompleta = () => {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              searchFacturas(e.target.value, selectedAnio); 
+              searchFacturas(e.target.value, selectedAnio);
             }}
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
             placeholder="Search"
             required
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-            <RiSearchLine className="h-8 w-8 p-1 xl:mb-2 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
+            <RiSearchLine className="h-8 w-8 p-1 xl:mb-0 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
           </div>
         </div>
       </div>
@@ -138,7 +155,11 @@ const FacturaCompleta = () => {
               facturas.map((factura, index) => (
                 <tr
                   key={factura.id}
-                  className={index % 2 === 0 ? "bg-gray-100 whitespace-nowrap" : "bg-white whitespace-nowrap"}
+                  className={
+                    index % 2 === 0
+                      ? "bg-gray-100 whitespace-nowrap"
+                      : "bg-white whitespace-nowrap"
+                  }
                 >
                   <td className="border px-4 py-2 text-center">{index + 1}</td>
                   <td className="border px-4 py-2 text-center">

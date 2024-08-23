@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import { RiSearchLine, RiDownloadLine, RiDeleteBin5Fill} from "react-icons/ri";
 import useDescargarConsorcios from "../../../../hook/Consorcios/useDescargarConsorcios";
 const Consorcios = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -159,6 +159,9 @@ const Consorcios = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Subtotal
               </th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                Eliminar
+              </th>
 
             </tr>
           </thead>
@@ -245,6 +248,16 @@ const Consorcios = () => {
                 </td>
                 <td className="border px-4 py-2 text-center">
                   ${consorcio.subtotal}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                <div className="flex justify-center items-center">
+                          <button
+                           
+                            className="flex justify-center items-center mr-2 gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                          >
+                            <RiDeleteBin5Fill className="" />
+                          </button>
+                          </div>
                 </td>
 
 

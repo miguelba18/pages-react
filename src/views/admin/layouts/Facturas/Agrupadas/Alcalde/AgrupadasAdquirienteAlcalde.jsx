@@ -24,7 +24,15 @@ const AgrupadasAdquirienteAlcalde = () => {
   }, [fetchFacturas]);
 
   const handleDownload = () => {
-    handleDownloadExcel("", searchQuery, selectedAnio);
+    if ( searchQuery || selectedAnio) {
+      handleDownloadExcel({
+        
+        filtro: searchQuery || undefined,
+        anio: selectedAnio || undefined,
+      });
+    } else {
+      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
+    }
   };
 
   const handleSearchWithResetAnio = (query) => {
@@ -168,7 +176,7 @@ const AgrupadasAdquirienteAlcalde = () => {
       return newState;
     });
   };
-  const handleDesagrupar = async (facturas) => {
+  const handleDesagrupar = async (facturas, tipo="adquirientes") => {
     console.log(facturas);
     if (!Array.isArray(facturas)) {
       throw new Error("El parámetro `facturas` no es un array");
@@ -177,8 +185,10 @@ const AgrupadasAdquirienteAlcalde = () => {
     }
 
     try {
+      const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+
       const url = new URL(
-        "http://localhost:8080/factura/adquiriente-desagrupar"
+        "http://localhost:8080/factura/persona-desagrupar"
       );
       const params = new URLSearchParams();
 
@@ -190,6 +200,9 @@ const AgrupadasAdquirienteAlcalde = () => {
           params.append("anios", factura.fechaEmision);
         }
       });
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
 
       url.search = params.toString();
       console.log("Desagrupar URL:", url.toString());

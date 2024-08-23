@@ -26,15 +26,17 @@ const useAddConsorcio = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Error al agregar el consorcio');
+        const errorText = await response.text();
+            throw new Error(errorText);
       }
 
       setSuccess(true);
       fetchFacturas(selectedCiudad, searchQuery, selectedAnio);
       toast.success("Consorcio agregada con éxito", { autoClose: 1700 });
       return id;
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      setError(error.message);
+      toast.info(error.message);
     } 
   };
 

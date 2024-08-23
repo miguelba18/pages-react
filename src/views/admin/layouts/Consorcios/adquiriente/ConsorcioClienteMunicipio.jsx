@@ -23,6 +23,12 @@ const ConsorcioClienteMunicipio = () => {
             <th className="px-4 py-2 bg-secundary text-white">
               Número Documento del Adquiriente
             </th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Departamento del Adquiriente
+            </th>
+            <th className="px-4 py-2 bg-secundary text-white">
+              Municipio del Adquiriente
+            </th>
 
             <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
           </tr>
@@ -54,6 +60,12 @@ const ConsorcioClienteMunicipio = () => {
 
                 <td className="border px-4 py-2 text-center">
                   {consorcio.numeroDocumentoAdquiriente}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {consorcio.departamentoAdquiriente}
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {consorcio.municipioAdquiriente}
                 </td>
 
                 <td className="border px-4 py-2 text-center">
