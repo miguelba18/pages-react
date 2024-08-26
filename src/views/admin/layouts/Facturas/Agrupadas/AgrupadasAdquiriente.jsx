@@ -79,10 +79,6 @@ const AgrupadasAdquiriente = () => {
   };
   const handleDownloadExcelDesagrupadas = async (factura, tipo="adquirientes") => {
     const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
-
-
-   
-    
     try {
       const url = new URL(
         "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
@@ -110,8 +106,7 @@ const AgrupadasAdquiriente = () => {
       }
         
 
-      url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
+      
       const response = await fetch(url, {
         method: "POST",
         headers: {

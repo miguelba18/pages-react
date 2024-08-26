@@ -1,28 +1,18 @@
-import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
 import { useEffect } from "react";
-import TablaConsorcioVendedor from "./TablaConsorcioVendedor";
-import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
+import TablaVendedorAlcalde from "./TablaVendedorAlcalde";
 import { useState } from "react";
+import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
+const VendedorAlcalde = () => {
+  const { consorcios, listConsorcios,  } = useListConsorcios();
 
-const ConsorcioVendedorMunicipio = () => {
-  const { consorcios, listConsorcios, setConsorcios } = useListConsorcios();
-
-  const [formData, setFormData] = useState({});
   const [selectedAnio, setSelectedAnio] = useState("");
   const [facturasDisponibles, setFacturasDisponibles] = useState(false);
 
-  const {
-    departamentos,
-    filteredCiudades,
-    selectedDepartamento,
-    selectedCiudad,
-    handleDepartamentoChange,
-    handleCiudadChange,
-  } = useSelectCityDepaUtils();
+  
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    listConsorcios(selectedCiudad, "", anio)
+    listConsorcios("", "", anio)
       .then((facturas) => {
         setFacturasDisponibles(facturas.length > 0);
       })
@@ -31,67 +21,18 @@ const ConsorcioVendedorMunicipio = () => {
       });
   };
   useEffect(() => {
-    if (selectedCiudad) {
-      listConsorcios(selectedCiudad);
-    } else {
-      setConsorcios([]);
-    }
-  }, [listConsorcios, selectedCiudad, setConsorcios]);
+   
+      listConsorcios();
+    
+  }, [listConsorcios]);
 
-  useEffect(() => {
-    setConsorcios([]);
-  }, [selectedDepartamento, setConsorcios]);
+  
   return (
     <div>
-      <div className="xl:flex xl:justify-between items-center">
-        <div className="flex justify-around  ">
-          <div className="ml-4 mt-3">
-            <select
-              value={selectedDepartamento}
-              onChange={(e) => {
-                handleDepartamentoChange(e);
-                setFormData({
-                  ...formData,
-                  departamentoId: e.target.value,
-                });
-              }}
-              className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-            >
-              <option value="">Selecciona un departamento</option>
-              {departamentos.map((departamento) => (
-                <option key={departamento.id} value={departamento.id}>
-                  {departamento.departamento}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="ml-10 mt-3">
-            <select
-              value={selectedCiudad}
-              onChange={(e) => {
-                handleCiudadChange(e);
-                setFormData({
-                  ...formData,
-                  ciudadId: e.target.value,
-                });
-                listConsorcios(e.target.value, selectedAnio);
-              }}
-              disabled={!selectedDepartamento}
-              className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-            >
-              <option value="">Selecciona una ciudad</option>
-              {filteredCiudades.map((ciudad) => (
-                <option key={ciudad.id} value={ciudad.id}>
-                  {ciudad.ciudad}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
-      {selectedCiudad && (
+      
+      
         <>
-        
+        <div className="overflow-x-auto">
           <table className="table-auto w-full mt-8">
             <thead>
               <tr>
@@ -194,14 +135,14 @@ const ConsorcioVendedorMunicipio = () => {
               )}
             </tbody>
           </table>
-
+          </div>
           <div className="mt-6">
-            <TablaConsorcioVendedor />
+            <TablaVendedorAlcalde />
           </div>
         </>
-      )}
+
     </div>
   );
 };
 
-export default ConsorcioVendedorMunicipio;
+export default VendedorAlcalde;

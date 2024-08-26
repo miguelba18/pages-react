@@ -1,77 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
-const ConsorcioClienteMunicipio = () => {
-  const { consorcios, listConsorcios, setConsorcios } = useListConsorcios();
-  const [formData, setFormData] = useState({});
-  const {
-    departamentos,
-    filteredCiudades,
-    selectedDepartamento,
-    selectedCiudad,
-    handleDepartamentoChange,
-    handleCiudadChange,
-  } = useSelectCityDepaUtils();
-  useEffect(() => {
-    if (selectedCiudad) {
-      listConsorcios(selectedCiudad);
-    } else {
-      setConsorcios([]);
-    }
-  }, [listConsorcios, selectedCiudad, setConsorcios]);
+const ClienteAlcalde = () => {
+  const { consorcios, listConsorcios } = useListConsorcios();
 
   useEffect(() => {
-    setConsorcios([]);
-  }, [selectedDepartamento, setConsorcios]);
+    listConsorcios();
+  }, [listConsorcios]);
 
   return (
     <div>
-      <div className="flex justify-around  ">
-        <div className="ml-4 mt-3">
-          <select
-            value={selectedDepartamento}
-            onChange={(e) => {
-              handleDepartamentoChange(e);
-              setFormData({
-                ...formData,
-                departamentoId: e.target.value,
-              });
-            }}
-            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-          >
-            <option value="">Selecciona un departamento</option>
-            {departamentos.map((departamento) => (
-              <option key={departamento.id} value={departamento.id}>
-                {departamento.departamento}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="ml-10 mt-3">
-          <select
-            value={selectedCiudad}
-            onChange={(e) => {
-              handleCiudadChange(e);
-              setFormData({
-                ...formData,
-                ciudadId: e.target.value,
-              });
-              listConsorcios(e.target.value);
-            }}
-            disabled={!selectedDepartamento}
-            className="mb-4 rounded-xl  text-secundary shadow-md shadow-blue-500 px-2  py-3 bg-tertiary-100 w-full focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-          >
-            <option value="">Selecciona una ciudad</option>
-            {filteredCiudades.map((ciudad) => (
-              <option key={ciudad.id} value={ciudad.id}>
-                {ciudad.ciudad}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      {selectedCiudad && (
+       <div className="overflow-x-auto">
       <table className="table-auto w-full mt-6">
         <thead>
           <tr>
@@ -141,9 +80,9 @@ const ConsorcioClienteMunicipio = () => {
           )}
         </tbody>
       </table>
-      )}
+      </div>
     </div>
   );
 };
 
-export default ConsorcioClienteMunicipio;
+export default ClienteAlcalde;

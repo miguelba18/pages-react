@@ -6,7 +6,7 @@ const useDescargarConsorcios = () => {
 
     const handleDownloadExcel = async (ciudad,filtro,anio) => {
 
-      let url = "http://localhost:8080/consorcio/descargar-excel";
+      let url = "http://localhost:8080/consorcio/descargar-excel-persona";
       if (ciudad) {
         url += `?ciudad=${ciudad}`;
       }
@@ -37,7 +37,7 @@ const useDescargarConsorcios = () => {
           const blob = await response.blob();
           const contentDisposition = response.headers.get("Content-Disposition");
           const fileNameMatch = contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
-          const fileName = fileNameMatch ? fileNameMatch[1] : "datos_consorcios.xlsx";
+          const fileName = fileNameMatch ? fileNameMatch[1] : "datos_consorcios_persona.xlsx";
 
     
           

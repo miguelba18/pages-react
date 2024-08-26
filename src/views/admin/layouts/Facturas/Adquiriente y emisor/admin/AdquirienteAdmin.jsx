@@ -21,8 +21,6 @@ const AdquirienteAdmin = () => {
         setFacturasDisponibles(false);
       });
   };
-  
-
 
   const handleSearchWithResetAnio = (query) => {
     setSelectedAnio("");
@@ -70,7 +68,6 @@ const AdquirienteAdmin = () => {
       <div className="flex xl:justify-between items-center ">
         <div className="flex justify-around  ">
           <div className="ml-4">
-            
             <select
               value={selectedDepartamento}
               onChange={(e) => {
@@ -91,7 +88,6 @@ const AdquirienteAdmin = () => {
             </select>
           </div>
           <div className="ml-20">
-            
             <select
               value={selectedCiudad}
               onChange={(e) => {
@@ -145,103 +141,115 @@ const AdquirienteAdmin = () => {
       </h1>
       {selectedCiudad && (
         <>
-        <div className="mt-4 text-right font-bold">
-        <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
-      </div>
-        <div className="overflow-x-auto mt-4">
-          <table className="table-auto w-full">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 bg-secundary text-white">#</th>
-                <th className="px-4 py-2 bg-secundary text-white ">
-                  Fecha <br/>
-                  <select
-                    onChange={(e) => handleAnioChange(e.target.value)}
-                    value={selectedAnio}
-                    className="p-1 rounded border border-gray-300 text-black"
-                  >
-                    <option value="">Todos</option>
-                    <option value="2015">2015</option>
-                    <option value="2016">2016</option>
-                    <option value="2017">2017</option>
-                    <option value="2018">2018</option>
-                    <option value="2019">2019</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                    <option value="2027">2027</option>
-                    <option value="2028">2028</option>
-                    <option value="2029">2029</option>
-                    <option value="2030">2030</option>
-                  </select>
-                </th>
-                
-           
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Nombre adquiriente o comprador
-                </th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  NIT adquiriente o comprador
-                </th>
-                
-                <th className="px-4 py-2 bg-secundary text-white">SubTotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {facturas.length > 0 ? (
-                facturas.map((factura, index) => (
-                  <tr key={index} className={
-                    index % 2 === 0
-                      ? "bg-gray-100 whitespace-nowrap"
-                      : "bg-white whitespace-nowrap"
-                  }>
-                    <td className="border px-4 py-2 text-center">{index + 1}</td>
-                    <td className="border px-4 text-center">{factura.fechaEmision}</td>
-                   
-                    <td className="border px-4 text-center">
-                      <HighlightedText
-                        text={factura.nombreAdquiriente}
-                        highlight={searchQuery}
-                      />
-                    </td>
-                    <td className="border px-4 text-center">
-                      <HighlightedText
-                        text={factura.numeroDocumentoAdquiriente}
-                        highlight={searchQuery}
-                      />
-                    </td>
-                    <td className="border px-4 text-center">${factura.subtotal}</td>
-                  </tr>
-                ))
-              ) : (
+          <div className="mt-4 text-right font-bold">
+            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+          </div>
+          <div className="overflow-x-auto mt-4">
+            <table className="table-auto w-full">
+              <thead>
                 <tr>
-                  <td colSpan={17} className="text-center py-4 text-red-500">
-                    {selectedAnio
-                      ? "No hay facturas para el año seleccionado."
-                      : "Esta ciudad no tiene facturas."}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-            {facturas.length > 0 && (
-              <tfoot>
-                <tr>
-                  <th
-                    className="px-4 py-2 bg-secundary text-white"
-                    colSpan={4}
-                  >
-                    Total
+                  <th className="px-4 py-2 bg-secundary text-white">#</th>
+                  <th className="px-4 py-2 bg-secundary text-white ">
+                    Fecha <br />
+                    <select
+                      onChange={(e) => handleAnioChange(e.target.value)}
+                      value={selectedAnio}
+                      className="p-1 rounded border border-gray-300 text-black"
+                    >
+                      <option value="">Todos</option>
+                      <option value="2015">2015</option>
+                      <option value="2016">2016</option>
+                      <option value="2017">2017</option>
+                      <option value="2018">2018</option>
+                      <option value="2019">2019</option>
+                      <option value="2020">2020</option>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                      <option value="2024">2024</option>
+                      <option value="2025">2025</option>
+                      <option value="2026">2026</option>
+                      <option value="2027">2027</option>
+                      <option value="2028">2028</option>
+                      <option value="2029">2029</option>
+                      <option value="2030">2030</option>
+                    </select>
                   </th>
-                  <th className="border px-4 py-2">${totalSubtotal.toLocaleString("de-DE")}</th>
+
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Nombre adquiriente o comprador
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    NIT adquiriente o comprador
+                  </th>
+
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    SubTotal
+                  </th>
                 </tr>
-              </tfoot>
-            )}
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {facturas.length > 0 ? (
+                  facturas.map((factura, index) => (
+                    <tr
+                      key={index}
+                      className={
+                        index % 2 === 0
+                          ? "bg-gray-100 whitespace-nowrap"
+                          : "bg-white whitespace-nowrap"
+                      }
+                    >
+                      <td className="border px-4 py-2 text-center">
+                        {index + 1}
+                      </td>
+                      <td className="border px-4 text-center">
+                        {factura.fechaEmision}
+                      </td>
+
+                      <td className="border px-4 text-center">
+                        <HighlightedText
+                          text={factura.nombreAdquiriente}
+                          highlight={searchQuery}
+                        />
+                      </td>
+                      <td className="border px-4 text-center">
+                        <HighlightedText
+                          text={factura.numeroDocumentoAdquiriente}
+                          highlight={searchQuery}
+                        />
+                      </td>
+                      <td className="border px-4 text-center">
+                        ${factura.subtotal}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={17} className="text-center py-4 text-red-500">
+                      {selectedAnio
+                        ? "No hay facturas para el año seleccionado."
+                        : "Esta ciudad no tiene facturas."}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+              {facturas.length > 0 && (
+                <tfoot>
+                  <tr>
+                    <th
+                      className="px-4 py-2 bg-secundary text-white"
+                      colSpan={4}
+                    >
+                      Total
+                    </th>
+                    <th className="border px-4 py-2">
+                      ${totalSubtotal.toLocaleString("de-DE")}
+                    </th>
+                  </tr>
+                </tfoot>
+              )}
+            </table>
+          </div>
         </>
       )}
     </div>

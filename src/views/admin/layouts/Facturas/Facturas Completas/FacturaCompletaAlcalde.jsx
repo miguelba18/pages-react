@@ -1,28 +1,47 @@
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiAddCircleFill,
+  RiCheckboxCircleFill,
+  RiArrowLeftSLine,
+  RiArrowRightSLine
+} from "react-icons/ri";
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
 import { toast } from "react-toastify";
+import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 const FacturaCompleta = () => {
   const { facturas, searchFacturas, totalSuma } = useListAlcalde();
   const [searchQuery, setSearchQuery] = useState("");
+  const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
   const { handleDownloadExcel } = useDescargarFacturas();
-
+  const [processedFacturas, setProcessedFacturas] = useState(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2;
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     searchFacturas(searchQuery, anio);
   };
-
   useEffect(() => {
     searchFacturas(searchQuery, selectedAnio);
   }, [searchQuery, selectedAnio, searchFacturas]);
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleAddConsorcio = async (id) => {
+    const resultId = await addConsorcio(id);
+    if (resultId) {
+      setProcessedFacturas((prev) => new Set(prev).add(resultId));
+    }
+  };
   const handleDownload = () => {
-    if ( searchQuery || selectedAnio) {
+    if (searchQuery || selectedAnio) {
       handleDownloadExcel({
-       
         filtro: searchQuery || undefined,
         anio: selectedAnio || undefined,
       });
@@ -33,6 +52,7 @@ const FacturaCompleta = () => {
 
   return (
     <div>
+      
       <div className="xl:flex justify-end">
         <div className="xl:relative mr-4 xl:mt-6">
           <button
@@ -62,8 +82,29 @@ const FacturaCompleta = () => {
         </div>
       </div>
 
-      <div className="mt-4 text-right font-bold">
-        <p>Total facturas: ${totalSuma}</p>
+      <div className="flex  justify-between">
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setCurrentPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+          >
+            <RiArrowLeftSLine />
+          </button>
+          <span className="mt-2">{`Página ${currentPage} de ${Math.ceil(
+            facturas.length / itemsPerPage
+          )}`}</span>
+          <button
+            onClick={() => setCurrentPage(currentPage + 1)}
+            disabled={currentPage === Math.ceil(facturas.length / itemsPerPage)}
+            className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+          >
+            <RiArrowRightSLine />
+          </button>
+        </div>
+        <div className="items-center  mt-2  flex justify-end font-bold">
+          <p>Total facturas: ${totalSuma}</p>
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -142,6 +183,7 @@ const FacturaCompleta = () => {
                 Telefono adquiriente
               </th>
               <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
+              <th className="px-4 py-2 bg-secundary text-white">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -152,7 +194,7 @@ const FacturaCompleta = () => {
                 </td>
               </tr>
             ) : (
-              facturas.map((factura, index) => (
+              currentItems.map((factura, index) => (
                 <tr
                   key={factura.id}
                   className={
@@ -161,7 +203,7 @@ const FacturaCompleta = () => {
                       : "bg-white whitespace-nowrap"
                   }
                 >
-                  <td className="border px-4 py-2 text-center">{index + 1}</td>
+                  <td className="border px-4 py-2 text-center">{indexOfFirstItem +index + 1}</td>
                   <td className="border px-4 py-2 text-center">
                     {factura.fechaEmision}
                   </td>
@@ -219,6 +261,25 @@ const FacturaCompleta = () => {
                   <td className="border px-4 py-2 text-center">
                     ${factura.subtotal}
                   </td>
+                  <td className="border px-4 py-2 text-center">
+                    <div className="flex justify-center items-center">
+                      <button
+                        onClick={() => handleAddConsorcio(factura.id)}
+                        disabled={processedFacturas.has(factura.id)}
+                        className={`  ${
+                          processedFacturas.has(factura.id)
+                            ? "flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#71fb86] cursor-not-allowed"
+                            : "flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl hover:shadow-blue-500 hover:scale-105 duration-300 hover:from-[#1512be] hover:to-[#717cfb]"
+                        }`}
+                      >
+                        {processedFacturas.has(factura.id) ? (
+                          <RiCheckboxCircleFill />
+                        ) : (
+                          <RiAddCircleFill className=" " />
+                        )}
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))
             )}
@@ -229,6 +290,7 @@ const FacturaCompleta = () => {
                 Total
               </th>
               <th className="border px-4 py-2">${totalSuma}</th>
+              <th className="px-4 py-2 bg-secundary text-white"></th>
             </tr>
           </tfoot>
         </table>

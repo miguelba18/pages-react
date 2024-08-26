@@ -7,7 +7,7 @@ const useListConsorcios = () => {
   const listConsorcios = useCallback(
     async (ciudad, filtro = "", anio = "") => {
       try {
-        let url = `http://localhost:8080/consorcio`;
+        let url = `http://localhost:8080/consorcio/persona`;
         const params = new URLSearchParams();
         if (ciudad) {
             params.append("ciudad", ciudad);
@@ -21,7 +21,8 @@ const useListConsorcios = () => {
         if (params.toString()) {
           url += `?${params.toString()}`;
         }
-       
+        
+      console.log(" URL:", url.toString());
         const response = await fetch(url, {
           method: "GET",
           headers: {

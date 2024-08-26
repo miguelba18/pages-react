@@ -1,14 +1,18 @@
-import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
-import { useEffect } from "react";
-import TablaConsorcioVendedor from "./TablaConsorcioVendedor";
+import { useEffect, useState } from "react";
+import useDescargarConsorciosPersona from "../../../../hook/Consorcios/use DescargarConsorciosPersona";
+import { RiSearchLine, RiDownloadLine  } from "react-icons/ri";
+import useListConsorciosPersona from "../../../../../views/hook/Consorcios/useListConsorciosPersona";
+import HighlightedText from "../../../../../utils/HighlightedText";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
-import { useState } from "react";
-
-const ConsorcioVendedorMunicipio = () => {
-  const { consorcios, listConsorcios, setConsorcios } = useListConsorcios();
-
+const TablaConsorcioVendedor = () => {
+  const { consorcios, listConsorcios, setConsorcios } =
+    useListConsorciosPersona();
+  const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({});
+  const {handleDownloadExcel} = useDescargarConsorciosPersona();
+
   const [selectedAnio, setSelectedAnio] = useState("");
+  const [resetAnio, setResetAnio] = useState(false);
   const [facturasDisponibles, setFacturasDisponibles] = useState(false);
 
   const {
@@ -22,7 +26,7 @@ const ConsorcioVendedorMunicipio = () => {
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    listConsorcios(selectedCiudad, "", anio)
+    listConsorcios("", "", anio)
       .then((facturas) => {
         setFacturasDisponibles(facturas.length > 0);
       })
@@ -30,6 +34,7 @@ const ConsorcioVendedorMunicipio = () => {
         setFacturasDisponibles(false);
       });
   };
+
   useEffect(() => {
     if (selectedCiudad) {
       listConsorcios(selectedCiudad);
@@ -38,12 +43,57 @@ const ConsorcioVendedorMunicipio = () => {
     }
   }, [listConsorcios, selectedCiudad, setConsorcios]);
 
+  const handleSearchWithResetAnio = (query) => {
+    const filteredQuery = query.replace(/[0-9]/g, "");
+    setSelectedAnio("");
+    handleSearch(filteredQuery, "");
+    setResetAnio(true);
+  };
+
   useEffect(() => {
-    setConsorcios([]);
-  }, [selectedDepartamento, setConsorcios]);
+    if (resetAnio) {
+      setResetAnio(false);
+    }
+  }, [resetAnio]);
+
+  const handleSearch = (query, anio) => {
+    setSearchQuery("");
+    setSearchQuery(query);
+    listConsorcios(selectedCiudad, query, anio);
+  };
+  const handleDownload = () => {
+    handleDownloadExcel(selectedCiudad,searchQuery, selectedAnio);
+  };
+
   return (
     <div>
       <div className="xl:flex xl:justify-between items-center">
+        <div className="flex justify-end">
+          <div className="relative " hidden={!selectedCiudad}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) =>
+                handleSearchWithResetAnio(e.target.value, facturasDisponibles)
+              }
+              className="rounded-[10px] shadow-xl  w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
+              placeholder="Search"
+              required
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
+              <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-secundary font-semibold " />
+            </div>
+          </div>
+        </div>
+        <div hidden={!selectedCiudad}  className="xl:relative mr-4">
+          <button disabled={consorcios.length < 1}
+            onClick={handleDownload}
+            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+          >
+            <span className="hidden md:inline">Descargar facturas</span>
+            <RiDownloadLine className="mr-0 xl:mr-2" />
+          </button>
+        </div>
         <div className="flex justify-around  ">
           <div className="ml-4 mt-3">
             <select
@@ -91,7 +141,6 @@ const ConsorcioVendedorMunicipio = () => {
       </div>
       {selectedCiudad && (
         <>
-        
           <table className="table-auto w-full mt-8">
             <thead>
               <tr>
@@ -99,9 +148,7 @@ const ConsorcioVendedorMunicipio = () => {
                 <th className="px-4 py-2 bg-secundary text-white">
                   Fecha <br />
                   <select
-                    onChange={(e) =>
-                      handleAnioChange(e.target.value, facturasDisponibles)
-                    }
+                    onChange={(e) => handleAnioChange(e.target.value)}
                     value={selectedAnio}
                     className="p-1 rounded border border-gray-300 text-black"
                   >
@@ -128,26 +175,15 @@ const ConsorcioVendedorMunicipio = () => {
                   Nombre o Razón Social del Emisor
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">
-                  Número Documento del Emisor
+                  Nombre Comprador
                 </th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Departamento del Emisor
-                </th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Municipio del Emisor
-                </th>
-
                 <th className="px-4 py-2 bg-secundary text-white">
                   Subtotal Factura
-                </th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Nombre Comprador
                 </th>
               </tr>
             </thead>
             <tbody>
-              
-                {consorcios.length > 0 ? (
+              {consorcios.length > 0 ? (
                 consorcios.map((consorcio, index) => (
                   <tr
                     key={consorcio.id}
@@ -162,46 +198,37 @@ const ConsorcioVendedorMunicipio = () => {
                       {consorcio.fechaEmision}
                     </td>
                     <td className="border px-4 text-center">
-                      {consorcio.nombreComercialEmisor}
-                    </td>
-
-                    <td className="border px-4 py-2 text-center">
-                      {consorcio.nitEmisor}
-                    </td>
-                    <td className="border px-4 py-2 text-center">
-                      {consorcio.departamentoEmisor}
+                      <HighlightedText
+                        text={consorcio.nombreComercialEmisor}
+                        highlight={searchQuery}
+                      />
                     </td>
                     <td className="border px-4 py-2 text-center">
-                      {consorcio.municipioEmisor}
+                      <HighlightedText
+                        text={consorcio.nombreAdquiriente}
+                        highlight={searchQuery}
+                      />
                     </td>
-
                     <td className="border px-4 py-2 text-center">
                       ${consorcio.subtotal}
-                    </td>
-                    <td className="border px-4 py-2 text-center">
-                      {consorcio.nombreAdquiriente}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                    <td colSpan={20} className="text-center py-4 text-red-500">
-                      {selectedAnio
-                        ? "No hay facturas para el año seleccionado."
-                        : "Esta ciudad no tiene facturas."}
-                    </td>
-                  </tr>
+                  <td colSpan={20} className="text-center py-4 text-red-500">
+                    {selectedAnio
+                      ? "No hay facturas para el año seleccionado."
+                      : "Esta ciudad no tiene facturas."}
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
-
-          <div className="mt-6">
-            <TablaConsorcioVendedor />
-          </div>
         </>
       )}
     </div>
   );
 };
 
-export default ConsorcioVendedorMunicipio;
+export default TablaConsorcioVendedor;

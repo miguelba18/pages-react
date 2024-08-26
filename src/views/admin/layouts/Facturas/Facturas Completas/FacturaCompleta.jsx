@@ -6,6 +6,8 @@ import {
   RiDeleteBin5Fill,
   RiAddCircleFill,
   RiCheckboxCircleFill,
+  RiArrowLeftSLine,
+  RiArrowRightSLine
 } from "react-icons/ri";
 import useListFacturaCompleta from "../../../../hook/Facturas/Factura Completa/admin/useListFacturaCompleta";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
@@ -15,16 +17,16 @@ import Modal from "../../../../modal/Modal";
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 
 const FacturaCompleta = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2;
   const [formData, setFormData] = useState({});
   const [setFacturasDisponibles] = useState(true);
   const { handleDownloadExcel } = useDescargarFacturas();
   const [resetAnio, setResetAnio] = useState(false);
-
   const { deleteFactura } = useDeleteFacturas();
   const { addConsorcio } = useAddConsorcio();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [facturaToDelete, setFacturaToDelete] = useState(null);
-
   const [processedFacturas, setProcessedFacturas] = useState(new Set());
   const {
     handleSearch,
@@ -41,6 +43,10 @@ const FacturaCompleta = () => {
     selectedAnio,
     setSelectedAnio,
   } = useListFacturaCompleta();
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleDelete = () => {
     if (facturaToDelete) {
@@ -92,7 +98,6 @@ const FacturaCompleta = () => {
       toast.error("Por favor selecciona una ciudad o introduce un filtro.");
     }
   };
-  
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -187,9 +192,34 @@ const FacturaCompleta = () => {
 
       {selectedCiudad && (
         <>
-          <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSuma}</p>
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="items-center  flex justify-end font-bold">
+              <p>Total facturas: ${totalSuma}</p>
+            </div>
           </div>
+
           <div className="overflow-x-auto mt-4">
             <table className="table-auto w-full">
               <thead>
@@ -268,13 +298,13 @@ const FacturaCompleta = () => {
                     Subtotal
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Eliminar
+                    Acciones
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {facturas.length > 0 ? (
-                  facturas.map((factura, index) => (
+                  currentItems.map((factura, index) => (
                     <tr
                       key={index}
                       className={
@@ -284,7 +314,7 @@ const FacturaCompleta = () => {
                       }
                     >
                       <td className="border px-4 py-2 text-center">
-                        {index + 1}
+                        {indexOfFirstItem +index + 1}
                       </td>
                       <td className="border px-4 text-center">
                         {factura.fechaEmision}
