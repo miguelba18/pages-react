@@ -56,7 +56,7 @@ const FacturaElectronica = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/factura/extraer-y-guardar-pdf",
+        "http://localhost:8080/pdf/extraer-y-guardar-factura",
         {
           method: "POST",
           headers: {
@@ -68,7 +68,7 @@ const FacturaElectronica = () => {
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(errorMessage || "No se pudo guardar los archivos PDF.");
+        throw new Error(errorMessage);
       }
       setTimeout(() => {
               window.location.reload();
@@ -105,7 +105,7 @@ const FacturaElectronica = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/factura/extraer-texto-pdf",
+        "http://localhost:8080/pdf/extraer-texto",
         {
           method: "POST",
           headers: {

@@ -18,9 +18,9 @@ import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/us
 
 const FacturaCompleta = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  const itemsPerPage = 100;
   const [formData, setFormData] = useState({});
-  const [setFacturasDisponibles] = useState(true);
+  const [facturasDisponibles,setFacturasDisponibles] = useState(true);
   const { handleDownloadExcel } = useDescargarFacturas();
   const [resetAnio, setResetAnio] = useState(false);
   const { deleteFactura } = useDeleteFacturas();
@@ -28,8 +28,9 @@ const FacturaCompleta = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [facturaToDelete, setFacturaToDelete] = useState(null);
   const [processedFacturas, setProcessedFacturas] = useState(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
   const {
-    handleSearch,
+    
     totalSuma,
     facturas,
     departamentos,
@@ -38,11 +39,29 @@ const FacturaCompleta = () => {
     handleDepartamentoChange,
     selectedCiudad,
     selectedDepartamento,
-    searchQuery,
+   setFacturas,
     fetchFacturas,
     selectedAnio,
     setSelectedAnio,
   } = useListFacturaCompleta();
+
+  useEffect(() => {
+    if (selectedCiudad) {
+      fetchFacturas(selectedCiudad, searchQuery); 
+    } else {
+      setFacturas([]);
+    }
+  }, [fetchFacturas, selectedCiudad, searchQuery, setFacturas]);
+
+  useEffect(() => {
+    setFacturas([]); 
+  }, [selectedDepartamento, setFacturas]);
+
+  const handleSearch = (query, anio) => {
+    setSearchQuery(query);
+    fetchFacturas(selectedCiudad, query, anio);
+
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -178,7 +197,7 @@ const FacturaCompleta = () => {
               disabled={!selectedCiudad}
               type="text"
               value={searchQuery}
-              onChange={(e) => handleSearchWithResetAnio(e.target.value)}
+              onChange={(e) => handleSearchWithResetAnio(e.target.value, facturasDisponibles)}
               className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
               placeholder="Search"
               required
@@ -228,7 +247,7 @@ const FacturaCompleta = () => {
                   <th className="px-4 py-2 bg-secundary text-white">
                     Fecha
                     <select
-                      onChange={(e) => handleAnioChange(e.target.value)}
+                      onChange={(e) => handleAnioChange(e.target.value,facturasDisponibles)}
                       value={selectedAnio}
                       className="p-1 rounded border border-gray-300 text-black"
                     >

@@ -10,8 +10,9 @@ import {
 } from "react-icons/ri";
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
-import { toast } from "react-toastify";
+
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
+import { toast } from "react-toastify";
 const FacturaCompleta = () => {
   const { facturas, searchFacturas, totalSuma } = useListAlcalde();
   const [searchQuery, setSearchQuery] = useState("");
@@ -20,7 +21,7 @@ const FacturaCompleta = () => {
   const { handleDownloadExcel } = useDescargarFacturas();
   const [processedFacturas, setProcessedFacturas] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  const itemsPerPage = 100;
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     searchFacturas(searchQuery, anio);
@@ -40,8 +41,9 @@ const FacturaCompleta = () => {
     }
   };
   const handleDownload = () => {
-    if (searchQuery || selectedAnio) {
+    if ("" || searchQuery || selectedAnio) {
       handleDownloadExcel({
+        ciudad: "" || undefined,
         filtro: searchQuery || undefined,
         anio: selectedAnio || undefined,
       });

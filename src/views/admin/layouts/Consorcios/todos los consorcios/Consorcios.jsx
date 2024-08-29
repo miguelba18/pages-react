@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
-import { RiSearchLine, RiDownloadLine, RiDeleteBin5Fill } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiDeleteBin5Fill,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import useDescargarConsorcios from "../../../../hook/Consorcios/useDescargarConsorcios";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import useDeleteConsorcios from "../../../../hook/Consorcios/useDeleteConsorcios";
 import Modal from "../../../../modal/Modal";
+
 const Consorcios = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const [formData, setFormData] = useState({});
   const [resetAnio, setResetAnio] = useState(false);
   const { handleDownloadExcel } = useDescargarConsorcios();
@@ -26,7 +35,9 @@ const Consorcios = () => {
     handleDepartamentoChange,
     handleCiudadChange,
   } = useSelectCityDepaUtils();
-
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     listConsorcios(selectedCiudad, "", anio)
@@ -178,8 +189,31 @@ const Consorcios = () => {
 
       {selectedCiudad && (
         <>
-          <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                consorcios.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(consorcios.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-4 text-right font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -288,7 +322,7 @@ const Consorcios = () => {
               </thead>
               <tbody>
                 {consorcios.length > 0 ? (
-                  consorcios.map((consorcio, index) => (
+                  currentItems.map((consorcio, index) => (
                     <tr
                       key={consorcio.id}
                       className={
@@ -298,7 +332,7 @@ const Consorcios = () => {
                       }
                     >
                       <td className="border px-4 py-2 text-center">
-                        {index + 1}
+                        {indexOfFirstItem + index + 1}
                       </td>
 
                       <td className="border px-4 text-center">

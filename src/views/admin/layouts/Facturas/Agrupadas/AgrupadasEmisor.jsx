@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import useAuthToken from "../../../../hook/Token/useAuthToken";
-import { RiDownloadLine, RiSearchLine } from "react-icons/ri";
+import {
+  RiDownloadLine,
+  RiSearchLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/Agrupadas/useDescargarFacturas";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import { toast } from "react-toastify";
@@ -9,6 +14,8 @@ import { MdOutlineGroupOff, MdOutlineGroup } from "react-icons/md";
 import useListFacturas from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/Agrupadas/useListFacturas";
 
 const AgrupadasEmisor = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const [formData, setFormData] = useState({});
   const { facturas, fetchFacturas, totalSuma, setFacturas } = useListFacturas();
   const [setFacturasDisponibles] = useState(true);
@@ -31,8 +38,6 @@ const AgrupadasEmisor = () => {
     handleCiudadChange,
   } = useSelectCityDepaUtils();
 
-  
-
   useEffect(() => {
     if (selectedCiudad) {
       fetchFacturas(selectedCiudad);
@@ -44,6 +49,10 @@ const AgrupadasEmisor = () => {
   useEffect(() => {
     setFacturas([]);
   }, [selectedDepartamento, setFacturas]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleDownload = () => {
     if (selectedCiudad || searchQuery || selectedAnio) {
@@ -83,11 +92,8 @@ const AgrupadasEmisor = () => {
     fetchFacturas(selectedCiudad, query, anio);
   };
 
-  const handleDesagrupar = async (facturas, tipo="emisores") => {
-
-    
-    const tipoString = typeof tipo === 'string' ? tipo : "emisores";
-
+  const handleDesagrupar = async (facturas, tipo = "emisores") => {
+    const tipoString = typeof tipo === "string" ? tipo : "emisores";
 
     try {
       const url = new URL("http://localhost:8080/factura/persona-desagrupar");
@@ -110,7 +116,6 @@ const AgrupadasEmisor = () => {
       }
 
       url.search = params.toString();
-   
 
       const response = await fetch(url, {
         method: "GET",
@@ -133,29 +138,28 @@ const AgrupadasEmisor = () => {
     }
   };
 
-
-  const handleDownloadExcelDesagrupadas = async (factura,tipo="emisores") => {
-   
-    const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+  const handleDownloadExcelDesagrupadas = async (
+    factura,
+    tipo = "emisores"
+  ) => {
+    const tipoString = typeof tipo === "string" ? tipo : "emisores";
 
     try {
       const url = new URL(
         "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
-      
-      
+
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-      const desagrupadoFacturas = facturasDesagrupadas
+      const desagrupadoFacturas = facturasDesagrupadas;
 
       desagrupadoFacturas.forEach((facturaItem) => {
-     
         if (facturaItem.nitEmisor) {
           params.append("filtros", facturaItem.nitEmisor);
         }
-        
+
         if (facturaItem.fechaEmision) {
           params.append("anios", facturaItem.fechaEmision);
         }
@@ -164,7 +168,6 @@ const AgrupadasEmisor = () => {
       if (tipo) {
         params.append("tipo", tipoString);
       }
-        
 
       url.search = params.toString();
       console.log("Desagrupar URL:", url.toString());
@@ -252,7 +255,6 @@ const AgrupadasEmisor = () => {
       return newState;
     });
   };
-
 
   return (
     <div>
@@ -344,12 +346,36 @@ const AgrupadasEmisor = () => {
 
       {selectedCiudad && (
         <>
-          <div className="mt-4 text-right font-bold">
-            {!isDesagrupado ? (
-              <p>Total facturas: ${totalSuma}</p>
-            ) : (
-              <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
-            )}
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-4 text-right font-bold">
+              {!isDesagrupado ? (
+                <p>Total facturas: ${totalSuma}</p>
+              ) : (
+                <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
+              )}
+            </div>
           </div>
           <div className="overflow-x-auto mt-4">
             <table className="table-auto w-full">
@@ -362,7 +388,7 @@ const AgrupadasEmisor = () => {
                       onChange={(e) => handleAnioChange(e.target.value)}
                       value={selectedAnio}
                       className="p-1 rounded border border-gray-300 text-black"
-                      >
+                    >
                       <option value="">Todos</option>
                       <option value="2015">2015</option>
                       <option value="2016">2016</option>
@@ -398,14 +424,14 @@ const AgrupadasEmisor = () => {
               </thead>
               <tbody>
                 {facturas.length > 0 ? (
-                  facturas.map((factura, index) => {
+                  currentItems.map((factura, index) => {
                     const claveFactura = `${factura.nitEmisor}-${factura.fechaEmision}`;
 
                     return (
                       <React.Fragment key={factura.id}>
                         <tr className="bg-gray-100 whitespace-nowrap">
                           <td className="border px-4 py-2 text-center">
-                            {index + 1}
+                            {indexOfFirstItem+index + 1}
                           </td>
                           <td className="border px-4 text-center">
                             {factura.fechaEmision}

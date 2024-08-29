@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
-import { RiDownloadLine, RiSearchLine } from "react-icons/ri";
+import {
+  RiDownloadLine,
+  RiSearchLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import { MdOutlineGroupOff, MdOutlineGroup } from "react-icons/md";
 
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useDescargarFacturas";
@@ -9,6 +14,8 @@ import useAuthToken from "../../../../hook/Token/useAuthToken";
 import { toast } from "react-toastify";
 import HighlightedText from "../../../../../utils/HighlightedText";
 const AgrupadasAdquiriente = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const { token } = useAuthToken();
   const [formData, setFormData] = useState({});
   const { facturas, fetchFacturas, totalSuma, setFacturas } = useListFacturas();
@@ -29,6 +36,11 @@ const AgrupadasAdquiriente = () => {
     handleDepartamentoChange,
     handleCiudadChange,
   } = useSelectCityDepaUtils();
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     fetchFacturas(selectedCiudad, "", anio)
@@ -77,26 +89,27 @@ const AgrupadasAdquiriente = () => {
     setSearchQuery(query);
     fetchFacturas(selectedCiudad, query, anio);
   };
-  const handleDownloadExcelDesagrupadas = async (factura, tipo="adquirientes") => {
-    const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+  const handleDownloadExcelDesagrupadas = async (
+    factura,
+    tipo = "adquirientes"
+  ) => {
+    const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
     try {
       const url = new URL(
         "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
-      
-      
+
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-      const desagrupadoFacturas = facturasDesagrupadas
+      const desagrupadoFacturas = facturasDesagrupadas;
 
       desagrupadoFacturas.forEach((facturaItem) => {
-     
         if (facturaItem.numeroDocumentoAdquiriente) {
           params.append("filtros", facturaItem.numeroDocumentoAdquiriente);
         }
-        
+
         if (facturaItem.fechaEmision) {
           params.append("anios", facturaItem.fechaEmision);
         }
@@ -104,9 +117,7 @@ const AgrupadasAdquiriente = () => {
       if (tipoString) {
         params.append("tipo", tipoString);
       }
-        
 
-      
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -163,7 +174,6 @@ const AgrupadasAdquiriente = () => {
     }
   };
 
-
   const toggleDespliegue = (factura) => {
     setFacturasDesplegadas((prev) => {
       const claveFactura = `${factura.numeroDocumentoAdquiriente}-${factura.fechaEmision}`;
@@ -177,7 +187,9 @@ const AgrupadasAdquiriente = () => {
         .map((key) => {
           const [numeroDocumentoAdquiriente, fechaEmision] = key.split("-");
           return facturas.find(
-            (f) => f.numeroDocumentoAdquiriente === numeroDocumentoAdquiriente && f.fechaEmision === fechaEmision
+            (f) =>
+              f.numeroDocumentoAdquiriente === numeroDocumentoAdquiriente &&
+              f.fechaEmision === fechaEmision
           );
         })
         .filter((f) => f);
@@ -191,7 +203,7 @@ const AgrupadasAdquiriente = () => {
       return newState;
     });
   };
-  const handleDesagrupar = async (facturas, tipo="adquirientes") => {
+  const handleDesagrupar = async (facturas, tipo = "adquirientes") => {
     console.log(facturas);
     if (!Array.isArray(facturas)) {
       throw new Error("El parámetro `facturas` no es un array");
@@ -200,7 +212,7 @@ const AgrupadasAdquiriente = () => {
     }
 
     try {
-      const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+      const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
       const url = new URL("http://localhost:8080/factura/persona-desagrupar");
       const params = new URLSearchParams();
 
@@ -215,7 +227,6 @@ const AgrupadasAdquiriente = () => {
         if (factura.fechaEmision) {
           params.append("anios", factura.fechaEmision);
         }
-
       });
       if (tipo) {
         params.append("tipo", tipoString);
@@ -341,12 +352,35 @@ const AgrupadasAdquiriente = () => {
 
       {facturas.length > 0 && (
         <>
-          <div className="mt-4 text-right font-bold">
-          {!isDesagrupado ? (
-              <p>Total facturas: ${totalSuma}</p>
-            ) : (
-              <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
-            )}
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-4 text-right font-bold">
+              {!isDesagrupado ? (
+                <p>Total facturas: ${totalSuma}</p>
+              ) : (
+                <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
+              )}
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="table-auto w-full mt-6">
@@ -359,7 +393,7 @@ const AgrupadasAdquiriente = () => {
                       onChange={(e) => handleAnioChange(e.target.value)}
                       value={selectedAnio}
                       className="p-1 rounded border border-gray-300 text-black"
-                      >
+                    >
                       <option value="">Todos</option>
                       <option value="2015">2015</option>
                       <option value="2016">2016</option>
@@ -396,14 +430,14 @@ const AgrupadasAdquiriente = () => {
               </thead>
               <tbody>
                 {facturas.length > 0 ? (
-                  facturas.map((factura, index) => {
+                  currentItems.map((factura, index) => {
                     const claveFactura = `${factura.numeroDocumentoAdquiriente}-${factura.fechaEmision}`;
 
                     return (
                       <React.Fragment key={factura.id}>
                         <tr className="bg-gray-100 whitespace-nowrap">
                           <td className="border px-4 py-2 text-center">
-                            {index + 1}
+                            {indexOfFirstItem + index + 1}
                           </td>
                           <td className="border px-4 text-center">
                             {factura.fechaEmision}
@@ -474,7 +508,7 @@ const AgrupadasAdquiriente = () => {
                                       <th className="px-4 py-2 bg-secundary text-white">
                                         Telefono Adquiriente
                                       </th>
-                                      
+
                                       <th className="px-4 py-2 bg-secundary text-white">
                                         Nombre Adquiriente
                                       </th>

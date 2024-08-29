@@ -21,7 +21,9 @@ import ConsorcioClienteMunicipio from "./views/admin/layouts/Consorcios/adquirie
 import ConsorcioVendedorMunicipio from "./views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio";
 import EnviarCorreos from "./views/admin/layouts/Enviar correos/EnviarCorreos";
 import EnviarCorreoAlcalde from "./views/admin/layouts/Enviar correos/Alcalde/EnviarCorreoAlcalde";
-
+import DocumentoSoporte from "./views/admin/layouts/Documento soporte/DocumentoSoporte";
+import DocumentoComprador from "./views/admin/layouts/Documento soporte/adquiriente/DocumentoComprador";
+import DocumentoVendedor from "./views/admin/layouts/Documento soporte/emisor/DocumentoVendedor";
 import Alcalde from "./views/admin/Admin-Panel/Roles/Alcalde/Alcalde";
 import Secretario from "./views/admin/Alcalde-Panel/Roles/Secretario/Secretario";
 import Personal from "./views/admin/Alcalde-Panel/Roles/Personal/Personal";
@@ -61,6 +63,10 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="perfil" element={<Perfil />} />
           <Route path="contribuyente" element={<Contribuyente />} />
+          <Route path="documentosoporte" element={<DocumentoSoporte/>}/>
+          <Route path="documentocomprador" element={<DocumentoComprador/>}/>
+          <Route path="documentovendedor" element={<DocumentoVendedor/>}/>
+
           <Route
             path="calendarioalcalde"
             element={

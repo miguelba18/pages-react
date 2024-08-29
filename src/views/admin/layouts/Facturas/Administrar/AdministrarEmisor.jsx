@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import useAuthToken from "../../../../hook/Token/useAuthToken";
-import { RiEditBoxFill } from "react-icons/ri";
+import { RiEditBoxFill,RiArrowLeftSLine,RiArrowRightSLine } from "react-icons/ri";
 import Modal from "../../../../modal/Modal";
 import { toast } from "react-toastify";
 import useListAdministrar from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/Administrar/useListAdministrar";
 
 const AdministrarEmisor = () => {
+  const itemsPerPage = 100;
+  const [currentPage, setCurrentPage] = useState(1);
   const [formData, setFormData] = useState({});
   const { facturas, fetchFacturas, setFacturas } = useListAdministrar();
   const [selectedFactura, setSelectedFactura] = useState(null);
@@ -22,7 +24,9 @@ const AdministrarEmisor = () => {
     handleCiudadChange,
   } = useSelectCityDepaUtils();
 
-  
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     if (selectedCiudad) {
@@ -146,8 +150,31 @@ const AdministrarEmisor = () => {
 
       {facturas.length > 0 && selectedCiudad && (
         <>
-          <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="items-center  flex justify-end font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
           </div>
           <div>
             <h2 className="text-xl font-bold mb-2">Facturas Emisor</h2>
@@ -184,13 +211,13 @@ const AdministrarEmisor = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {facturas.map((factura, index) => (
+                  {currentItems.map((factura, index) => (
                     <tr key={factura.id} className={
                       index % 2 === 0
                         ? "bg-gray-100 whitespace-nowrap"
                         : "bg-white whitespace-nowrap"
                     }>
-                      <td className="border px-4 py-2x text-center">{index + 1}</td>
+                      <td className="border px-4 py-2x text-center">{indexOfFirstItem+index + 1}</td>
                       <td className="border px-4 text-center">
                         {factura.nombreComercialEmisor}
                       </td>

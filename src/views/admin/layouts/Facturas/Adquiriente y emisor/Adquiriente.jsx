@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import { RiSearchLine, RiDownloadLine,RiArrowLeftSLine,RiArrowRightSLine } from "react-icons/ri";
 import useListAdquiriente from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useListAdquiriente";
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
 import HighlightedText from "../../../../../utils/HighlightedText";
@@ -10,7 +10,8 @@ const Adquiriente = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAnio, setSelectedAnio] = useState("");
   const [totalSubtotal, setTotalSubtotal] = useState(0);
-
+  const itemsPerPage = 100;
+  const [currentPage, setCurrentPage] = useState(1);
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     searchAdquirientes(searchQuery, anio);
@@ -19,7 +20,9 @@ const Adquiriente = () => {
   useEffect(() => {
     searchAdquirientes(searchQuery, selectedAnio);
   }, [searchQuery, selectedAnio, searchAdquirientes]);
-
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = adquirientes.slice(indexOfFirstItem, indexOfLastItem);
   useEffect(() => {
     const total = adquirientes.reduce((sum, adquiriente) => {
       const subtotalStr = adquiriente.subtotal.replace(/\./g, "");
@@ -67,9 +70,32 @@ const Adquiriente = () => {
       <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
         Facturas de Adquirientes
       </h1>
-      <div className="mt-4 text-right font-bold">
-        <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
-      </div>
+      <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                adquirientes.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(adquirientes.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="items-center  flex justify-end font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
+          </div>
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-6">
           <thead>
@@ -121,7 +147,7 @@ const Adquiriente = () => {
                 </td>
               </tr>
             ) : (
-              adquirientes.map((adquiriente, index) => (
+              currentItems.map((adquiriente, index) => (
                 <tr
                   key={adquiriente.id}
                   className={
@@ -130,7 +156,7 @@ const Adquiriente = () => {
                       : "bg-white whitespace-nowrap"
                   }
                 >
-                  <td className="border px-4 py-2 text-center">{index + 1}</td>
+                  <td className="border px-4 py-2 text-center">{indexOfFirstItem+index + 1}</td>
                   <td className="border px-4 text-center">{adquiriente.fechaEmision}</td>
                   <td className="border px-4 text-center">
                     <HighlightedText

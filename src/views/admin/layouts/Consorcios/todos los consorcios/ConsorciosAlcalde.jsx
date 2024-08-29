@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
 import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
-import { RiSearchLine, RiDownloadLine, RiDeleteBin5Fill } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiDeleteBin5Fill,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import useDescargarConsorcios from "../../../../hook/Consorcios/useDescargarConsorcios";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import Modal from "../../../../modal/Modal";
-import useAuthToken from "../../../../hook/Token/useAuthToken";
 import useDeleteConsorcios from "../../../../hook/Consorcios/useDeleteConsorcios";
 const ConsorciosAlcalde = () => {
-  const { token } = useAuthToken();
-  const [userRoleId, setuserRoleId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
+  
+ 
   const [resetAnio, setResetAnio] = useState(false);
   const { handleDownloadExcel } = useDescargarConsorcios();
   const [setFacturasDisponibles] = useState(true);
@@ -19,22 +26,8 @@ const ConsorciosAlcalde = () => {
   const [facturaToDelete, setFacturaToDelete] = useState(null);
   const { deleteConsorcio } = useDeleteConsorcios();
   const { consorcios, listConsorcios } = useListConsorcios();
-  useEffect(() => {
-    if (token) {
-      try {
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        const roleId = decodedToken.role;
+  
 
-        setuserRoleId(roleId);
-      } catch (error) {
-        console.error("Error al decodificar el token:", error);
-        window.localStorage.removeItem("token");
-        
-      }
-    } else {
-      alert("No hay token");
-    }
-  }, [ token]);
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -48,7 +41,10 @@ const ConsorciosAlcalde = () => {
   };
   useEffect(() => {
     listConsorcios();
-  }, [ listConsorcios]);
+  }, [listConsorcios]);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleDownload = () => {
     handleDownloadExcel(searchQuery, selectedAnio);
@@ -130,9 +126,32 @@ const ConsorciosAlcalde = () => {
         Facturas de Consorcios
       </h1>
 
-      <div className="mt-4 text-right font-bold">
-        <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
-      </div>
+      <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                consorcios.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(consorcios.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-4 text-right font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
+          </div>
 
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-6">
@@ -226,12 +245,17 @@ const ConsorciosAlcalde = () => {
               </th>
               <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
               {}
-              <th hidden={userRoleId === "Secretario" || userRoleId === "Personal"   } className="px-4 py-2 bg-secundary text-white">Eliminar</th>
+              <th
+                
+                className="px-4 py-2 bg-secundary text-white"
+              >
+                Eliminar
+              </th>
             </tr>
           </thead>
           <tbody>
             {consorcios.length > 0 ? (
-              consorcios.map((consorcio, index) => (
+              currentItems.map((consorcio, index) => (
                 <tr
                   key={consorcio.id}
                   className={
@@ -240,7 +264,7 @@ const ConsorciosAlcalde = () => {
                       : "bg-white whitespace-nowrap"
                   }
                 >
-                  <td className="border px-4 py-2 text-center">{index + 1}</td>
+                  <td className="border px-4 py-2 text-center">{indexOfFirstItem+index + 1}</td>
 
                   <td className="border px-4 text-center">
                     {consorcio.codigoUnico}
@@ -319,7 +343,10 @@ const ConsorciosAlcalde = () => {
                   <td className="border px-4 py-2 text-center">
                     ${consorcio.subtotal}
                   </td>
-                  <td hidden={userRoleId === "Secretario"|| userRoleId === "Personal" } className="border px-4 py-2 text-center">
+                  <td
+                    
+                    className="border px-4 py-2 text-center"
+                  >
                     <div className="flex justify-center items-center">
                       <button
                         onClick={() => openDeleteModal(consorcio)}
@@ -350,21 +377,24 @@ const ConsorciosAlcalde = () => {
                 <th className="border px-4 py-2">
                   ${totalSubtotal.toLocaleString("de-DE")}
                 </th>
-                <th hidden={userRoleId === "Secretario" || userRoleId === "Personal"   } className="px-4 py-2 bg-secundary text-white"></th>
+                <th
+                  
+                  className="px-4 py-2 bg-secundary text-white"
+                ></th>
               </tr>
             </tfoot>
           )}
         </table>
         <Modal
-              isOpen={isDeleteModalOpen}
-              onClose={() => setIsDeleteModalOpen(false)}
-              title="Eliminar Factura"
-              confirmText="Confirmar"
-              onConfirm={confirmDelete}
-              onCancel={cancelDelete}
-            >
-              <p>¿Estás seguro de eliminar esta factura?</p>
-            </Modal>
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          title="Eliminar Factura"
+          confirmText="Confirmar"
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+        >
+          <p>¿Estás seguro de eliminar esta factura?</p>
+        </Modal>
       </div>
     </div>
   );

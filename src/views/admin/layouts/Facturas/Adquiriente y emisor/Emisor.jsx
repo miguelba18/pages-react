@@ -1,10 +1,12 @@
 import useListEmisor from "../../../../../views/hook/Facturas/Adquiriente y emisor/Emisor/useListEmisor";
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/useDescargarFacturas";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import { RiSearchLine, RiDownloadLine,RiArrowLeftSLine,RiArrowRightSLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 
 const Emisor = () => {
+  const itemsPerPage = 100;
+  const [currentPage, setCurrentPage] = useState(1);
   const { emisores, searchEmisores } = useListEmisor();
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +21,9 @@ const Emisor = () => {
   useEffect(() => {
     searchEmisores(searchQuery, selectedAnio);
   }, [searchQuery, selectedAnio, searchEmisores]);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = emisores.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     const total = emisores.reduce((sum, emisor) => {
@@ -65,9 +70,32 @@ const Emisor = () => {
       <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
         Factura de Emisores
       </h1>
-      <div className="mt-4 text-right font-bold">
-        <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
-      </div>
+      <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                emisores.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(emisores.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="items-center  flex justify-end font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
+          </div>
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-8">
           <thead>
@@ -120,7 +148,7 @@ const Emisor = () => {
                 </td>
               </tr>
             ) : (
-              emisores.map((emisor, index) => (
+              currentItems.map((emisor, index) => (
                 <tr
                   key={emisor.id}
                   className={
@@ -129,7 +157,7 @@ const Emisor = () => {
                       : "bg-white whitespace-nowrap"
                   }
                 >
-                  <td className="border px-4 py-2">{index + 1}</td>
+                  <td className="border px-4 py-2">{indexOfFirstItem+index + 1}</td>
                   <td className="border px-4 text-center">{emisor.fechaEmision}</td>
                   <td className="border px-4 text-center">
                     <HighlightedText

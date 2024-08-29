@@ -19,6 +19,8 @@ import {
   RiMoneyDollarCircleFill,
   RiTeamFill,
   RiMailSendFill,
+  RiArticleFill,
+  RiFolderOpenFill
 } from "react-icons/ri";
 import { MdManageAccounts } from "react-icons/md";
 import { IoFileTrayFull } from "react-icons/io5";
@@ -27,8 +29,8 @@ const Sidebar = () => {
   const [showSubMenu, setShowSubMenu] = useState(false);
   const [showSubMenuFactura, setShowSubMenuFactura] = useState(false);
   const [showSubMenuConsorcio, setShowSubMenuConsorcio] = useState(false);
-  const [showSubMenuFacturaElectronica, setShowSubMenuFacturaElectronica] =
-    useState(false);
+  const [showSubMenuFacturaElectronica, setShowSubMenuFacturaElectronica] = useState(false);
+  const [showSubMenuDocumentos, setShowSubMenuDocumentos] = useState(false);
   const { token } = useAuthToken();
 
   const location = useLocation();
@@ -824,6 +826,47 @@ const Sidebar = () => {
                   Perfil
                 </Link>
               </li>
+              <div >
+                <button
+                  onClick={() => setShowSubMenuDocumentos(!showSubMenuDocumentos)}
+                  className="flex items-center justify-between  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg w-full  "
+                >
+                  <RiArticleFill className="text-xl text-secundary" />
+                  Documento Soporte
+                  <RiArrowDropRightLine
+                    className={`text-3xl ${
+                      showSubMenuDocumentos && "rotate-90"
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <ul className={`my-2 ${!showSubMenuDocumentos && "hidden"} `}>
+                <li
+                  className={
+                    location.pathname === "/documentosoporte"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/documentosoporte"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiFolderOpenFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentosoporte"
+                          ? "text-white "
+                          : ""
+                      }`}
+                    />
+                    Documentos
+                  </Link>
+                </li>
+
+                
+                
+              </ul>
               <div hidden={userRoleId === "ADMIN"}>
                 <button
                   onClick={() => setShowSubMenuConsorcio(!showSubMenuConsorcio)}

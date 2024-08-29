@@ -1,11 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import useListContribuyente from "../../../hook/Contribuyente/useListContribuyente";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import HighlightedText from "../../../../utils/HighlightedText";
 import useDownloadContribuyente from "../../../hook/Contribuyente/useDownloadContribuyente";
 
 const Contribuyente = () => {
-  const { contribuyentes, fetchContribuyentes, fetchFacturaById, factura } = useListContribuyente();
+  const { contribuyentes, fetchContribuyentes, fetchFacturaById, factura } =
+    useListContribuyente();
+    const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const { handleDownloadExcel } = useDownloadContribuyente();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState("");
@@ -14,6 +22,9 @@ const Contribuyente = () => {
   useEffect(() => {
     fetchContribuyentes(searchQuery);
   }, [searchQuery, fetchContribuyentes]);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = contribuyentes.slice(indexOfFirstItem, indexOfLastItem);
 
   useEffect(() => {
     if (selectedId) {
@@ -33,7 +44,7 @@ const Contribuyente = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    setSelectedId(""); 
+    setSelectedId("");
   };
 
   const tableRows = () => {
@@ -75,7 +86,7 @@ const Contribuyente = () => {
         </tr>
       ));
     } else {
-      return contribuyentes.map((contribuyente, index) => (
+      return currentItems.map((contribuyente, index) => (
         <tr
           key={contribuyente.id}
           className={
@@ -84,7 +95,7 @@ const Contribuyente = () => {
               : "bg-white whitespace-nowrap"
           }
         >
-          <td className="border px-4 py-2 text-center">{index + 1}</td>
+          <td className="border px-4 py-2 text-center">{indexOfFirstItem+index + 1}</td>
           <td className="border px-4 text-center">
             {contribuyente.nombreContribuyente}
           </td>
@@ -120,7 +131,7 @@ const Contribuyente = () => {
         <div className="xl:relative mr-4">
           <button
             onClick={handleDownload}
-            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
           >
             <span className="hidden md:inline">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
@@ -143,6 +154,28 @@ const Contribuyente = () => {
       <h1 className="text-3xl font-bold mb-4 mt-4 xl:mt-0">
         Lista de Contribuyentes
       </h1>
+      <div className="flex mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                contribuyentes.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(contribuyentes.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-6">
           <thead>
@@ -183,9 +216,7 @@ const Contribuyente = () => {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {tableRows()}
-          </tbody>
+          <tbody>{tableRows()}</tbody>
         </table>
       </div>
     </div>

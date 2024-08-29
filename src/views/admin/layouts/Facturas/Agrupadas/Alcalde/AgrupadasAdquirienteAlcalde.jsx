@@ -3,10 +3,17 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { MdOutlineGroupOff, MdOutlineGroup } from "react-icons/md";
 import HighlightedText from "../../../../../../utils/HighlightedText";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import useDescargarFacturas from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/Alcalde/useDescargarFacturas";
 import useAuthToken from "../../../../../hook/Token/useAuthToken";
 const AgrupadasAdquirienteAlcalde = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const { facturas, totalSuma, fetchFacturas } = useListFacturasAdquiriente();
   const [selectedAnio, setSelectedAnio] = useState("");
   const [setFacturasDisponibles] = useState(true);
@@ -19,14 +26,17 @@ const AgrupadasAdquirienteAlcalde = () => {
   const [resetAnio, setResetAnio] = useState(false);
   const { handleDownloadExcel } = useDescargarFacturas();
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
+
   useEffect(() => {
     fetchFacturas();
   }, [fetchFacturas]);
 
   const handleDownload = () => {
-    if ( searchQuery || selectedAnio) {
+    if (searchQuery || selectedAnio) {
       handleDownloadExcel({
-        
         filtro: searchQuery || undefined,
         anio: selectedAnio || undefined,
       });
@@ -50,7 +60,7 @@ const AgrupadasAdquirienteAlcalde = () => {
     setSearchQuery(query);
     fetchFacturas("", query, anio);
   };
-  
+
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     setSearchQuery("");
@@ -62,10 +72,6 @@ const AgrupadasAdquirienteAlcalde = () => {
         setFacturasDisponibles(false);
       });
   };
-
-  
-
-  
 
   const handleDownloadExcelDesagrupadas = async (factura) => {
     if (!Array.isArray(factura)) {
@@ -176,7 +182,7 @@ const AgrupadasAdquirienteAlcalde = () => {
       return newState;
     });
   };
-  const handleDesagrupar = async (facturas, tipo="adquirientes") => {
+  const handleDesagrupar = async (facturas, tipo = "adquirientes") => {
     console.log(facturas);
     if (!Array.isArray(facturas)) {
       throw new Error("El parámetro `facturas` no es un array");
@@ -185,11 +191,9 @@ const AgrupadasAdquirienteAlcalde = () => {
     }
 
     try {
-      const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+      const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
 
-      const url = new URL(
-        "http://localhost:8080/factura/persona-desagrupar"
-      );
+      const url = new URL("http://localhost:8080/factura/persona-desagrupar");
       const params = new URLSearchParams();
 
       facturas.forEach((factura) => {
@@ -279,12 +283,35 @@ const AgrupadasAdquirienteAlcalde = () => {
       )}
       {facturas.length > 0 && (
         <>
-          <div className="mt-4 text-right font-bold">
-            {!isDesagrupado ? (
-              <p>Total facturas: ${totalSuma}</p>
-            ) : (
-              <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
-            )}
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-4 text-right font-bold">
+              {!isDesagrupado ? (
+                <p>Total facturas: ${totalSuma}</p>
+              ) : (
+                <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
+              )}
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="table-auto w-full mt-6">
@@ -333,14 +360,14 @@ const AgrupadasAdquirienteAlcalde = () => {
               </thead>
               <tbody>
                 {facturas.length > 0 ? (
-                  facturas.map((factura, index) => {
+                  currentItems.map((factura, index) => {
                     const claveFactura = `${factura.numeroDocumentoAdquiriente}-${factura.fechaEmision}`;
 
                     return (
                       <React.Fragment key={factura.id}>
                         <tr className="bg-gray-100 whitespace-nowrap">
                           <td className="border px-4 py-2 text-center">
-                            {index + 1}
+                            {indexOfFirstItem+index + 1}
                           </td>
                           <td className="border px-4 text-center">
                             {factura.fechaEmision}

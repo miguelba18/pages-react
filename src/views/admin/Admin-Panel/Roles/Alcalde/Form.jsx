@@ -35,7 +35,8 @@ const Form = () => {
   const [alertSeverity, setAlertSeverity] = useState("success");
   const [alertMessage, setAlertMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const [celular, setCelular] = useState("");
+  const [cedula, setCedula] = useState("");
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -45,12 +46,33 @@ const Form = () => {
 
   const [formData, setFormData] = useState(initialState);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+  
+    if (name === "telefono") {
+      const phoneNumber = value.replace(/\D/g, "");
+      if (phoneNumber.length <= 10) {
+        setFormData({
+          ...formData,
+          [name]: phoneNumber,
+        });
+        setCelular(phoneNumber);
+      }
+    } else if (name === "cedula") {
+      const cleanedValue = value.replace(/\D/g, "");
+      if (cleanedValue.length <= 10) { 
+      setFormData({
+        ...formData,
+        [name]: cleanedValue,
+      });
+      setCedula(cleanedValue);
+    }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -145,13 +167,16 @@ const Form = () => {
               Cédula:
             </label>
             <input
-              type="number"
+              type="text"
               name="cedula"
               value={formData.cedula}
               onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500  placeholder-black placeholder-opacity-70"
               required
             />
+            <div className="grid justify-end text-blue-500">
+              {cedula.length}/10
+            </div>
           </div>
 
           <div className="mb-4">
@@ -162,13 +187,14 @@ const Form = () => {
               Teléfono:
             </label>
             <input
-              type="number"
+              type="text"
               name="telefono"
               value={formData.telefono}
               onChange={handleChange}
               className="border-b px-2 border-black text-black py-1 bg-tertiary-100 w-full focus:outline-none focus:border-blue-500  placeholder-black placeholder-opacity-70"
               required
             />
+            <div className="grid justify-end text-blue-500">{celular.length}/10</div>
           </div>
 
           <div className="mb-4">

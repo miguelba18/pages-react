@@ -1,21 +1,16 @@
-import useListAdquiriente from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/admin/useListAdquiriente";
-import {
-  RiSearchLine,
-  RiDownloadLine,
-  RiArrowLeftSLine,
-  RiArrowRightSLine,
-} from "react-icons/ri";
+import useListDocumentoComprador from "../../../../hook/documento soporte/useListDocumentoComprador";
+import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
 import { useState, useEffect } from "react";
-import HighlightedText from "../../../../../../utils/HighlightedText";
-import useDescargarFacturas from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
-const AdquirienteAdmin = () => {
+import HighlightedText from "../../../../../utils/HighlightedText";
+import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
+const DocumentoComprador = () => {
   const [formData, setFormData] = useState({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 100;
+
   const { handleDownloadExcel } = useDescargarFacturas();
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const [resetAnio, setResetAnio] = useState(false);
   const [setFacturasDisponibles] = useState(true);
+
   const {
     handleSearch,
     facturas,
@@ -29,8 +24,8 @@ const AdquirienteAdmin = () => {
     fetchFacturas,
     selectedAnio,
     setSelectedAnio,
-  } = useListAdquiriente();
-  
+  } = useListDocumentoComprador();
+
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     fetchFacturas(selectedCiudad, searchQuery, anio)
@@ -53,9 +48,7 @@ const AdquirienteAdmin = () => {
       setResetAnio(false);
     }
   }, [resetAnio]);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
+
   
 
   useEffect(() => {
@@ -145,36 +138,11 @@ const AdquirienteAdmin = () => {
           </div>
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas de Adquirientes
-      </h1>
+      
       {selectedCiudad && (
         <>
-          <div className="flex  justify-between">
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
-              >
-                <RiArrowLeftSLine />
-              </button>
-              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
-                facturas.length / itemsPerPage
-              )}`}</span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={
-                  currentPage === Math.ceil(facturas.length / itemsPerPage)
-                }
-                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
-              >
-                <RiArrowRightSLine />
-              </button>
-            </div>
-            <div className="items-center  flex justify-end font-bold">
-              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
-            </div>
+          <div className="mt-4 text-right font-bold">
+            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
           </div>
           <div className="overflow-x-auto mt-4">
             <table className="table-auto w-full">
@@ -182,7 +150,7 @@ const AdquirienteAdmin = () => {
                 <tr>
                   <th className="px-4 py-2 bg-secundary text-white">#</th>
                   <th className="px-4 py-2 bg-secundary text-white ">
-                    Fecha <br />
+                    Fecha Generacion <br />
                     <select
                       onChange={(e) => handleAnioChange(e.target.value)}
                       value={selectedAnio}
@@ -207,12 +175,21 @@ const AdquirienteAdmin = () => {
                       <option value="2030">2030</option>
                     </select>
                   </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Fecha Vencimiento
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Codigo Unico
+                  </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre adquiriente o comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     NIT adquiriente o comprador
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Tipo Contribuyente
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
@@ -222,7 +199,7 @@ const AdquirienteAdmin = () => {
               </thead>
               <tbody>
                 {facturas.length > 0 ? (
-                  currentItems.map((factura, index) => (
+                  facturas.map((factura, index) => (
                     <tr
                       key={index}
                       className={
@@ -232,10 +209,16 @@ const AdquirienteAdmin = () => {
                       }
                     >
                       <td className="border px-4 py-2 text-center">
-                        {indexOfFirstItem+index + 1}
+                        {index + 1}
                       </td>
                       <td className="border px-4 text-center">
-                        {factura.fechaEmision}
+                        {factura.fechaGeneracion}
+                      </td>
+                      <td className="border px-4 text-center">
+                        {factura.fechaVencimiento}
+                      </td>
+                      <td className="border px-4 text-center">
+                        {factura.codigoUnico}
                       </td>
 
                       <td className="border px-4 text-center">
@@ -246,9 +229,12 @@ const AdquirienteAdmin = () => {
                       </td>
                       <td className="border px-4 text-center">
                         <HighlightedText
-                          text={factura.numeroDocumentoAdquiriente}
+                          text={factura.nitAdquiriente}
                           highlight={searchQuery}
                         />
+                      </td>
+                      <td className="border px-4 text-center">
+                        {factura.tipoContribuyenteAdquiriente}
                       </td>
                       <td className="border px-4 text-center">
                         ${factura.subtotal}
@@ -270,7 +256,7 @@ const AdquirienteAdmin = () => {
                   <tr>
                     <th
                       className="px-4 py-2 bg-secundary text-white"
-                      colSpan={4}
+                      colSpan={7}
                     >
                       Total
                     </th>
@@ -288,4 +274,4 @@ const AdquirienteAdmin = () => {
   );
 };
 
-export default AdquirienteAdmin;
+export default DocumentoComprador;

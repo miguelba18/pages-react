@@ -1,12 +1,12 @@
 import useAuthToken from "../../../Token/useAuthToken"
-import { useEffect, useState, useCallback } from "react"
+import { useState, useCallback } from "react"
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 
 const useListFacturaCompleta = () => {
   
   const [facturas, setFacturas] = useState([]);
   const [totalSuma, setTotalSuma] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
+  
   const [selectedAnio, setSelectedAnio] = useState("");
 
   
@@ -55,11 +55,7 @@ const useListFacturaCompleta = () => {
       [token]
     );
   
-    const handleSearch = (query, anio) => {
-      setSearchQuery(query);
-      fetchFacturas(selectedCiudad, query, anio);
-
-    };
+    
   
     const {
       departamentos,
@@ -70,20 +66,10 @@ const useListFacturaCompleta = () => {
       handleCiudadChange,
     } = useSelectCityDepaUtils();
   
-    useEffect(() => {
-      if (selectedCiudad) {
-        fetchFacturas(selectedCiudad, searchQuery); 
-      } else {
-        setFacturas([]);
-      }
-    }, [fetchFacturas, selectedCiudad, searchQuery]);
-  
-    useEffect(() => {
-      setFacturas([]); 
-    }, [selectedDepartamento]);
     
     
-      return { handleSearch, totalSuma, facturas, departamentos, filteredCiudades, handleCiudadChange, handleDepartamentoChange, selectedCiudad, selectedDepartamento, searchQuery, fetchFacturas, selectedAnio, setSelectedAnio };
+    
+      return { totalSuma, facturas, departamentos, filteredCiudades, handleCiudadChange, handleDepartamentoChange, selectedCiudad, selectedDepartamento,setFacturas, fetchFacturas, selectedAnio, setSelectedAnio };
     };
 
 export default useListFacturaCompleta
