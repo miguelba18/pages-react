@@ -1,25 +1,21 @@
-
 import useAuthToken from "../Token/useAuthToken";
-import { useEffect, useState, useCallback } from "react";
-import useSelectCityDepaUtils from "../../../utils/useSelectCityDepaUtils";
+import { useState, useCallback } from "react";
+
 const useListDocumentoComprador = () => {
   const { token } = useAuthToken();
   const [facturas, setFacturas] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedAnio, setSelectedAnio] = useState("");
 
-  
-  
   const fetchFacturas = useCallback(
-    async (ciudad, query, anio, tipo="adquirientes") => {
+    async (ciudad, query, anio, tipo = "adquirientes") => {
       try {
-        const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+        const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
         let url = `http://localhost:8080/soporte/persona`;
         const params = new URLSearchParams();
 
         if (ciudad) {
           params.append("ciudad", ciudad);
         }
+
         if (query) {
           params.append("filtro", query);
         }
@@ -41,6 +37,7 @@ const useListDocumentoComprador = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log("Desagrupar URL:", url.toString());
 
         if (!response.ok) {
           throw new Error("Error al obtener las facturas");
@@ -48,7 +45,6 @@ const useListDocumentoComprador = () => {
 
         const data = await response.json();
         setFacturas(data);
-    
       } catch (error) {
         console.error(error);
         setFacturas([]);
@@ -56,37 +52,8 @@ const useListDocumentoComprador = () => {
     },
     [token]
   );
-  const handleSearch = (query, anio) => {
-    setSearchQuery(query);
-    fetchFacturas(selectedCiudad, query, anio);
 
-  };
-
-  const {
-    departamentos,
-    filteredCiudades,
-    selectedDepartamento,
-    selectedCiudad,
-    handleDepartamentoChange,
-    handleCiudadChange,
-  } = useSelectCityDepaUtils();
-
-  useEffect(() => {
-    if (selectedCiudad) {
-      fetchFacturas(selectedCiudad, searchQuery); 
-    } else {
-      setFacturas([]);
-    }
-  }, [fetchFacturas, selectedCiudad, searchQuery]);
-
-  useEffect(() => {
-    setFacturas([]); 
-  }, [selectedDepartamento]);
-  
-
-  return {  handleSearch, facturas, departamentos, filteredCiudades, handleCiudadChange, handleDepartamentoChange, selectedCiudad, selectedDepartamento, searchQuery, fetchFacturas, selectedAnio, setSelectedAnio };
+  return { facturas, fetchFacturas, setFacturas };
 };
 
 export default useListDocumentoComprador;
-  
-

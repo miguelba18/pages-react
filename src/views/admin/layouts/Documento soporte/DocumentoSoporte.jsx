@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import DocumentoComprador from "./adquiriente/DocumentoComprador";
-import DocumentoVendedor from "./emisor/DocumentoVendedor";
 import "react-toastify/dist/ReactToastify.css";
 import { RiFilePdf2Line, RiSave3Line } from "react-icons/ri";
 import useAuthToken from "../../../hook/Token/useAuthToken";
 const DocumentoSoporte = () => {
-  const [selectedEmpresa, setSelectedEmpresa] = useState("adquiriente");
-  const handleEmpresaChange = (empresa) => {
-    setSelectedEmpresa(empresa);
-  };
+  
   const [pdfs, setPdfs] = useState([]);
   const { token } = useAuthToken();
 
@@ -72,36 +67,13 @@ const DocumentoSoporte = () => {
 
   return (
     <div className="">
-      <div className="flex  justify-between mb-10">
-        <div className="grid w-1/2  justify-center items-center">
+      <div className=" mb-10">
+        
           <h1 className="text-3xl font-medium text-secondary">
             Documento Soporte
           </h1>
-          <div>
-        <div className="mt-4">
-          <button
-            onClick={() => handleEmpresaChange("adquiriente")}
-            className={`${
-              selectedEmpresa === "adquiriente"
-                ? "bg-secundary text-white shadow-xl shadow-secundary"
-                : "bg-white text-secundary"
-            } px-4 py-2 rounded-l`}
-          >
-            Adquiriente
-          </button>
-          <button
-            onClick={() => handleEmpresaChange("emisor")}
-            className={`${
-              selectedEmpresa === "emisor"
-                ? "bg-secundary text-white shadow-xl shadow-secundary"
-                : "bg-white text-secundary"
-            } px-4 py-2 rounded-r`}
-          >
-            Emisor
-          </button>
-        </div>
-      </div>
-        </div>
+          
+        
         <div className="w-1/2 xl:flex mt-8 xl:mt-0 xl:p-4 justify-center">
           <div className="bg-tertiary-100 h-full xl:w-full p-10  rounded-xl shadow-2xl shadow-secundary">
             <h2 className="text-lg text-center font-semibold mb-2">
@@ -154,9 +126,8 @@ const DocumentoSoporte = () => {
           </div>
         </div>
       </div>
-      
-      {selectedEmpresa === "adquiriente" && <DocumentoComprador />}
-      {selectedEmpresa === "emisor" && <DocumentoVendedor />}
+
+
     </div>
   );
 };

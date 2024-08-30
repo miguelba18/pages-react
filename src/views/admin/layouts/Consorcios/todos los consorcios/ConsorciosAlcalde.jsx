@@ -31,6 +31,7 @@ const ConsorciosAlcalde = () => {
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
+    setSearchQuery("");
     listConsorcios("", "", anio)
       .then((facturas) => {
         setFacturasDisponibles(facturas.length > 0);

@@ -276,13 +276,8 @@ const AgrupadasAdquirienteAlcalde = () => {
           </div>
         </div>
       </div>
-      {facturas.length === 0 && (
-        <p className="text-red-500">
-          No hay facturas disponibles para la ciudad seleccionada.
-        </p>
-      )}
-      {facturas.length > 0 && (
-        <>
+      
+      
           <div className="flex  justify-between">
             <div className="flex justify-center mt-4">
               <button
@@ -527,8 +522,7 @@ const AgrupadasAdquirienteAlcalde = () => {
               </tbody>
             </table>
           </div>
-        </>
-      )}
+       
     </div>
   );
 };

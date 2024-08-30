@@ -48,7 +48,7 @@ const useProfile = () => {
       setProfile(response.data);
       return true;
     } catch (error) {
-      toast.error("El numero de celular debe tener 10 digitos");
+      toast.error(error.message);
       return false;
     }
   };

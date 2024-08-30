@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import TablaVendedorAlcalde from "./TablaVendedorAlcalde";
 import { useState } from "react";
+import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
 const VendedorAlcalde = () => {
-  const { consorcios, listConsorcios,  } = useListConsorcios();
-
+  const { consorcios, listConsorcios } = useListConsorcios();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const [selectedAnio, setSelectedAnio] = useState("");
   const [facturasDisponibles, setFacturasDisponibles] = useState(false);
-
-  
+  const [totalSubtotal, setTotalSubtotal] = useState(0);
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -21,17 +22,51 @@ const VendedorAlcalde = () => {
       });
   };
   useEffect(() => {
-   
-      listConsorcios();
-    
+    listConsorcios();
   }, [listConsorcios]);
 
-  
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
+
+  useEffect(() => {
+    const total = consorcios.reduce((sum, consorcio) => {
+      const subtotalStr = consorcio.subtotal.replace(/\./g, "");
+      const subtotal = parseFloat(subtotalStr.replace(/[^0-9.-]+/g, ""));
+      return sum + (isNaN(subtotal) ? 0 : subtotal);
+    }, 0);
+    setTotalSubtotal(total);
+  }, [consorcios]);
+
   return (
     <div>
-      
-      
-        <>
+      <>
+      <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                consorcios.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(consorcios.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-8 text-right font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
+          </div>
         <div className="overflow-x-auto">
           <table className="table-auto w-full mt-8">
             <thead>
@@ -87,9 +122,8 @@ const VendedorAlcalde = () => {
               </tr>
             </thead>
             <tbody>
-              
-                {consorcios.length > 0 ? (
-                consorcios.map((consorcio, index) => (
+              {consorcios.length > 0 ? (
+                currentItems.map((consorcio, index) => (
                   <tr
                     key={consorcio.id}
                     className={
@@ -98,7 +132,7 @@ const VendedorAlcalde = () => {
                         : "bg-white whitespace-nowrap"
                     }
                   >
-                    <td className="border px-4 py-2">{index + 1}</td>
+                    <td className="border px-4 py-2">{indexOfFirstItem+index + 1}</td>
                     <td className="border px-4 text-center">
                       {consorcio.fechaEmision}
                     </td>
@@ -126,21 +160,20 @@ const VendedorAlcalde = () => {
                 ))
               ) : (
                 <tr>
-                    <td colSpan={20} className="text-center py-4 text-red-500">
-                      {selectedAnio
-                        ? "No hay facturas para el año seleccionado."
-                        : "Esta ciudad no tiene facturas."}
-                    </td>
-                  </tr>
+                  <td colSpan={20} className="text-center py-4 text-red-500">
+                    {selectedAnio
+                      ? "No hay facturas para el año seleccionado."
+                      : "Esta ciudad no tiene facturas."}
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
-          </div>
-          <div className="mt-6">
-            <TablaVendedorAlcalde />
-          </div>
-        </>
-
+        </div>
+        <div className="mt-6">
+          <TablaVendedorAlcalde />
+        </div>
+      </>
     </div>
   );
 };

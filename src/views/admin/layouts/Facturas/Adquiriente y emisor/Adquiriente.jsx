@@ -20,6 +20,7 @@ const Adquiriente = () => {
   useEffect(() => {
     searchAdquirientes(searchQuery, selectedAnio);
   }, [searchQuery, selectedAnio, searchAdquirientes]);
+  
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = adquirientes.slice(indexOfFirstItem, indexOfLastItem);

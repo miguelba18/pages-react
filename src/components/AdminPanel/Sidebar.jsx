@@ -250,7 +250,7 @@ const Sidebar = () => {
                       className="flex items-center justify-between  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg w-full  "
                     >
                       <RiTeamFill className="text-xl text-secundary mr-4" />
-                      Consorcios
+                      No Vinculantes
                       <RiArrowDropRightLine
                         className={`text-3xl ${
                           showSubMenuConsorcio && "rotate-90"
@@ -279,7 +279,7 @@ const Sidebar = () => {
                                 : ""
                             }`}
                           />
-                          Todos los consorcios
+                          Todos los no Vinculantes
                         </Link>
                       </li>
 
@@ -301,7 +301,7 @@ const Sidebar = () => {
                                 : ""
                             }`}
                           />
-                          Cliente Municipio
+                          No Vinculante Cliente 
                         </Link>
                       </li>
                       <li
@@ -323,7 +323,7 @@ const Sidebar = () => {
                                 : ""
                             }`}
                           />
-                          Vendedor Municipio
+                          No Vinculante Vendedor 
                         </Link>
                       </li>
                     </ul>
@@ -864,6 +864,98 @@ const Sidebar = () => {
                   </Link>
                 </li>
 
+                <li
+                hidden={userRoleId === "Secretario"||userRoleId === "Alcalde"||userRoleId === "Personal"}
+                  className={
+                    location.pathname === "/documentocomprador"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/documentocomprador"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiShakeHandsFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentocomprador"
+                          ? "text-white "
+                          : ""
+                      }`}
+                    />
+                    Documento Comprador
+                  </Link>
+                </li>
+
+                <li
+                hidden={userRoleId === "Secretario"||userRoleId === "Alcalde"||userRoleId === "Personal"}
+                  className={
+                    location.pathname === "/documentovendedor"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/documentovendedor"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiBankFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentovendedor"
+                          ? "text-white "
+                          : ""
+                      }`}
+                    />
+                    Documento Vendedor
+                  </Link>
+                </li>
+
+                <li
+                hidden={userRoleId === "ADMIN"}
+                  className={
+                    location.pathname === "/documentocompradoralcalde"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/documentocompradoralcalde"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiShakeHandsFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentocompradoralcalde"
+                          ? "text-white "
+                          : ""
+                      }`}
+                    />
+                    Documento Comprador
+                  </Link>
+                </li>
+
+                <li
+                hidden={userRoleId === "ADMIN"}
+                  className={
+                    location.pathname === "/documentovendedoralcalde"
+                      ? "bg-secundary text-white rounded-lg  "
+                      : "hover:bg-tertiary-900 transition-colors  rounded-lg text-gray-500"
+                  }
+                >
+                  <Link
+                    to="/documentovendedoralcalde"
+                    className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2 before:border-2 before:border-tertiary-100"
+                  >
+                    <RiBankFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentovendedoralcalde"
+                          ? "text-white "
+                          : ""
+                      }`}
+                    />
+                    Documento Vendedor
+                  </Link>
+                </li>
+
                 
                 
               </ul>
@@ -873,7 +965,7 @@ const Sidebar = () => {
                   className="flex items-center justify-between  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg w-full  "
                 >
                   <RiTeamFill className="text-xl text-secundary" />
-                  Consorcios
+                  No Vinculantes
                   <RiArrowDropRightLine
                     className={`text-3xl ${
                       showSubMenuConsorcio && "rotate-90"
@@ -901,7 +993,7 @@ const Sidebar = () => {
                           : ""
                       }`}
                     />
-                    Todos los consorcios
+                    Todos los no Vinculantes
                   </Link>
                 </li>
 
@@ -923,7 +1015,7 @@ const Sidebar = () => {
                           : ""
                       }`}
                     />
-                    Cliente Municipio
+                    No Vinculante Cliente
                   </Link>
                 </li>
                 <li
@@ -944,7 +1036,7 @@ const Sidebar = () => {
                           : ""
                       }`}
                     />
-                    Vendedor Municipio
+                    No Vinculante Vendedor
                   </Link>
                 </li>
               </ul>

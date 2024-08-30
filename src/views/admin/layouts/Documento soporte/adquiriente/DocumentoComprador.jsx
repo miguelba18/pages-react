@@ -1,30 +1,56 @@
 import useListDocumentoComprador from "../../../../hook/documento soporte/useListDocumentoComprador";
-import { RiSearchLine, RiDownloadLine } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
-import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/useDescargarFacturas";
+import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
+import useDescargarFacturasAdquirientes from "../../../../hook/documento soporte/useDescargarFacturasAdquirientes";
+ 
 const DocumentoComprador = () => {
   const [formData, setFormData] = useState({});
-
-  const { handleDownloadExcel } = useDescargarFacturas();
+  const [selectedAnio, setSelectedAnio] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const { handleDownloadExcel } = useDescargarFacturasAdquirientes();
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const [resetAnio, setResetAnio] = useState(false);
-  const [setFacturasDisponibles] = useState(true);
-
+  const [facturasDisponibles,setFacturasDisponibles] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const {
-    handleSearch,
     facturas,
+    fetchFacturas,
+    setFacturas
+  } = useListDocumentoComprador();
+  const {
     departamentos,
     filteredCiudades,
-    handleCiudadChange,
-    handleDepartamentoChange,
-    selectedCiudad,
     selectedDepartamento,
-    searchQuery,
-    fetchFacturas,
-    selectedAnio,
-    setSelectedAnio,
-  } = useListDocumentoComprador();
+    selectedCiudad,
+    handleDepartamentoChange,
+    handleCiudadChange,
+  } = useSelectCityDepaUtils();
+
+  useEffect(() => {
+    if (selectedCiudad) {
+      fetchFacturas(selectedCiudad, searchQuery); 
+    } else {
+      setFacturas([]);
+    }
+  }, [fetchFacturas, selectedCiudad, searchQuery,setFacturas]);
+
+  useEffect(() => {
+    setFacturas([]); 
+  }, [selectedDepartamento,setFacturas]);
+  
+  const handleSearch = (query, anio) => {
+    setSearchQuery(query);
+    fetchFacturas(selectedCiudad, query, anio);
+
+  };
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -49,8 +75,6 @@ const DocumentoComprador = () => {
     }
   }, [resetAnio]);
 
-  
-
   useEffect(() => {
     const total = facturas.reduce((sum, adquiriente) => {
       const subtotalStr = adquiriente.subtotal.replace(/\./g, "");
@@ -64,6 +88,9 @@ const DocumentoComprador = () => {
   const handleDownload = () => {
     handleDownloadExcel(selectedCiudad, searchQuery, selectedAnio);
   };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="">
@@ -115,6 +142,7 @@ const DocumentoComprador = () => {
         <div className="flex  ">
           <div className="xl:relative mr-4">
             <button
+            disabled={!selectedCiudad}
               onClick={handleDownload}
               className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
             >
@@ -125,9 +153,10 @@ const DocumentoComprador = () => {
 
           <div className="relative xl:right-0">
             <input
-              type="text"
+            disabled={!selectedCiudad}
+              type="number"
               value={searchQuery}
-              onChange={(e) => handleSearchWithResetAnio(e.target.value)}
+              onChange={(e) => handleSearchWithResetAnio(e.target.value,facturasDisponibles)}
               className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
               placeholder="Search"
               required
@@ -138,11 +167,37 @@ const DocumentoComprador = () => {
           </div>
         </div>
       </div>
-      
+      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
+        Facturas documento compradores
+      </h1>
+
       {selectedCiudad && (
         <>
-          <div className="mt-4 text-right font-bold">
-            <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-8 text-right font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
           </div>
           <div className="overflow-x-auto mt-4">
             <table className="table-auto w-full">
@@ -152,7 +207,7 @@ const DocumentoComprador = () => {
                   <th className="px-4 py-2 bg-secundary text-white ">
                     Fecha Generacion <br />
                     <select
-                      onChange={(e) => handleAnioChange(e.target.value)}
+                      onChange={(e) => handleAnioChange(e.target.value,facturasDisponibles)}
                       value={selectedAnio}
                       className="p-1 rounded border border-gray-300 text-black"
                     >
@@ -199,7 +254,7 @@ const DocumentoComprador = () => {
               </thead>
               <tbody>
                 {facturas.length > 0 ? (
-                  facturas.map((factura, index) => (
+                  currentItems.map((factura, index) => (
                     <tr
                       key={index}
                       className={
@@ -209,7 +264,7 @@ const DocumentoComprador = () => {
                       }
                     >
                       <td className="border px-4 py-2 text-center">
-                        {index + 1}
+                        {indexOfFirstItem+index + 1}
                       </td>
                       <td className="border px-4 text-center">
                         {factura.fechaGeneracion}

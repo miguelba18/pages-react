@@ -24,6 +24,8 @@ import EnviarCorreoAlcalde from "./views/admin/layouts/Enviar correos/Alcalde/En
 import DocumentoSoporte from "./views/admin/layouts/Documento soporte/DocumentoSoporte";
 import DocumentoComprador from "./views/admin/layouts/Documento soporte/adquiriente/DocumentoComprador";
 import DocumentoVendedor from "./views/admin/layouts/Documento soporte/emisor/DocumentoVendedor";
+import DocumentoVendedorAlcalde from "./views/admin/layouts/Documento soporte/emisor/DocumentoVendedorAlcalde";
+import DocumentoCompradorAlcalde from "./views/admin/layouts/Documento soporte/adquiriente/DocumentoCompradorAlcalde";
 import Alcalde from "./views/admin/Admin-Panel/Roles/Alcalde/Alcalde";
 import Secretario from "./views/admin/Alcalde-Panel/Roles/Secretario/Secretario";
 import Personal from "./views/admin/Alcalde-Panel/Roles/Personal/Personal";
@@ -63,10 +65,24 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="perfil" element={<Perfil />} />
           <Route path="contribuyente" element={<Contribuyente />} />
-          <Route path="documentosoporte" element={<DocumentoSoporte/>}/>
-          <Route path="documentocomprador" element={<DocumentoComprador/>}/>
-          <Route path="documentovendedor" element={<DocumentoVendedor/>}/>
+          <Route path="documentosoporte" element={<DocumentoSoporte />} />
 
+          <Route
+            path="documentocompradoralcalde"
+            element={
+              <RestrictedRouteSecretarioPersonal>
+                <DocumentoCompradorAlcalde />
+              </RestrictedRouteSecretarioPersonal>
+            }
+          />
+          <Route
+            path="documentovendedoralcalde"
+            element={
+              <RestrictedRouteSecretarioPersonal>
+                <DocumentoVendedorAlcalde />
+              </RestrictedRouteSecretarioPersonal>
+            }
+          />
           <Route
             path="calendarioalcalde"
             element={
@@ -156,6 +172,22 @@ function App() {
           />
 
           {/* Rutas que solo puede ver el ADMIN */}
+          <Route
+            path="documentocomprador"
+            element={
+              <RestrictedRouteAdmin>
+                <DocumentoComprador />
+              </RestrictedRouteAdmin>
+            }
+          />
+          <Route
+            path="documentovendedor"
+            element={
+              <RestrictedRouteAdmin>
+                <DocumentoVendedor />
+              </RestrictedRouteAdmin>
+            }
+          />
           <Route
             path="alcalde"
             element={

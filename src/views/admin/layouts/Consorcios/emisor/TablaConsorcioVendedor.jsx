@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
 import useDescargarConsorciosPersona from "../../../../hook/Consorcios/use DescargarConsorciosPersona";
-import { RiSearchLine, RiDownloadLine  } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import useListConsorciosPersona from "../../../../../views/hook/Consorcios/useListConsorciosPersona";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
+
 const TablaConsorcioVendedor = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 100;
   const { consorcios, listConsorcios, setConsorcios } =
     useListConsorciosPersona();
   const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({});
-  const {handleDownloadExcel} = useDescargarConsorciosPersona();
+  const { handleDownloadExcel } = useDescargarConsorciosPersona();
+  const [totalSubtotal, setTotalSubtotal] = useState(0);
 
   const [selectedAnio, setSelectedAnio] = useState("");
   const [resetAnio, setResetAnio] = useState(false);
@@ -26,7 +35,7 @@ const TablaConsorcioVendedor = () => {
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    listConsorcios("", "", anio)
+    listConsorcios(selectedCiudad, searchQuery, anio)
       .then((facturas) => {
         setFacturasDisponibles(facturas.length > 0);
       })
@@ -62,8 +71,20 @@ const TablaConsorcioVendedor = () => {
     listConsorcios(selectedCiudad, query, anio);
   };
   const handleDownload = () => {
-    handleDownloadExcel(selectedCiudad,searchQuery, selectedAnio);
+    handleDownloadExcel(selectedCiudad, searchQuery, selectedAnio);
   };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
+
+  useEffect(() => {
+    const total = consorcios.reduce((sum, consorcio) => {
+      const subtotalStr = consorcio.subtotal.replace(/\./g, "");
+      const subtotal = parseFloat(subtotalStr.replace(/[^0-9.-]+/g, ""));
+      return sum + (isNaN(subtotal) ? 0 : subtotal);
+    }, 0);
+    setTotalSubtotal(total);
+  }, [consorcios]);
 
   return (
     <div>
@@ -85,8 +106,9 @@ const TablaConsorcioVendedor = () => {
             </div>
           </div>
         </div>
-        <div hidden={!selectedCiudad}  className="xl:relative mr-4">
-          <button disabled={consorcios.length < 1}
+        <div hidden={!selectedCiudad} className="xl:relative mr-4">
+          <button
+            disabled={consorcios.length < 1}
             onClick={handleDownload}
             className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
           >
@@ -141,6 +163,32 @@ const TablaConsorcioVendedor = () => {
       </div>
       {selectedCiudad && (
         <>
+          <div className="flex  justify-between">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+                consorcios.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(consorcios.length / itemsPerPage)
+                }
+                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+            <div className="mt-8 text-right font-bold">
+              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+            </div>
+          </div>
           <table className="table-auto w-full mt-8">
             <thead>
               <tr>
@@ -184,7 +232,7 @@ const TablaConsorcioVendedor = () => {
             </thead>
             <tbody>
               {consorcios.length > 0 ? (
-                consorcios.map((consorcio, index) => (
+                currentItems.map((consorcio, index) => (
                   <tr
                     key={consorcio.id}
                     className={
@@ -193,7 +241,9 @@ const TablaConsorcioVendedor = () => {
                         : "bg-white whitespace-nowrap"
                     }
                   >
-                    <td className="border px-4 py-2">{index + 1}</td>
+                    <td className="border px-4 py-2">
+                      {indexOfFirstItem + index + 1}
+                    </td>
                     <td className="border px-4 text-center">
                       {consorcio.fechaEmision}
                     </td>

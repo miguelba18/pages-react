@@ -23,7 +23,7 @@ const useDeleteConsorcios = () => {
             Authorization: `Bearer ${token}`,
           },
       });
-
+      
       if (!response.ok) {
         throw new Error('Error al eliminar la factura');
       }
