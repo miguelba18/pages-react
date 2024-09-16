@@ -35,7 +35,7 @@ const Sidebar = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const [userRoleId, setuserRoleId] = useState(null);
+  const [userRoleId, setUserRoleId] = useState(null);
 
   useEffect(() => {
     if (token) {
@@ -43,7 +43,7 @@ const Sidebar = () => {
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
         const roleId = decodedToken.role;
 
-        setuserRoleId(roleId);
+        setUserRoleId(roleId);
       } catch (error) {
         console.error("Error al decodificar el token:", error);
         window.localStorage.removeItem("token");
@@ -155,6 +155,7 @@ const Sidebar = () => {
                           Agregar Alcalde
                         </Link>
                       </li>
+                      
                       <li
                         className={
                           location.pathname === "/tablaadminalcalde"

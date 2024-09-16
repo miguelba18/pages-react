@@ -38,7 +38,7 @@ const useListInquietud = () => {
     obtenerInquietudes();
   }, [token]);
 
-  return { inquietudes, loading, error };
+  return { inquietudes,setInquietudes, loading, error };
 };
 
 export default useListInquietud;
