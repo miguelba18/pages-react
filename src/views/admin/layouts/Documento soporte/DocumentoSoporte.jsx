@@ -19,7 +19,7 @@ const DocumentoSoporte = () => {
     setPdfs(validFiles);
   };
 
-  const handleSavePdfs = async () => {
+  const handleSavePdfs = async (tipo="soporte") => {
     if (pdfs.length === 0) {
       toast.error("Por favor, selecciona archivos PDF primero.");
       return;
@@ -38,9 +38,17 @@ const DocumentoSoporte = () => {
     });
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/pdf/extraer-y-guardar-soporte",
-        {
+      const tipoString = typeof tipo === 'string' ? tipo : "soporte";
+      let url = `http://localhost:8080/pdf/extraer-y-guardar`;
+        const params = new URLSearchParams();
+        if (tipo) {
+          params.append("tipo", tipoString);
+        }
+
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
+      const response = await fetch(url,{
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,16 +57,29 @@ const DocumentoSoporte = () => {
         }
       );
 
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage);
+      const result = await response.json();
+
+    if (!response.ok) {
+
+      if (result.errorTipo && result.errorTipo.length > 0) {
+        throw new Error(result.errorTipo.join(", "));
+      } else {
+        throw new Error("Error al guardar los archivos PDF.");
       }
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+    }
+
+
+    if (result.errorTipo && result.errorTipo.length > 0) {
+      toast.error(result.errorTipo.join(", "));
+      return;
+    }
+      
       toast.success(
         "Los archivos PDF se han guardado correctamente en la base de datos."
       );
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Error al guardar los archivos PDF:", error);
       toast.error(error.message);

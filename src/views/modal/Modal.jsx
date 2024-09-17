@@ -8,6 +8,7 @@ const Modal = ({
   children,
   confirmText = "Confirmar",
   cancelText = "Cancelar",
+  showConfirmButton = true,
 }) => {
   if (!isOpen) return null;
 
@@ -23,6 +24,7 @@ Modal.propTypes = {
   children: PropTypes.node.isRequired,
   confirmText: PropTypes.string.isRequired,
   cancelText: PropTypes.string.isRequired,
+  showConfirmButton: PropTypes.bool,
 }
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -40,13 +42,15 @@ Modal.propTypes = {
             {children}
           </div>
           <div className="bg-tertiary-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button
-              onClick={onConfirm}
-              type="button"
-              className="flex mr-2 justify-center items-center gap-2 px-3 ml-2 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
-            >
-              {confirmText}
-            </button>
+          {showConfirmButton && (  // Condicional para mostrar o no el botón de confirmar
+              <button
+                onClick={onConfirm}
+                type="button"
+                className="flex mr-2 justify-center items-center gap-2 px-3 ml-2 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
+              >
+                {confirmText}
+              </button>
+            )}
             <div>
               <button
                 onClick={handleCancel}

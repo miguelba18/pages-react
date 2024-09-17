@@ -11,7 +11,7 @@ const SecuDatos = () => {
                             
                         <p className="text-black text-[15px] leading-6 -mt-3 font-sans ">La aplicación almacena tus notas y se guardan en un formato abierto, por lo que siempre tendrás acceso a ellas. Utiliza cifrado de extremo a extremo (E2EE) para proteger sus notas y garantizar que nadie más que usted pueda acceder a ellas.</p>
                         <div className="pt-5 flex">
-                        <button className="flex mb-2 justify-center items-center gap-4 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] ">
+                        <button className="flex mb-2 justify-center items-center gap-4 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#459fed] to-[#126cbb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#044ab3] ">
                                 Read more<RiArrowRightLine className="ml-2 mt-1.5" />
                             </button>
                         </div>

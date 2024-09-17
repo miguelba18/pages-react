@@ -36,7 +36,7 @@ const FacturaElectronica = () => {
     setPdf(validFiles);
   };
 
-  const handleSavePdfs = async () => {
+  const handleSavePdfs = async (tipo="factura") => {
     if (pdfs.length === 0) {
       toast.error("Por favor, selecciona archivos PDF primero.");
       return;
@@ -55,9 +55,17 @@ const FacturaElectronica = () => {
     });
 
     try {
-      const response = await fetch(
-        "http://localhost:8080/pdf/extraer-y-guardar-factura",
-        {
+      const tipoString = typeof tipo === 'string' ? tipo : "factura";
+      let url = `http://localhost:8080/pdf/extraer-y-guardar`;
+        const params = new URLSearchParams();
+        if (tipo) {
+          params.append("tipo", tipoString);
+        }
+
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
+      const response = await fetch(url,{
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -66,10 +74,22 @@ const FacturaElectronica = () => {
         }
       );
 
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage);
+      const result = await response.json();
+
+    if (!response.ok) {
+  
+      if (result.errorTipo && result.errorTipo.length > 0) {
+        throw new Error(result.errorTipo.join(", "));
+      } else {
+        throw new Error("Error al guardar los archivos PDF.");
       }
+    }
+
+  
+    if (result.errorTipo && result.errorTipo.length > 0) {
+      toast.error(result.errorTipo.join(", "));
+      return;
+    }
       setTimeout(() => {
               window.location.reload();
             }, 3000);

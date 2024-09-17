@@ -1,4 +1,4 @@
-import { RiCopyrightLine } from "react-icons/ri";
+import { RiCopyrightLine,RiMailFill,RiWhatsappFill,RiInstagramFill,RiFacebookCircleFill, RiAppleFill,RiAndroidFill,RiWindowsFill } from "react-icons/ri";
 import { useState } from "react";
 
 const Footer = () => {
@@ -13,28 +13,30 @@ const Footer = () => {
   };
 
   return (
-    <div id="Politicas" className="bg-cover bg-[#0146cf]/90 text-white relative">
-      <div className="text-center">
-        <h1 id="Footer" className="text-6xl font-bold pt-32 leading-[72px]">
-          Conoce a SIM SAS hoy
-        </h1>
-        <p className="text-xl p-5">
-          Conoce nuestras políticas. <br /> Da click en nuestro botón para que
-          puedas leerlas.
-        </p>
-        <div className="flex justify-center items-center mb-2">
-          <button
-            onClick={handleOpenPoliticas}
-            className="overflow-hidden w-32 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
-          >
-            Empieza!
-            <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
-            <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
-            <span className="absolute w-36 h-32 -top-8 -left-2 bg-blue-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
-            <span className="group-hover:opacity-100 group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
-              Explora!
-            </span>
-          </button>
+    <div id="Politicas" className="bg-cover bg-primary/90 text-white relative">
+      <div className="text-center flex items-center justify-between ">
+        <div className="">
+          <h1 id="Footer" className="text-6xl text-white font-bold p-10 leading-[72px]">
+            Conoce a SIM SAS hoy
+          </h1>
+          <p className="text-xl p-5">
+            Conoce nuestras políticas. <br /> Da click en nuestro botón para que
+            puedas leerlas.
+          </p>
+          <div className="grid justify-center items-center mb-2">
+            <button
+              onClick={handleOpenPoliticas}
+              className="overflow-hidden w-32 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
+            >
+              Empieza!
+              <span className="absolute w-36 h-32 -top-8 -left-2 bg-primary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
+              <span className="absolute w-36 h-32 -top-8 -left-2 bg-secundary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
+              <span className="absolute w-36 h-32 -top-8 -left-2 bg-cuartary-100 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
+              <span className="group-hover:opacity-100 group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
+                Explora!
+              </span>
+            </button>
+          </div>
         </div>
 
         {politicas && (
@@ -93,9 +95,10 @@ const Footer = () => {
                   <br /> Para cualquier pregunta o inquietud sobre esta
                   <br />
                   Política de Privacidad contáctenos en [dirección de contacto].
-                  <br /> <span className="text-semibold text-3xl">
+                  <br />{" "}
+                  <span className="text-semibold text-3xl">
                     Términos y Condiciones
-                  </span> 
+                  </span>
                   <br /> 1. Aceptación de los Términos Al utilizar [nombre del
                   sitio web], usted acepta estos Términos y Condiciones. Si no
                   está de acuerdo con estos términos, no debe utilizar el Sitio.{" "}
@@ -140,28 +143,37 @@ const Footer = () => {
           </div>
         )}
 
-        <p className="text-xl pb-6">Contáctanos</p>
-        <div className="flex justify-center">
-          <img
-            src="/src/assets/img/appleblanco.png"
-            className="h-16 m-2"
-            alt="Apple"
-          />
-          <img
-            src="/src/assets/img/winblanco.png"
-            className="h-16 m-2"
-            alt="Windows"
-          />
-          <img
-            src="/src/assets/img/androidblanco.png"
-            className="h-16 m-2"
-            alt="Android"
-          />
+        <div className="flex  flex-col items-center justify-center p-10">
+          <p className="text-2xl mb-2 ">Somos multiplataforma </p>
+          <p className="text-2xl ">Descarga nuestra app,</p>
+          <p className="text-2xl ">para todo el pais colombiano</p>
+
+          <div className="flex justify-center mt-10 space-x-6">
+          <RiAppleFill className="h-20 w-20 text-cuartary-100"/>
+          <RiAndroidFill className="h-20 w-20 text-cuartary-100"/>
+          <RiWindowsFill className="h-20 w-20 text-cuartary-100"/>
+            
+          </div>
+        </div>
+
+        <div className="flex  flex-col items-center justify-center p-10">
+          <p className="text-2xl mb-2 ">Contactanos </p>
+          <a href="mailto:info@simsasllc.com" className="flex justify-center text-cuartary-100 w-full items-center text-md mb-4 transform transition-transform duration-500 hover:scale-110 hover:rounded-xl hover:bg-white hover:text-blue-600 ">
+          <RiMailFill className="mr-2"/>info@simsasllc.com 
+          </a>
+          <p className="text-2xl ">Siguenos en todas las redes</p>
+          <p className="text-2xl ">y enterate de todo</p>
+
+          <div className="flex justify-center space-x-6 mt-8">
+          <RiWhatsappFill className="h-8 w-8 text-cuartary-100" />
+          <RiInstagramFill className="h-8 w-8 text-cuartary-100"/>
+          <RiFacebookCircleFill className="h-8 w-8 text-cuartary-100"/>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-col items-center justify-center p-10">
-        <p className="flex">
+        <p className="flex text-cuartary-100">
           <RiCopyrightLine className="mt-1 mr-1" />
           2024 SIM SAS LLC.
         </p>

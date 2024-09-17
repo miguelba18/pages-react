@@ -11,6 +11,9 @@ import useDescargarConsorcios from "../../../../hook/Consorcios/useDescargarCons
 import HighlightedText from "../../../../../utils/HighlightedText";
 import Modal from "../../../../modal/Modal";
 import useDeleteConsorcios from "../../../../hook/Consorcios/useDeleteConsorcios";
+import useAuthToken from "../../../../hook/Token/useAuthToken";
+import { useNavigate } from "react-router-dom";
+
 const ConsorciosAlcalde = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -26,6 +29,27 @@ const ConsorciosAlcalde = () => {
   const [facturaToDelete, setFacturaToDelete] = useState(null);
   const { deleteConsorcio } = useDeleteConsorcios();
   const { consorcios, listConsorcios } = useListConsorcios();
+  const [userRoleId, setUserRoleId] = useState(null);
+  const { token } = useAuthToken();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const roleId = decodedToken.role;
+
+        setUserRoleId(roleId);
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+        window.localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, [navigate, token]);
+
   
 
 
@@ -245,13 +269,14 @@ const ConsorciosAlcalde = () => {
                 Telefono Adquiriente
               </th>
               <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
-              {}
+              {userRoleId === "Alcalde" && (
               <th
                 
                 className="px-4 py-2 bg-secundary text-white"
               >
                 Eliminar
               </th>
+            )}
             </tr>
           </thead>
           <tbody>
@@ -344,6 +369,7 @@ const ConsorciosAlcalde = () => {
                   <td className="border px-4 py-2 text-center">
                     ${consorcio.subtotal}
                   </td>
+                  {userRoleId === "Alcalde" && (
                   <td
                     
                     className="border px-4 py-2 text-center"
@@ -357,6 +383,7 @@ const ConsorciosAlcalde = () => {
                       </button>
                     </div>
                   </td>
+                )}
                 </tr>
               ))
             ) : (
@@ -378,10 +405,12 @@ const ConsorciosAlcalde = () => {
                 <th className="border px-4 py-2">
                   ${totalSubtotal.toLocaleString("de-DE")}
                 </th>
+                {userRoleId === "Alcalde" && (
                 <th
                   
                   className="px-4 py-2 bg-secundary text-white"
                 ></th>
+              )}
               </tr>
             </tfoot>
           )}

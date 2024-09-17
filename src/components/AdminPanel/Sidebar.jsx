@@ -65,12 +65,12 @@ const Sidebar = () => {
       >
         <div className="">
           <div className="flex mb-4 ">
-            <div className=" rounded-md bg-blue-500 w-full flex justify-center items-center pb-2">
+            <div className=" rounded-md bg-primary w-full flex justify-center items-center pb-2">
               <RiAppsFill className="text-white mt-2 h-6 w-6 mr-2" />
               <h1 className=" text-2xl font-normal   ">
                 {userRoleId === "ADMIN" && (
                   <span className="text-white">
-                    SIM ADMIN<span className="text-4xl text-secundary">.</span>
+                    SIM ADMIN<span className="text-4xl ">.</span>
                   </span>
                 )}
                 {userRoleId === "Alcalde" && (
@@ -1049,7 +1049,7 @@ const Sidebar = () => {
           <a
             href="https://www.dian.gov.co/"
             target="BLANK"
-            className="flex mb-2  items-center w-full gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
+            className="flex mb-2  items-center w-full gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#4596ed] to-[#1285bb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#0470b3]"
           >
             <RiPagesFill className="text-white" />
             DIAN

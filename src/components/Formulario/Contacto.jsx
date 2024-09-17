@@ -157,14 +157,14 @@ const Contacto = () => {
           </div>
           <button
             type="submit"
-            className="w-[80%] px-8 py-4 rounded-xl mt-8 bg-[#4f9cf9] text-black hover:bg-primary hover:text-white transform transition-transform duration-500 hover:scale-110"
+            className="w-[80%] px-8 py-4 rounded-xl mt-8 bg-secundary text-white hover:bg-primary hover:text-white transform transition-transform duration-500 hover:scale-110"
           >
             Enviar
           </button>
         </form>
       </div>
 
-      <div className="bg-[#4f9cf9] rounded-[8px] xl:w-[30%] text-white xl:-ml-[5%] shadow-2xl mt-8 xl:mt-0 p-10 xl:p-0">
+      <div className="bg-secundary rounded-[8px] xl:w-[30%] text-white xl:-ml-[5%] shadow-2xl mt-8 xl:mt-0 p-10 xl:p-0">
         <h1 className="text-4xl font-bold py-5 xl:py-20 text-center">
           Contacto
         </h1>

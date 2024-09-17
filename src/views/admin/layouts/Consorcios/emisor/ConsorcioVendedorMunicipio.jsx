@@ -1,19 +1,35 @@
-import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
-import { useEffect } from "react";
-import TablaConsorcioVendedor from "./TablaConsorcioVendedor";
+import { useEffect, useState } from "react";
+import useDescargarConsorciosPersona from "../../../../hook/Consorcios/use DescargarConsorciosPersona";
+import {
+  RiSearchLine,
+  RiDownloadLine,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiSearchEyeLine
+} from "react-icons/ri";
+import useListConsorciosPersona from "../../../../../views/hook/Consorcios/useListConsorciosPersona";
+import HighlightedText from "../../../../../utils/HighlightedText";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
-import { useState } from "react";
-import {RiArrowLeftSLine,
-  RiArrowRightSLine,} from "react-icons/ri";
+import Modal from "../../../../modal/Modal";
+import useListId from "../../../../hook/Consorcios/useListId";
 
 const ConsorcioVendedorMunicipio = () => {
-  const { consorcios, listConsorcios, setConsorcios } = useListConsorcios();
-  const [totalSubtotal, setTotalSubtotal] = useState(0);
-  const [formData, setFormData] = useState({});
-  const [selectedAnio, setSelectedAnio] = useState("");
-  const [facturasDisponibles, setFacturasDisponibles] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
+  const { consorcios, listConsorcios, setConsorcios } =
+    useListConsorciosPersona();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [formData, setFormData] = useState({});
+  const { handleDownloadExcel } = useDescargarConsorciosPersona();
+  const [totalSubtotal, setTotalSubtotal] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFacturaId, setSelectedFacturaId] = useState(null);
+  const { factura, loading, error } = useListId(selectedFacturaId);
+
+  const [selectedAnio, setSelectedAnio] = useState("");
+  const [resetAnio, setResetAnio] = useState(false);
+  const [facturasDisponibles, setFacturasDisponibles] = useState(false);
+
   const {
     departamentos,
     filteredCiudades,
@@ -23,13 +39,9 @@ const ConsorcioVendedorMunicipio = () => {
     handleCiudadChange,
   } = useSelectCityDepaUtils();
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
-
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    listConsorcios(selectedCiudad, "", anio)
+    listConsorcios(selectedCiudad, searchQuery, anio)
       .then((facturas) => {
         setFacturasDisponibles(facturas.length > 0);
       })
@@ -37,6 +49,7 @@ const ConsorcioVendedorMunicipio = () => {
         setFacturasDisponibles(false);
       });
   };
+
   useEffect(() => {
     if (selectedCiudad) {
       listConsorcios(selectedCiudad);
@@ -45,9 +58,31 @@ const ConsorcioVendedorMunicipio = () => {
     }
   }, [listConsorcios, selectedCiudad, setConsorcios]);
 
+  const handleSearchWithResetAnio = (query) => {
+    const filteredQuery = query.replace(/[0-9]/g, "");
+    setSelectedAnio("");
+    handleSearch(filteredQuery, "");
+    setResetAnio(true);
+  };
+
   useEffect(() => {
-    setConsorcios([]);
-  }, [selectedDepartamento, setConsorcios]);
+    if (resetAnio) {
+      setResetAnio(false);
+    }
+  }, [resetAnio]);
+
+  const handleSearch = (query, anio) => {
+    setSearchQuery("");
+    setSearchQuery(query);
+    listConsorcios(selectedCiudad, query, anio);
+  };
+  const handleDownload = () => {
+    handleDownloadExcel(selectedCiudad, searchQuery, selectedAnio);
+  };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
+
   useEffect(() => {
     const total = consorcios.reduce((sum, consorcio) => {
       const subtotalStr = consorcio.subtotal.replace(/\./g, "");
@@ -56,9 +91,47 @@ const ConsorcioVendedorMunicipio = () => {
     }, 0);
     setTotalSubtotal(total);
   }, [consorcios]);
+
+  const handleViewConsorcio = (id) => {
+    setSelectedFacturaId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedFacturaId(null);
+  };
+
   return (
     <div>
       <div className="xl:flex xl:justify-between items-center">
+        <div className="flex justify-end">
+          <div className="relative " hidden={!selectedCiudad}>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) =>
+                handleSearchWithResetAnio(e.target.value, facturasDisponibles)
+              }
+              className="rounded-[10px] shadow-xl  w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
+              placeholder="Search"
+              required
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
+              <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-secundary font-semibold " />
+            </div>
+          </div>
+        </div>
+        <div hidden={!selectedCiudad} className="xl:relative mr-4">
+          <button
+            disabled={consorcios.length < 1}
+            onClick={handleDownload}
+            className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+          >
+            <span className="hidden md:inline">Descargar facturas</span>
+            <RiDownloadLine className="mr-0 xl:mr-2" />
+          </button>
+        </div>
         <div className="flex justify-around  ">
           <div className="ml-4 mt-3">
             <select
@@ -106,7 +179,7 @@ const ConsorcioVendedorMunicipio = () => {
       </div>
       {selectedCiudad && (
         <>
-        <div className="flex  justify-between">
+          <div className="flex  justify-between">
             <div className="flex justify-center mt-4">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
@@ -132,7 +205,7 @@ const ConsorcioVendedorMunicipio = () => {
               <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
             </div>
           </div>
-          <div className=" overflow-x-auto">
+          <div className="overflow-x-auto mt-4">
           <table className="table-auto w-full mt-8">
             <thead>
               <tr>
@@ -140,9 +213,7 @@ const ConsorcioVendedorMunicipio = () => {
                 <th className="px-4 py-2 bg-secundary text-white">
                   Fecha <br />
                   <select
-                    onChange={(e) =>
-                      handleAnioChange(e.target.value, facturasDisponibles)
-                    }
+                    onChange={(e) => handleAnioChange(e.target.value)}
                     value={selectedAnio}
                     className="p-1 rounded border border-gray-300 text-black"
                   >
@@ -169,26 +240,18 @@ const ConsorcioVendedorMunicipio = () => {
                   Nombre o Razón Social del Emisor
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">
-                  Número Documento del Emisor
+                  Nombre Comprador
                 </th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Departamento del Emisor
-                </th>
-                <th className="px-4 py-2 bg-secundary text-white">
-                  Municipio del Emisor
-                </th>
-
                 <th className="px-4 py-2 bg-secundary text-white">
                   Subtotal Factura
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">
-                  Nombre Comprador
+                 Ver mas
                 </th>
               </tr>
             </thead>
             <tbody>
-              
-                {consorcios.length > 0 ? (
+              {consorcios.length > 0 ? (
                 currentItems.map((consorcio, index) => (
                   <tr
                     key={consorcio.id}
@@ -198,47 +261,90 @@ const ConsorcioVendedorMunicipio = () => {
                         : "bg-white whitespace-nowrap"
                     }
                   >
-                    <td className="border px-4 py-2">{indexOfFirstItem+index + 1}</td>
+                    <td className="border px-4 py-2">
+                      {indexOfFirstItem + index + 1}
+                    </td>
                     <td className="border px-4 text-center">
                       {consorcio.fechaEmision}
                     </td>
                     <td className="border px-4 text-center">
-                      {consorcio.nombreComercialEmisor}
-                    </td>
-
-                    <td className="border px-4 py-2 text-center">
-                      {consorcio.nitEmisor}
-                    </td>
-                    <td className="border px-4 py-2 text-center">
-                      {consorcio.departamentoEmisor}
+                      <HighlightedText
+                        text={consorcio.nombreComercialEmisor}
+                        highlight={searchQuery}
+                      />
                     </td>
                     <td className="border px-4 py-2 text-center">
-                      {consorcio.municipioEmisor}
+                      <HighlightedText
+                        text={consorcio.nombreAdquiriente}
+                        highlight={searchQuery}
+                      />
                     </td>
-
                     <td className="border px-4 py-2 text-center">
                       ${consorcio.subtotal}
                     </td>
                     <td className="border px-4 py-2 text-center">
-                      {consorcio.nombreAdquiriente}
-                    </td>
+                      <button
+                        onClick={() => handleViewConsorcio(consorcio.id)}
+                        className="p-1 rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-1
+                        duration-300 hover:from-secundary hover:to-[#042cb3]"
+                      ><RiSearchEyeLine /></button>
+                      </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                    <td colSpan={20} className="text-center py-4 text-red-500">
-                      {selectedAnio
-                        ? "No hay facturas para el año seleccionado."
-                        : "Esta ciudad no tiene facturas."}
-                    </td>
-                  </tr>
+                  <td colSpan={20} className="text-center py-4 text-red-500">
+                    {selectedAnio
+                      ? "No hay facturas para el año seleccionado."
+                      : "Esta ciudad no tiene facturas."}
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
+        </div>
+          <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+       
+        title="Detalles de la Factura"
+        cancelText="Cerrar"
+        showConfirmButton={false}
+       
+      >
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+        {factura && (
+          <div>
+            <p><strong>ID:</strong> {factura.id}</p>
+            <p><strong>Fecha Creación:</strong> {factura.fechaCreacion}</p>
+            <p><strong>Código Único:</strong> {factura.codigoUnico}</p>
+            <p><strong>Número Factura:</strong> {factura.numeroFactura}</p>
+            <p><strong>Forma de Pago:</strong> {factura.formaPago}</p>
+            <p><strong>Fecha Emisión:</strong> {factura.fechaEmision}</p>
+            <p><strong>País Emisor:</strong> {factura.paisEmisor}</p>
+            <p><strong>Departamento Emisor:</strong> {factura.departamentoEmisor}</p>
+            <p><strong>Municipio Emisor:</strong> {factura.municipioEmisor}</p>
+            <p><strong>Dirección Emisor:</strong> {factura.direccionEmisor}</p>
+            <p><strong>Correo Emisor:</strong> {factura.correoEmisor}</p>
+            <p><strong>Teléfono Emisor:</strong> {factura.telefonoEmisor}</p>
+            <p><strong>Nombre Comercial Emisor:</strong> {factura.nombreComercialEmisor}</p>
+            <p><strong>NIT Emisor:</strong> {factura.nitEmisor}</p>
+            <p><strong>Tipo Contribuyente Emisor:</strong> {factura.tipoContribuyenteEmisor}</p>
+            <p><strong>Nombre Adquiriente:</strong> {factura.nombreAdquiriente}</p>
+            <p><strong>Número Documento Adquiriente:</strong> {factura.numeroDocumentoAdquiriente}</p>
+            <p><strong>Tipo Documento Adquiriente:</strong> {factura.tipoDocumentoAdquiriente}</p>
+            <p><strong>País Adquiriente:</strong> {factura.paisAdquiriente}</p>
+            <p><strong>Departamento Adquiriente:</strong> {factura.departamentoAdquiriente}</p>
+            <p><strong>Municipio Adquiriente:</strong> {factura.municipioAdquiriente}</p>
+            <p><strong>Dirección Adquiriente:</strong> {factura.direccionAdquiriente}</p>
+            <p><strong>Correo Adquiriente:</strong> {factura.correoAdquiriente}</p>
+            <p><strong>Teléfono Adquiriente:</strong> {factura.telefonoAdquiriente}</p>
+            <p><strong>Subtotal:</strong> ${factura.subtotal}</p>
+            <p><strong>Total Factura:</strong> ${factura.totalFactura}</p>
           </div>
-          <div className="mt-6">
-            <TablaConsorcioVendedor />
-          </div>
+        )}
+      </Modal>
         </>
       )}
     </div>
