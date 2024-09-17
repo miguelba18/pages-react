@@ -48,7 +48,7 @@ const FacturaCompleta = () => {
     if (selectedCiudad) {
       fetchFacturas(selectedCiudad, searchQuery, selectedAnio).then(facturas => {
         setFacturasDisponibles(facturas.length > 0);
-        // Marca las facturas procesadas
+       
         setFacturas(facturas.map(factura => ({
           ...factura,
           isProcessed: processedFacturas.has(factura.id),
@@ -83,7 +83,7 @@ const FacturaCompleta = () => {
     const resultId = await addConsorcio(id);
     if (resultId) {
       setProcessedFacturas(prev => new Set(prev).add(resultId));
-      // Actualiza las facturas después de agregar el consorcio
+
       fetchFacturas(selectedCiudad, searchQuery, selectedAnio).then(facturas => {
         setFacturas(facturas.map(factura => ({
           ...factura,

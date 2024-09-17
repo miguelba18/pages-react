@@ -46,7 +46,7 @@ const useListFacturasAdquiriente = () => {
     
             const data = await response.json();
             setFacturas(data.facturasAgrupadas);
-            setTotalSuma(data.totalSuma); 
+            setTotalSuma(data.subTotalSuma); 
           } catch (error) {
             console.error(error);
             setFacturas([]);

@@ -186,7 +186,7 @@ const Contribuyente = () => {
                 <select
                   value={selectedId}
                   onChange={(e) => handleSelect(e.target.value)}
-                  className="mt-4 text-secundary border-b px-2 w-full border-black py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
+                  className="mt-4 text-secundary rounded-md px-2 w-full  py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
                 >
                   <option value="">Selecciona un nombre</option>
                   {contribuyentes.map((contribuyente) => (

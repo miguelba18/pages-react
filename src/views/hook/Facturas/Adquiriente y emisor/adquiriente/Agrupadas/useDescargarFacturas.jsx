@@ -18,7 +18,7 @@ const useDescargarFacturas = () => {
         url += ciudad ? `&anio=${anio}` : `?anio=${anio}`;
     }
     if (tipoString) {
-      url += ciudad? `&tipo=${tipoString}` : `?tipo=${tipoString}`;
+      url += ciudad ? `&tipo=${tipoString}` : `?tipo=${tipoString}`;
     }
         try {
           const response = await fetch(url,{

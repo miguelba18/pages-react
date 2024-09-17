@@ -14,7 +14,7 @@ import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/adm
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 import { toast } from "react-toastify";
 const FacturaCompleta = () => {
-  const { facturas, searchFacturas, totalSuma } = useListAlcalde();
+  const { facturas, fetchFacturas, totalSuma, setFacturas } = useListAlcalde();
   const [searchQuery, setSearchQuery] = useState("");
   const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
@@ -24,11 +24,11 @@ const FacturaCompleta = () => {
   const itemsPerPage = 100;
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    searchFacturas(searchQuery, anio);
+    fetchFacturas(searchQuery, anio);
   };
   useEffect(() => {
-    searchFacturas(searchQuery, selectedAnio);
-  }, [searchQuery, selectedAnio, searchFacturas]);
+    fetchFacturas(searchQuery, selectedAnio);
+  }, [searchQuery, selectedAnio, fetchFacturas]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -37,7 +37,15 @@ const FacturaCompleta = () => {
   const handleAddConsorcio = async (id) => {
     const resultId = await addConsorcio(id);
     if (resultId) {
-      setProcessedFacturas((prev) => new Set(prev).add(resultId));
+      setProcessedFacturas(prev => new Set(prev).add(resultId));
+
+      fetchFacturas( searchQuery, selectedAnio).then(facturas => {
+        setFacturas(facturas.map(factura => ({
+          ...factura,
+          isProcessed: processedFacturas.has(factura.id),
+        })));
+        toast.success("Consorcio agregado con éxito", { autoClose: 1700 });
+      });
     }
   };
   const handleDownload = () => {
@@ -72,7 +80,7 @@ const FacturaCompleta = () => {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              searchFacturas(e.target.value, selectedAnio);
+              fetchFacturas(e.target.value, selectedAnio);
             }}
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
             placeholder="Search"
@@ -265,21 +273,26 @@ const FacturaCompleta = () => {
                   </td>
                   <td className="border px-4 py-2 text-center">
                     <div className="flex justify-center items-center">
-                      <button
-                        onClick={() => handleAddConsorcio(factura.id)}
-                        disabled={processedFacturas.has(factura.id)}
-                        className={`  ${
-                          processedFacturas.has(factura.id)
-                            ? "flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#71fb86] cursor-not-allowed"
-                            : "flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl hover:shadow-blue-500 hover:scale-105 duration-300 hover:from-[#1512be] hover:to-[#717cfb]"
-                        }`}
-                      >
-                        {processedFacturas.has(factura.id) ? (
-                          <RiCheckboxCircleFill />
-                        ) : (
-                          <RiAddCircleFill className=" " />
-                        )}
-                      </button>
+                    <button
+                          onClick={() => handleAddConsorcio(factura.id)}
+                          disabled={factura.estado === 1}
+                          className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
+                            factura.estado === 1
+                              ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] hover:shadow-xl hover:shadow-green-500 cursor-not-allowed"
+                              : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl hover:shadow-blue-500 hover:scale-105 duration-300 hover:from-[#1512be] hover:to-[#717cfb]"
+                          }`}
+                          aria-label={
+                            factura.estado === 1
+                              ? "Factura procesada"
+                              : "Agregar factura"
+                          }
+                        >
+                          {factura.estado === 1 ? (
+                            <RiCheckboxCircleFill />
+                          ) : (
+                            <RiAddCircleFill />
+                          )}
+                        </button>
                     </div>
                   </td>
                 </tr>

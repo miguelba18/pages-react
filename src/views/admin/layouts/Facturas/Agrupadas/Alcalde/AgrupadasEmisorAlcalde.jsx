@@ -112,22 +112,25 @@ const AgrupadasEmisorAlcalde = () => {
       const data = await response.json();
 
       setFacturasDesagrupadas(data.facturas);
-      setTotalSumaDesagrupadas(data.totalSuma);
+      setTotalSumaDesagrupadas(data.subtotalSuma);
       setIsDesagrupado(true);
     } catch (error) {
       console.error("Error en handleDesagrupar:", error);
     }
   };
-  const handleDownloadExcelDesagrupadas = async (factura) => {
+  const handleDownloadExcelDesagrupadas = async (factura,tipo = "emisores") => {
     if (!Array.isArray(factura)) {
       factura = [factura];
     }
+    const tipoString = typeof tipo === "string" ? tipo : "emisores";
     try {
+
       const url = new URL(
-        "http://localhost:8080/factura/descargar-excel-emisor-desagrupar"
+        "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
 
+     
       const desagrupadoFacturas = facturasDesagrupadas;
 
       desagrupadoFacturas.forEach((facturaItem) => {
@@ -139,6 +142,9 @@ const AgrupadasEmisorAlcalde = () => {
           params.append("anios", facturaItem.fechaEmision);
         }
       });
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
 
       url.search = params.toString();
       console.log("Desagrupar URL:", url.toString());

@@ -94,6 +94,7 @@ const AgrupadasAdquiriente = () => {
     tipo = "adquirientes"
   ) => {
     const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
+
     try {
       const url = new URL(
         "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
@@ -114,10 +115,13 @@ const AgrupadasAdquiriente = () => {
           params.append("anios", facturaItem.fechaEmision);
         }
       });
-      if (tipoString) {
+
+      if (tipo) {
         params.append("tipo", tipoString);
       }
 
+      url.search = params.toString();
+      console.log("Desagrupar URL:", url.toString());
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -138,7 +142,7 @@ const AgrupadasAdquiriente = () => {
         contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
       const fileName = fileNameMatch
         ? fileNameMatch[1]
-        : "datos_factura_adquiriente_desagrupar.xlsx";
+        : "datos_factura_adquirientes_desagrupar.xlsx";
 
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({

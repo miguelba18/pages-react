@@ -6,7 +6,7 @@ const useListAlcalde = () => {
   const [facturas, setFacturas] = useState([]);
   const [totalSuma, setTotalSuma] = useState(0);
 
-  const searchFacturas = useCallback(
+  const fetchFacturas = useCallback(
     async ( query, anio) => {
       try {
         let url = `http://localhost:8080/factura/listar`;
@@ -48,7 +48,7 @@ const useListAlcalde = () => {
 
   
 
-  return { facturas, searchFacturas, totalSuma };
+  return { facturas, fetchFacturas, totalSuma, setFacturas };
 };
 
 export default useListAlcalde;

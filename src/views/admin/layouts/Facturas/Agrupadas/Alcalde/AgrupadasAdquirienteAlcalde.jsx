@@ -73,15 +73,17 @@ const AgrupadasAdquirienteAlcalde = () => {
       });
   };
 
-  const handleDownloadExcelDesagrupadas = async (factura) => {
+  const handleDownloadExcelDesagrupadas = async (factura,tipo = "adquirientes") => {
     if (!Array.isArray(factura)) {
       factura = [factura];
     }
+    const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
     try {
       const url = new URL(
-        "http://localhost:8080/factura/descargar-excel-adquiriente-desagrupar"
+        "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
+
 
       const desagrupadoFacturas = facturasDesagrupadas;
 
@@ -94,6 +96,9 @@ const AgrupadasAdquirienteAlcalde = () => {
           params.append("anios", facturaItem.fechaEmision);
         }
       });
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
 
       url.search = params.toString();
       console.log("Desagrupar URL:", url.toString());
@@ -225,7 +230,7 @@ const AgrupadasAdquirienteAlcalde = () => {
 
       const data = await response.json();
       setFacturasDesagrupadas(data.facturas);
-      setTotalSumaDesagrupadas(data.totalSuma);
+      setTotalSumaDesagrupadas(data.subtotalSuma);
       setIsDesagrupado(true);
     } catch (error) {
       console.error("Error en handleDesagrupar:", error);
@@ -345,11 +350,12 @@ const AgrupadasAdquirienteAlcalde = () => {
                   <th className="px-4 py-2 bg-secundary text-white">
                     Número Documento del Adquiriente
                   </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Desagrupar
-                  </th>
+                 
                   <th className="px-4 py-2 bg-secundary text-white">
                     Subtotal
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Desagrupar
                   </th>
                 </tr>
               </thead>
