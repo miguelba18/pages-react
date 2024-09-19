@@ -49,15 +49,8 @@ const FacturaCompleta = () => {
     }
   };
   const handleDownload = () => {
-    if ("" || searchQuery || selectedAnio) {
-      handleDownloadExcel({
-        ciudad: "" || undefined,
-        filtro: searchQuery || undefined,
-        anio: selectedAnio || undefined,
-      });
-    } else {
-      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
-    }
+    handleDownloadExcel("",searchQuery, selectedAnio);
+    
   };
 
   return (

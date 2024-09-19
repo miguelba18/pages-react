@@ -431,49 +431,7 @@ const Sidebar = () => {
                         </Link>
                       </li>
 
-                      <li
-                        className={
-                          location.pathname === "/adquirienteadmin"
-                            ? "bg-secundary text-white rounded-lg"
-                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                        }
-                      >
-                        <Link
-                          to="/adquirienteadmin"
-                          className="flex items-center  gap-4 px-4 py-2  border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
-                        >
-                          <RiShakeHandsFill
-                            className={`text-xl text-secundary ${
-                              location.pathname === "/adquirienteadmin"
-                                ? "text-white"
-                                : ""
-                            }`}
-                          />
-                          Cliente Municipio
-                        </Link>
-                      </li>
-
-                      <li
-                        className={
-                          location.pathname === "/emisoradmin"
-                            ? "bg-secundary text-white rounded-lg"
-                            : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                        }
-                      >
-                        <Link
-                          to="/emisoradmin"
-                          className="flex items-center  gap-4 px-4 py-2 mb-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
-                        >
-                          <RiBankFill
-                            className={`text-xl text-secundary ${
-                              location.pathname === "/emisoradmin"
-                                ? "text-white"
-                                : ""
-                            }`}
-                          />
-                          Vendedor Municipio
-                        </Link>
-                      </li>
+                      
                     </ul>
                   </li>
                 </>
@@ -766,46 +724,7 @@ const Sidebar = () => {
                   </Link>
                 </li>
 
-                <li
-                  className={
-                    location.pathname === "/adquiriente"
-                      ? "bg-secundary text-white rounded-lg"
-                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                  }
-                  hidden={userRoleId === "ADMIN"}
-                >
-                  <Link
-                    to="/adquiriente"
-                    className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[22%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
-                  >
-                    <RiShakeHandsFill
-                      className={`text-xl text-secundary ${
-                        location.pathname === "/adquiriente" ? "text-white" : ""
-                      }`}
-                    />
-                    Cliente Municipio
-                  </Link>
-                </li>
-
-                <li
-                  className={
-                    location.pathname === "/emisor"
-                      ? "bg-secundary text-white rounded-lg"
-                      : "rounded-lg hover:bg-tertiary-900 transition-colors "
-                  }
-                >
-                  <Link
-                    to="/emisor"
-                    className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
-                  >
-                    <RiBankFill
-                      className={`text-xl text-secundary ${
-                        location.pathname === "/emisor" ? "text-white" : ""
-                      }`}
-                    />
-                    Vendedor Municipio
-                  </Link>
-                </li>
+               
               </ul>
 
               <li

@@ -6,8 +6,7 @@ import FacturaElectronica from "./views/admin/layouts/Facturas/Factura Electroni
 import CalendarioAlcalde from "./views/admin/Alcalde-Panel/Calendario/CalendarioAlcalde";
 import RegistroAdmin from "./views/admin/layouts/RegistroAdmin/RegistroAdmin";
 import Inquietud from "./views/admin/layouts/Inquietudes/Inquietud";
-import Adquiriente from "./views/admin/layouts/Facturas/Adquiriente y emisor/Adquiriente";
-import Emisor from "./views/admin/layouts/Facturas/Adquiriente y emisor/Emisor";
+
 import AdministrarFacturas from "./views/admin/layouts/Facturas/Administrar/AdministrarFacturas";
 import FacturasAgrupadas from "./views/admin/layouts/Facturas/Agrupadas/FacturasAgrupadas";
 import FacturaCompleta from "./views/admin/layouts/Facturas/Facturas Completas/FacturaCompleta";
@@ -15,8 +14,7 @@ import FacturaCompletaAlcalde from "./views/admin/layouts/Facturas/Facturas Comp
 import AgrupadasAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAlcalde";
 import Consorcios from "./views/admin/layouts/Consorcios/todos los consorcios/Consorcios";
 import Contribuyente from "./views/admin/layouts/Contribuyente/Contribuyente";
-import AdquirienteAdmin from "./views/admin/layouts/Facturas/Adquiriente y emisor/admin/AdquirienteAdmin";
-import EmisorAdmin from "./views/admin/layouts/Facturas/Adquiriente y emisor/admin/EmisorAdmin";
+
 import ConsorcioClienteMunicipio from "./views/admin/layouts/Consorcios/adquiriente/ConsorcioClienteMunicipio";
 import ConsorcioVendedorMunicipio from "./views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio";
 import EnviarCorreos from "./views/admin/layouts/Enviar correos/EnviarCorreos";
@@ -124,8 +122,7 @@ function App() {
               </RestrictedRouteSecretarioPersonal>
             }
           />
-          <Route path="adquiriente" element={<Adquiriente />} />
-          <Route path="emisor" element={<Emisor />} />
+   
           <Route path="facturaelectronica" element={<FacturaElectronica />} />
 
           {/* Rutas que solo va a ver el Alcalde*/}
@@ -285,22 +282,7 @@ function App() {
             }
           />
 
-          <Route
-            path="adquirienteadmin"
-            element={
-              <RestrictedRouteAdmin>
-                <AdquirienteAdmin />
-              </RestrictedRouteAdmin>
-            }
-          />
-          <Route
-            path="emisoradmin"
-            element={
-              <RestrictedRouteAdmin>
-                <EmisorAdmin />
-              </RestrictedRouteAdmin>
-            }
-          />
+          
         </Route>
 
         <Route path="/login" element={<Login />} />

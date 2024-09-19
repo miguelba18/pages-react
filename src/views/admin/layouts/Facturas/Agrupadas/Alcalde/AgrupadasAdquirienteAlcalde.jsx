@@ -1,7 +1,7 @@
 import useListFacturasAdquiriente from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/Alcalde/useListFacturasAdquiriente";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { MdOutlineGroupOff, MdOutlineGroup } from "react-icons/md";
+import { MdOutlineGroup } from "react-icons/md";
 import HighlightedText from "../../../../../../utils/HighlightedText";
 import {
   RiSearchLine,
@@ -9,6 +9,7 @@ import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
+import Modal from "../../../../../modal/Modal";
 import useDescargarFacturas from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/Alcalde/useDescargarFacturas";
 import useAuthToken from "../../../../../hook/Token/useAuthToken";
 const AgrupadasAdquirienteAlcalde = () => {
@@ -18,13 +19,15 @@ const AgrupadasAdquirienteAlcalde = () => {
   const [selectedAnio, setSelectedAnio] = useState("");
   const [setFacturasDisponibles] = useState(true);
   const [facturasDesagrupadas, setFacturasDesagrupadas] = useState([]);
-  const [facturasDesplegadas, setFacturasDesplegadas] = useState({});
-  const [isDesagrupado, setIsDesagrupado] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { token } = useAuthToken();
   const [totalSumaDesagrupadas, setTotalSumaDesagrupadas] = useState(0);
   const [resetAnio, setResetAnio] = useState(false);
   const { handleDownloadExcel } = useDescargarFacturas();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [facturasSeleccionadas, setFacturasSeleccionadas] = useState([]);
+  const [showCheckboxes, setShowCheckboxes] = useState(false);
+  const isDownloadButtonVisible = facturasSeleccionadas.length > 0;
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -35,14 +38,8 @@ const AgrupadasAdquirienteAlcalde = () => {
   }, [fetchFacturas]);
 
   const handleDownload = () => {
-    if (searchQuery || selectedAnio) {
-      handleDownloadExcel({
-        filtro: searchQuery || undefined,
-        anio: selectedAnio || undefined,
-      });
-    } else {
-      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
-    }
+    handleDownloadExcel("", searchQuery, selectedAnio);
+    
   };
 
   const handleSearchWithResetAnio = (query) => {
@@ -73,10 +70,8 @@ const AgrupadasAdquirienteAlcalde = () => {
       });
   };
 
-  const handleDownloadExcelDesagrupadas = async (factura,tipo = "adquirientes") => {
-    if (!Array.isArray(factura)) {
-      factura = [factura];
-    }
+  const handleDownloadExcelDesagrupadas = async (selectedFacturas,tipo = "adquirientes") => {
+  
     const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
     try {
       const url = new URL(
@@ -85,23 +80,15 @@ const AgrupadasAdquirienteAlcalde = () => {
       const params = new URLSearchParams();
 
 
-      const desagrupadoFacturas = facturasDesagrupadas;
-
-      desagrupadoFacturas.forEach((facturaItem) => {
-        if (facturaItem.numeroDocumentoAdquiriente) {
-          params.append("filtros", facturaItem.numeroDocumentoAdquiriente);
-        }
-
-        if (facturaItem.fechaEmision) {
-          params.append("anios", facturaItem.fechaEmision);
-        }
+      selectedFacturas.forEach((id) => {
+        params.append("id", id);
       });
+
       if (tipo) {
         params.append("tipo", tipoString);
       }
 
       url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -141,6 +128,8 @@ const AgrupadasAdquirienteAlcalde = () => {
         await writableStream.write(blob);
         await writableStream.close();
         toast.success("El excel se ha descargado correctamente  .");
+        setShowCheckboxes(false); 
+        setFacturasSeleccionadas([]);
       } else {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -158,35 +147,7 @@ const AgrupadasAdquirienteAlcalde = () => {
     }
   };
 
-  const toggleDespliegue = (factura) => {
-    setFacturasDesplegadas((prev) => {
-      const claveFactura = `${factura.numeroDocumentoAdquiriente}-${factura.fechaEmision}`;
-
-      const newState = {
-        ...prev,
-        [claveFactura]: !prev[claveFactura],
-      };
-      const facturasADesagrupar = Object.keys(newState)
-        .filter((key) => newState[key])
-        .map((key) => {
-          const [numeroDocumentoAdquiriente, fechaEmision] = key.split("-");
-          return facturas.find(
-            (f) =>
-              f.numeroDocumentoAdquiriente === numeroDocumentoAdquiriente &&
-              f.fechaEmision === fechaEmision
-          );
-        })
-        .filter((f) => f);
-
-      if (facturasADesagrupar.length > 0) {
-        handleDesagrupar(facturasADesagrupar);
-      }
-
-      setIsDesagrupado(facturasADesagrupar.length > 0);
-
-      return newState;
-    });
-  };
+  
   const handleDesagrupar = async (facturas, tipo = "adquirientes") => {
     console.log(facturas);
     if (!Array.isArray(facturas)) {
@@ -231,17 +192,34 @@ const AgrupadasAdquirienteAlcalde = () => {
       const data = await response.json();
       setFacturasDesagrupadas(data.facturas);
       setTotalSumaDesagrupadas(data.subtotalSuma);
-      setIsDesagrupado(true);
     } catch (error) {
       console.error("Error en handleDesagrupar:", error);
     }
+  };
+
+  const toggleDespliegue = async (factura) => {
+ 
+    await handleDesagrupar([factura]);
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setShowCheckboxes(false);
+  };
+  const handleCheckboxChange = (id) => {
+    setFacturasSeleccionadas((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter((facturaId) => facturaId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   return (
     <div>
       <div className="xl:flex justify-end">
         <div className="xl:relative mr-2 ">
-          {!isDesagrupado ? (
             <button
               onClick={handleDownload}
               className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
@@ -249,23 +227,7 @@ const AgrupadasAdquirienteAlcalde = () => {
               <span className="">Descargar facturas</span>
               <RiDownloadLine className="mr-0 xl:mr-2" />
             </button>
-          ) : (
-            <>
-              {facturasDesagrupadas.map((facturas, index) => (
-                <div key={index}>
-                  {index === 0 && (
-                    <button
-                      onClick={() => handleDownloadExcelDesagrupadas(facturas)}
-                      className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
-                    >
-                      <span className="">Descargar facturas</span>
-                      <RiDownloadLine className="mr-0 xl:mr-2" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </>
-          )}
+          
         </div>
         <div className="relative xl:right-0 xl:mt-0">
           <input
@@ -306,11 +268,8 @@ const AgrupadasAdquirienteAlcalde = () => {
               </button>
             </div>
             <div className="mt-4 text-right font-bold">
-              {!isDesagrupado ? (
                 <p>Total facturas: ${totalSuma}</p>
-              ) : (
-                <p>Total facturas Desagrupadas: ${totalSumaDesagrupadas}</p>
-              )}
+              
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -362,7 +321,6 @@ const AgrupadasAdquirienteAlcalde = () => {
               <tbody>
                 {facturas.length > 0 ? (
                   currentItems.map((factura, index) => {
-                    const claveFactura = `${factura.numeroDocumentoAdquiriente}-${factura.fechaEmision}`;
 
                     return (
                       <React.Fragment key={factura.id}>
@@ -389,130 +347,14 @@ const AgrupadasAdquirienteAlcalde = () => {
                                 onClick={() => toggleDespliegue(factura)}
                                 className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
                               >
-                                {facturasDesplegadas[claveFactura] ? (
                                   <MdOutlineGroup className="h-6 w-6" />
-                                ) : (
-                                  <MdOutlineGroupOff className="h-6 w-6" />
-                                )}
+                                
                               </button>
                             </div>
                           </td>
                         </tr>
 
-                        {facturasDesplegadas[claveFactura] && (
-                          <tr>
-                            <td colSpan="6" className="p-0">
-                              <div className="overflow-x-auto">
-                                <table className="table-auto w-full">
-                                  <thead>
-                                    <tr>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        #
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Fecha
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Cufe
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Numero de factura
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Forma de pago
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Pais Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Departamento Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Municipio Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Direccion Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Correo Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Telefono Adquiriente
-                                      </th>
-
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Nombre Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        NIT Adquiriente
-                                      </th>
-                                      <th className="px-4 py-2 bg-secundary text-white">
-                                        Subtotal
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {facturasDesagrupadas
-                                      .filter(
-                                        (f) =>
-                                          `${f.numeroDocumentoAdquiriente}-${f.fechaEmision}` ===
-                                          claveFactura
-                                      )
-                                      .map((factura, idx) => (
-                                        <tr
-                                          key={idx}
-                                          className="bg-white whitespace-nowrap"
-                                        >
-                                          <td className="border px-4 py-2 text-center">
-                                            {idx + 1}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.fechaEmision}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.codigoUnico}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.numeroFactura}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.formaPago}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.paisAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.departamentoAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.municipioAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.direccionAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.correoAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.telefonoAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.nombreAdquiriente}
-                                          </td>
-                                          <td className="border px-4 text-center">
-                                            {factura.numeroDocumentoAdquiriente}
-                                          </td>
-                                          <td className="border px-4">
-                                            ${factura.subtotal}
-                                          </td>
-                                        </tr>
-                                      ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
+                        
                       </React.Fragment>
                     );
                   })
@@ -527,6 +369,172 @@ const AgrupadasAdquirienteAlcalde = () => {
                 )}
               </tbody>
             </table>
+            <Modal
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              title="Facturas Desagrupadas"
+              showConfirmButton={false}
+            >
+              {facturasDesagrupadas && (
+                <>
+                  <div className="flex justify-between py-4">
+                    {isDownloadButtonVisible && (
+                      <button
+                        onClick={() =>
+                          handleDownloadExcelDesagrupadas(facturasSeleccionadas)
+                        }
+                        className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+                      >
+                        Descargar facturas
+                      </button>
+                    )}
+                    <div className="text-center font-bold">
+                      <p>
+                        Total facturas Desagrupadas:
+                        <br /> ${totalSumaDesagrupadas}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    {!showCheckboxes ? (
+                      <button
+                        onClick={() => setShowCheckboxes(true)}
+                        className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
+                      >
+                        Seleccionar Facturas
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setShowCheckboxes(false)}
+                        className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
+                      >
+                        Salir del seleccionar
+                      </button>
+                    )}
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="table-auto w-full">
+                      <thead>
+                        
+                      
+                        <tr>
+                          {showCheckboxes && (
+                            <th className="px-4 py-2 bg-secundary text-white">
+                              Seleccionar
+                            </th>
+                          )}
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            #
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Fecha
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Cufe
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Numero de factura
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Forma de pago
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Pais Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Departamento Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Municipio Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Direccion Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Correo Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Telefono Adquiriente
+                          </th>
+
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Nombre Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            NIT Adquiriente
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Subtotal
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {facturasDesagrupadas.map((factura, idx) => (
+                          <tr key={idx} className="bg-white whitespace-nowrap">
+                            {showCheckboxes && (
+                              <td className="border px-4 py-2 text-center">
+                                <input
+                                 className="h-6 w-6"
+                                  type="checkbox"
+                                  value={factura.id}
+                                  checked={facturasSeleccionadas.includes(
+                                    factura.id
+                                  )}
+                                  onChange={() =>
+                                    handleCheckboxChange(factura.id)
+                                  }
+                                  
+                                />
+                              </td>
+                            )}
+                            <td className="border px-4 py-2 text-center">
+                              {idx + 1}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.fechaEmision}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.codigoUnico}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.numeroFactura}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.formaPago}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.paisAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.departamentoAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.municipioAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.direccionAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.correoAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.telefonoAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.nombreAdquiriente}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.numeroDocumentoAdquiriente}
+                            </td>
+                            <td className="border px-4">${factura.subtotal}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </>
+              )}
+            </Modal>
           </div>
        
     </div>

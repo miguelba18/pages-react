@@ -4,9 +4,11 @@ import useAuthToken from "../../../../../Token/useAuthToken";
 const useDescargarFacturas = () => {
     const { token } = useAuthToken();
 
-    const handleDownloadExcel = async (ciudad,filtro, anio) => {
+    const handleDownloadExcel = async (ciudad,filtro, anio, tipo="adquirientes" ) => {
+      const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
+
         
-      let url = "http://localhost:8080/factura/descargar-excel-adquiriente-agrupar";
+      let url = "http://localhost:8080/factura/descargar-excel-persona-agrupar";
 
       if (filtro) {
         url += ciudad ? `&filtro=${filtro}` : `?filtro=${filtro}`;
@@ -14,6 +16,11 @@ const useDescargarFacturas = () => {
         if (anio) {
             url += ciudad ? `&anio=${anio}` : `?anio=${anio}`;
         }
+        if (tipoString) {
+          url += ciudad ? `&tipo=${tipoString}` : `?tipo=${tipoString}`;
+        }
+
+      
   
       try {
         const response = await fetch(url, {

@@ -4,9 +4,11 @@ const useListEmisor = () => {
     const { token } = useAuthToken();
     const [users, setUsers] = useState([]);
   
-    const fetchUsers = useCallback(async () => {
+    const fetchUsers = useCallback(async (tipo="emisores") => {
         try {
-          let url =`http://localhost:8080/correo/usuarios-alcalde/emisor`;
+          const tipoString = typeof tipo === 'string' ? tipo : "emisores";
+
+          let url =`http://localhost:8080/correo/usuarios-alcalde/?tipo=${encodeURIComponent(tipoString)}`;
           
     
           const response = await fetch(url, {

@@ -3,9 +3,9 @@ import useListUsers from "../../../hook/Enviar correo/useListUsers";
 import useAuthToken from "../../../hook/Token/useAuthToken";
 import { RiLoader4Line } from "react-icons/ri";
 import { toast } from "react-toastify";
+
 const EnviarCorreos = () => {
   const { users, fetchUsers } = useListUsers();
-
   const { token } = useAuthToken();
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [emailSubject, setEmailSubject] = useState("");
@@ -13,6 +13,7 @@ const EnviarCorreos = () => {
   const [showCheckboxes, setShowCheckboxes] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -25,24 +26,36 @@ const EnviarCorreos = () => {
         : [...prevSelectedUsers, userId]
     );
   };
+
+  const handleFileChange = (event) => {
+    setFiles(Array.from(event.target.files));
+  };
+
   const handleSendEmails = async () => {
     setIsLoading(true);
+    const formData = new FormData();
+    const enviarCorreo = {
+      para: selectedUsers,
+      asunto: emailSubject,
+      contenido: emailContent,
+    };
+    formData.append("enviarCorreo", JSON.stringify(enviarCorreo));
+
+    files.forEach((file) => {
+      formData.append("adjuntos", file);
+    });
+    
+
     try {
       const url = "http://localhost:8080/correo/enviar";
-      const body = {
-        para: selectedUsers,
-        asunto: emailSubject,
-        contenido: emailContent,
-      };
-
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(body),
+        body: formData,
       });
+      console.log(response);
 
       if (!response.ok) {
         throw new Error("Error al enviar el correo");
@@ -51,12 +64,27 @@ const EnviarCorreos = () => {
       toast.success("Correos enviados correctamente");
       setShowModal(false);
       setShowCheckboxes(false);
-      setSelectedUsers([false]);
+      setSelectedUsers([]);
+      setFiles([]);
+      setEmailSubject("");
+      setEmailContent("");
     } catch (error) {
       console.error(error);
       toast.error("Hubo un error al enviar los correos.");
     }
     setIsLoading(false);
+  };
+  const resetCheckBoxes = () => {
+    setSelectedUsers([]);
+    setShowCheckboxes(false);
+  };
+
+  const cancelModal = () => {
+    setShowModal(false);
+    
+    setFiles([]);
+    setEmailSubject("");
+    setEmailContent("");
   };
 
   return (
@@ -76,15 +104,16 @@ const EnviarCorreos = () => {
           </button>
         ) : (
           <button
-            onClick={() => setShowCheckboxes(false)}
+            onClick={resetCheckBoxes}
             className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
           >
             Salir del seleccionar
           </button>
         )}
       </div>
+
       <div className="overflow-x-auto">
-        <table className="table-auto w-full mt-4 ">
+        <table className="table-auto w-full mt-4">
           <thead>
             <tr>
               {showCheckboxes && (
@@ -93,7 +122,6 @@ const EnviarCorreos = () => {
                 </th>
               )}
               <th className="px-4 py-2 bg-secundary text-white">#</th>
-
               <th className="px-4 py-2 bg-secundary text-white">
                 CORREO ELECTRONICO
               </th>
@@ -101,11 +129,11 @@ const EnviarCorreos = () => {
               <th className="px-4 py-2 bg-secundary text-white">CIUDAD</th>
             </tr>
           </thead>
-
           <tbody>
             {users
-              .filter((user) => user.rol !== "Secretario")
-              .filter((user) => user.rol !== "Personal")
+              .filter(
+                (user) => user.rol !== "Secretario" && user.rol !== "Personal"
+              )
               .map((user, index) => (
                 <tr key={user.id}>
                   {showCheckboxes && (
@@ -119,7 +147,6 @@ const EnviarCorreos = () => {
                     </td>
                   )}
                   <td className="border px-4 py-2 text-center">{index + 1}</td>
-
                   <td className="border px-4 py-2 text-center">{user.email}</td>
                   <td className="border px-4 py-2 text-center">{user.rol}</td>
                   <td className="border px-4 py-2 text-center">
@@ -160,11 +187,28 @@ const EnviarCorreos = () => {
               onChange={(e) => setEmailContent(e.target.value)}
               className="mb-4 px-2 py-3 rounded-xl shadow-md shadow-blue-500 text-secundary bg-tertiary-100 w-full h-32 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
             />
+            <div className="mb-4">
+              <input
+                type="file"
+                multiple
+                id="file-input"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="file-input"
+                className="block cursor-pointer bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark text-center"
+              >
+                {files.length > 0
+                  ? `Archivos seleccionados: ${files.length}`
+                  : "Seleccionar archivos"}
+              </label>
+            </div>
             <div className="flex justify-end">
               {!isLoading ? (
                 <>
                   <button
-                    onClick={() => setShowModal(false)}
+                    onClick={cancelModal}
                     className="mr-4 bg-gray-400 text-white px-4 py-2 rounded-xl shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                   >
                     Cancelar
@@ -180,7 +224,7 @@ const EnviarCorreos = () => {
               ) : (
                 <div className="flex justify-center">
                   <RiLoader4Line className="text-black animate-spin text-4xl mt-6" />
-                  <p className="text-black mt-8 ">Enviando correos...</p>
+                  <p className="text-black mt-8">Enviando correos...</p>
                 </div>
               )}
             </div>

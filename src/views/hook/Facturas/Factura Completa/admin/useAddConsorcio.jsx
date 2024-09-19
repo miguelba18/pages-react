@@ -32,7 +32,7 @@ const useAddConsorcio = () => {
 
       setSuccess(true);
       fetchFacturas(selectedCiudad, searchQuery, selectedAnio);
-      toast.success("Consorcio agregada con éxito", { autoClose: 1700 });
+      toast.success("Consorcio agregado con éxito", { autoClose: 1700 });
       return id;
     } catch (error) {
       setError(error.message);

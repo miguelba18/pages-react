@@ -306,8 +306,9 @@ const ConsorcioVendedorMunicipio = () => {
           <Modal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-       
-        title="Detalles de la Factura"
+        
+        
+        
         cancelText="Cerrar"
         showConfirmButton={false}
        
@@ -315,34 +316,117 @@ const ConsorcioVendedorMunicipio = () => {
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">Error: {error}</p>}
         {factura && (
-          <div>
-            <p><strong>ID:</strong> {factura.id}</p>
-            <p><strong>Fecha Creación:</strong> {factura.fechaCreacion}</p>
-            <p><strong>Código Único:</strong> {factura.codigoUnico}</p>
-            <p><strong>Número Factura:</strong> {factura.numeroFactura}</p>
-            <p><strong>Forma de Pago:</strong> {factura.formaPago}</p>
-            <p><strong>Fecha Emisión:</strong> {factura.fechaEmision}</p>
-            <p><strong>País Emisor:</strong> {factura.paisEmisor}</p>
-            <p><strong>Departamento Emisor:</strong> {factura.departamentoEmisor}</p>
-            <p><strong>Municipio Emisor:</strong> {factura.municipioEmisor}</p>
-            <p><strong>Dirección Emisor:</strong> {factura.direccionEmisor}</p>
-            <p><strong>Correo Emisor:</strong> {factura.correoEmisor}</p>
-            <p><strong>Teléfono Emisor:</strong> {factura.telefonoEmisor}</p>
-            <p><strong>Nombre Comercial Emisor:</strong> {factura.nombreComercialEmisor}</p>
-            <p><strong>NIT Emisor:</strong> {factura.nitEmisor}</p>
-            <p><strong>Tipo Contribuyente Emisor:</strong> {factura.tipoContribuyenteEmisor}</p>
-            <p><strong>Nombre Adquiriente:</strong> {factura.nombreAdquiriente}</p>
-            <p><strong>Número Documento Adquiriente:</strong> {factura.numeroDocumentoAdquiriente}</p>
-            <p><strong>Tipo Documento Adquiriente:</strong> {factura.tipoDocumentoAdquiriente}</p>
-            <p><strong>País Adquiriente:</strong> {factura.paisAdquiriente}</p>
-            <p><strong>Departamento Adquiriente:</strong> {factura.departamentoAdquiriente}</p>
-            <p><strong>Municipio Adquiriente:</strong> {factura.municipioAdquiriente}</p>
-            <p><strong>Dirección Adquiriente:</strong> {factura.direccionAdquiriente}</p>
-            <p><strong>Correo Adquiriente:</strong> {factura.correoAdquiriente}</p>
-            <p><strong>Teléfono Adquiriente:</strong> {factura.telefonoAdquiriente}</p>
-            <p><strong>Subtotal:</strong> ${factura.subtotal}</p>
-            <p><strong>Total Factura:</strong> ${factura.totalFactura}</p>
+          <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-2xl font-bold text-primary mb-4">Detalles de la Factura</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 break-words">
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">ID</p>
+              <p className="text-lg font-semibold">{factura.id}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Fecha Creación</p>
+              <p className="text-lg font-semibold">{factura.fechaCreacion}</p>
+            </div>
+            
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Número Factura</p>
+              <p className="text-lg font-semibold">{factura.numeroFactura}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Forma de Pago</p>
+              <p className="text-lg font-semibold">{factura.formaPago}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Fecha Emisión</p>
+              <p className="text-lg font-semibold">{factura.fechaEmision}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">País Emisor</p>
+              <p className="text-lg font-semibold">{factura.paisEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Departamento Emisor</p>
+              <p className="text-lg font-semibold">{factura.departamentoEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Municipio Emisor</p>
+              <p className="text-lg font-semibold">{factura.municipioEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Dirección Emisor</p>
+              <p className="text-lg font-semibold">{factura.direccionEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Correo Emisor</p>
+              <p className="text-lg font-semibold">{factura.correoEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Teléfono Emisor</p>
+              <p className="text-lg font-semibold">{factura.telefonoEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Nombre Comercial Emisor</p>
+              <p className="text-lg font-semibold">{factura.nombreComercialEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">NIT Emisor</p>
+              <p className="text-lg font-semibold">{factura.nitEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Tipo Contribuyente Emisor</p>
+              <p className="text-lg font-semibold">{factura.tipoContribuyenteEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Nombre Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.nombreAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Codigo Unico</p>
+              <p className="text-lg font-semibold ">{factura.codigoUnico}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Número Documento Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.numeroDocumentoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Tipo Documento Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.tipoDocumentoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">País Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.paisAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Departamento Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.departamentoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Municipio Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.municipioAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Dirección Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.direccionAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Correo Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.correoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Teléfono Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.telefonoAdquiriente}</p>
+            </div>
+            <div className="border-t pt-2">
+              <p className="text-sm text-gray-500">Subtotal</p>
+              <p className="text-lg font-semibold">${factura.subtotal}</p>
+            </div>
+            <div className="border-t pt-2">
+              <p className="text-sm text-gray-500">Total Factura</p>
+              <p className="text-lg font-semibold">${factura.totalFactura}</p>
+            </div>
           </div>
+        </div>
+        
         )}
       </Modal>
         </>

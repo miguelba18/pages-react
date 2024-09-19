@@ -4,9 +4,10 @@ const useListAdquiriente = () => {
     const { token } = useAuthToken();
     const [users, setUsers] = useState([]);
   
-    const fetchUsers = useCallback(async () => {
+    const fetchUsers = useCallback(async (tipo="adquirientes") => {
         try {
-          let url =`http://localhost:8080/correo/usuarios-alcalde/adquiriente`;
+          const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
+          let url =`http://localhost:8080/correo/usuarios-alcalde/?tipo=${encodeURIComponent(tipoString)}`;
           
     
           const response = await fetch(url, {

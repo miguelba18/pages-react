@@ -27,8 +27,8 @@ Modal.propTypes = {
   showConfirmButton: PropTypes.bool,
 }
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div className="fixed z-10 inset-0 overflow-y-auto ">
+      <div className="flex items-center justify-center min-h-screen  pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity">
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
@@ -42,7 +42,7 @@ Modal.propTypes = {
             {children}
           </div>
           <div className="bg-tertiary-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          {showConfirmButton && (  // Condicional para mostrar o no el botón de confirmar
+          {showConfirmButton && ( 
               <button
                 onClick={onConfirm}
                 type="button"

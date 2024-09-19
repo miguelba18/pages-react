@@ -5,20 +5,25 @@ import {
   RiDownloadLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
+  RiSearchEyeLine
 } from "react-icons/ri";
 import useListConsorciosPersona from "../../../../../views/hook/Consorcios/useListConsorciosPersona";
 import HighlightedText from "../../../../../utils/HighlightedText";
+import Modal from "../../../../modal/Modal";
+import useListId from "../../../../hook/Consorcios/useListId";
 const VendedorAlcalde = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const [totalSubtotal, setTotalSubtotal] = useState(0);
-
+  const [selectedFacturaId, setSelectedFacturaId] = useState(null);
+  const { factura, loading, error } = useListId(selectedFacturaId);
   const { consorcios, listConsorcios } = useListConsorciosPersona();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAnio, setSelectedAnio] = useState("");
   const [resetAnio, setResetAnio] = useState(false);
   const [facturasDisponibles, setFacturasDisponibles] = useState(false);
   const { handleDownloadExcel } = useDescargarConsorciosPersona();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
@@ -69,6 +74,16 @@ const VendedorAlcalde = () => {
     }, 0);
     setTotalSubtotal(total);
   }, [consorcios]);
+
+  const handleViewConsorcio = (id) => {
+    setSelectedFacturaId(id);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedFacturaId(null);
+  };
 
   return (
     <div>
@@ -129,6 +144,7 @@ const VendedorAlcalde = () => {
               <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
             </div>
           </div>
+          <div className="overflow-x-auto mt-4">
         <table className="table-auto w-full mt-8">
           <thead>
             <tr>
@@ -168,6 +184,9 @@ const VendedorAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Subtotal Factura
               </th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                 Ver mas
+                </th>
             </tr>
           </thead>
           <tbody>
@@ -200,6 +219,13 @@ const VendedorAlcalde = () => {
                   <td className="border px-4 py-2 text-center">
                     ${consorcio.subtotal}
                   </td>
+                  <td className="border px-4 py-2 text-center">
+                      <button
+                        onClick={() => handleViewConsorcio(consorcio.id)}
+                        className="p-1 rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-1
+                        duration-300 hover:from-secundary hover:to-[#042cb3]"
+                      ><RiSearchEyeLine /></button>
+                      </td>
                 </tr>
               ))
             ) : (
@@ -213,8 +239,136 @@ const VendedorAlcalde = () => {
             )}
           </tbody>
         </table>
+      </div>
+        <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        
+        
+        
+        cancelText="Cerrar"
+        showConfirmButton={false}
+       
+      >
+        {loading && <p>Loading...</p>}
+        {error && <p className="text-red-500">Error: {error}</p>}
+        {factura && (
+          <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-2xl font-bold text-primary mb-4">Detalles de la Factura</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 break-words">
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">ID</p>
+              <p className="text-lg font-semibold">{factura.id}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Fecha Creación</p>
+              <p className="text-lg font-semibold">{factura.fechaCreacion}</p>
+            </div>
+            
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Número Factura</p>
+              <p className="text-lg font-semibold">{factura.numeroFactura}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Forma de Pago</p>
+              <p className="text-lg font-semibold">{factura.formaPago}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Fecha Emisión</p>
+              <p className="text-lg font-semibold">{factura.fechaEmision}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">País Emisor</p>
+              <p className="text-lg font-semibold">{factura.paisEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Departamento Emisor</p>
+              <p className="text-lg font-semibold">{factura.departamentoEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Municipio Emisor</p>
+              <p className="text-lg font-semibold">{factura.municipioEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Dirección Emisor</p>
+              <p className="text-lg font-semibold">{factura.direccionEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Correo Emisor</p>
+              <p className="text-lg font-semibold">{factura.correoEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Teléfono Emisor</p>
+              <p className="text-lg font-semibold">{factura.telefonoEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Nombre Comercial Emisor</p>
+              <p className="text-lg font-semibold">{factura.nombreComercialEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">NIT Emisor</p>
+              <p className="text-lg font-semibold">{factura.nitEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Tipo Contribuyente Emisor</p>
+              <p className="text-lg font-semibold">{factura.tipoContribuyenteEmisor}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Nombre Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.nombreAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Codigo Unico</p>
+              <p className="text-lg font-semibold ">{factura.codigoUnico}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Número Documento Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.numeroDocumentoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Tipo Documento Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.tipoDocumentoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">País Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.paisAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Departamento Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.departamentoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Municipio Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.municipioAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Dirección Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.direccionAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Correo Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.correoAdquiriente}</p>
+            </div>
+            <div className="border-b pb-2">
+              <p className="text-sm text-gray-500">Teléfono Adquiriente</p>
+              <p className="text-lg font-semibold">{factura.telefonoAdquiriente}</p>
+            </div>
+            <div className="border-t pt-2">
+              <p className="text-sm text-gray-500">Subtotal</p>
+              <p className="text-lg font-semibold">${factura.subtotal}</p>
+            </div>
+            <div className="border-t pt-2">
+              <p className="text-sm text-gray-500">Total Factura</p>
+              <p className="text-lg font-semibold">${factura.totalFactura}</p>
+            </div>
+          </div>
+        </div>
+        
+        )}
+      </Modal>
       </>
     </div>
+    
   );
 };
 

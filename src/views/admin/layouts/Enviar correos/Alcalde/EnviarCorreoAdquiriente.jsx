@@ -12,6 +12,7 @@ const EnviarCorreoAdquiriente = () => {
   const [showCheckboxes, setShowCheckboxes] = useState(false); 
   const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -24,43 +25,64 @@ const EnviarCorreoAdquiriente = () => {
         : [...prevSelectedUsers, userId] 
     );
   };
-  const handleSendEmails = async (tipo="adquirientes") => {
+  const handleFileChange = (event) => {
+    setFiles(Array.from(event.target.files));
+  };
+  const handleSendEmails = async ( tipo="adquirientes") => {
     setIsLoading(true);
+    const formData = new FormData();
+    const enviarCorreo = {
+      para: selectedUsers,
+      asunto: emailSubject,
+      contenido: emailContent,
+    };
+    formData.append("enviarCorreo", JSON.stringify(enviarCorreo));
+
+    files.forEach((file) => {
+      formData.append("adjuntos", file);
+    });
+    
+
     try {
       const tipoString = typeof tipo === 'string' ? tipo : "adquirientes";
-
-   
-    const url = `http://localhost:8080/correo/enviar/?tipo=${encodeURIComponent(tipoString)}`;
-      const body = {
-        para: selectedUsers,
-        asunto: emailSubject,
-        contenido: emailContent,
-      };
-
+      const url = `http://localhost:8080/correo/enviar/?tipo=${encodeURIComponent(tipoString)}`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(body),
+        body: formData,
       });
+      console.log(response);
 
       if (!response.ok) {
         throw new Error("Error al enviar el correo");
       }
 
-      toast.success("Correos enviados correctamente");  
+      toast.success("Correos enviados correctamente");
       setShowModal(false);
       setShowCheckboxes(false);
-      setSelectedUsers([false]);
-      
-
+      setSelectedUsers([]);
+      setFiles([]);
+      setEmailSubject("");
+      setEmailContent("");
     } catch (error) {
       console.error(error);
       toast.error("Hubo un error al enviar los correos.");
     }
     setIsLoading(false);
+  };
+
+  const resetCheckBoxes = () => {
+    setSelectedUsers([]);
+    setShowCheckboxes(false);
+  };
+  const cancelModal = () => {
+    setShowModal(false);
+    
+    setFiles([]);
+    setEmailSubject("");
+    setEmailContent("");
   };
   return (
     <div>
@@ -75,7 +97,7 @@ const EnviarCorreoAdquiriente = () => {
             
         ) : (
             <button
-            onClick={() => setShowCheckboxes(false)}
+            onClick={resetCheckBoxes}
             className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
           >
             Salir del seleccionar
@@ -104,8 +126,9 @@ const EnviarCorreoAdquiriente = () => {
             {users.map((user, index) => (
               <tr key={user.id}>
                 {showCheckboxes && (
-                  <td className="border px-4 py-2 text-center">
+                  <td className="border px-4 py-2 text-center h-6 w-6">
                     <input
+                    className="h-6 w-6"
                       type="checkbox"
                       checked={selectedUsers.includes(user.correoAdquiriente)}
                       onChange={() => handleUserSelect(user.correoAdquiriente)}
@@ -124,7 +147,7 @@ const EnviarCorreoAdquiriente = () => {
         <div className="mt-8">
           <button
             onClick={() => setShowModal(true)}
-            disabled={selectedUsers.length === 0}
+            hidden={selectedUsers.length === 0}
             className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
           >
             Enviar correo
@@ -132,7 +155,7 @@ const EnviarCorreoAdquiriente = () => {
         </div>
       )}
 
-      {showModal && (
+{showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
             <h2 className="text-xl mb-4">Enviar correo</h2>
@@ -149,11 +172,28 @@ const EnviarCorreoAdquiriente = () => {
               onChange={(e) => setEmailContent(e.target.value)}
               className="mb-4 px-2 py-3 rounded-xl shadow-md shadow-blue-500 text-secundary bg-tertiary-100 w-full h-32 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
             />
+            <div className="mb-4">
+              <input
+                type="file"
+                multiple
+                id="file-input"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="file-input"
+                className="block cursor-pointer bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark text-center"
+              >
+                {files.length > 0
+                  ? `Archivos seleccionados: ${files.length}`
+                  : "Seleccionar archivos"}
+              </label>
+            </div>
             <div className="flex justify-end">
-            {!isLoading ? (
+              {!isLoading ? (
                 <>
                   <button
-                    onClick={() => setShowModal(false)}
+                    onClick={cancelModal}
                     className="mr-4 bg-gray-400 text-white px-4 py-2 rounded-xl shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
                   >
                     Cancelar
@@ -169,7 +209,7 @@ const EnviarCorreoAdquiriente = () => {
               ) : (
                 <div className="flex justify-center">
                   <RiLoader4Line className="text-black animate-spin text-4xl mt-6" />
-                  <p className="text-black mt-8 ">Enviando correos...</p>
+                  <p className="text-black mt-8">Enviando correos...</p>
                 </div>
               )}
             </div>
