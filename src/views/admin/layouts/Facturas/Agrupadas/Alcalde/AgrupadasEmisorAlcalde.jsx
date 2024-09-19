@@ -214,6 +214,97 @@ const AgrupadasEmisorAlcalde = () => {
     });
   };
 
+  const handleDownloadExcelDesagrupadasAfuera = async (
+    filtros,
+    tipo = "Emisores"
+  ) => {
+    const tipoString = typeof tipo === "string" ? tipo : "Emisores";
+
+    try {
+      const url = new URL(
+        "http://localhost:8080/factura/descargar-excel-persona-desagrupar/"
+      );
+      const params = new URLSearchParams();
+
+    
+      if (filtros.nitEmisor) {
+        params.append("filtros", filtros.nitEmisor);
+      }
+      if (filtros.fechaEmision) {
+        params.append("anios", filtros.fechaEmision);
+      }
+
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
+
+      url.search = params.toString();
+      console.log("Desagrupar URL:", url.toString());
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(
+          errorMessage || "No se pudo descargar el archivo Excel."
+        );
+      }
+
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get("Content-Disposition");
+      const fileNameMatch =
+        contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
+      const fileName = fileNameMatch
+        ? fileNameMatch[1]
+        : "datos_factura_emisores_desagrupar.xlsx";
+
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [
+            {
+              description: "Excel files",
+              accept: {
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                  [".xlsx"],
+              },
+            },
+          ],
+        });
+        const writableStream = await handle.createWritable();
+        await writableStream.write(blob);
+        await writableStream.close();
+        toast.success("El excel se ha descargado correctamente  .");
+      } else {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        toast.success("El excel se ha descargado correctamente .");
+      }
+    } catch (error) {
+      console.error("Error al descargar el archivo Excel:", error);
+      toast.error("Hubo un problema al descargar el archivo Excel.");
+    }
+  };
+
+  const handleDownloadExcelDesagrupadasOut = async (factura) => {
+    const filtros = {
+      nitEmisor: factura.nitEmisor,
+      fechaEmision: factura.fechaEmision,
+    };
+
+    await handleDownloadExcelDesagrupadasAfuera(filtros);
+  };
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -314,6 +405,9 @@ const AgrupadasEmisorAlcalde = () => {
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
                 <th className="px-4 py-2 bg-secundary text-white">
+                    Descargar Desagrupadas
+                  </th>
+                <th className="px-4 py-2 bg-secundary text-white">
                   Desagrupar
                 </th>
               </tr>
@@ -340,9 +434,22 @@ const AgrupadasEmisorAlcalde = () => {
                             highlight={searchQuery}
                           />
                         </td>
+                        
                         <td className="border px-4 text-center">
                           ${factura.subtotal}
                         </td>
+                        <td className="border px-4 py-2 text-center">
+                            <div className="grid justify-center">
+                              <button
+                                onClick={() =>
+                                  handleDownloadExcelDesagrupadasOut(factura)
+                                }
+                                className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+                              >
+                                <RiDownloadLine className="" />
+                              </button>
+                            </div>
+                          </td>
                         <td className="border px-4 py-2 text-center">
                           <div className="grid justify-center">
                             <button
@@ -416,7 +523,7 @@ const AgrupadasEmisorAlcalde = () => {
                     )}
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="table-auto w-full">
+                  <table className="table-auto w-full">
                       <thead>
                         <tr>
                           {showCheckboxes && (
@@ -424,49 +531,28 @@ const AgrupadasEmisorAlcalde = () => {
                               Seleccionar
                             </th>
                           )}
-                          <th className="px-4 py-2 bg-secundary text-white">#</th>
+                          
                           <th className="px-4 py-2 bg-secundary text-white">
                             Fecha
                           </th>
+                         
+                         
+                          
+                          
+
                           <th className="px-4 py-2 bg-secundary text-white">
-                            Cufe
+                            Nombre o Razón Social del Comprador
                           </th>
                           <th className="px-4 py-2 bg-secundary text-white">
-                            Numero de factura
+                            NIT Comprador
                           </th>
                           <th className="px-4 py-2 bg-secundary text-white">
-                            Forma de pago
+                            Nombre o Razón Social del Vendedor
                           </th>
                           <th className="px-4 py-2 bg-secundary text-white">
-                            Pais Emisor
+                            NIT Vendedor
                           </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Departamento Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Municipio Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Direccion Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Correo Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Telefono Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Tipo Contribuyente Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Nombre Comercial Emisor o vendedor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            NIT Emisor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Tipo Contribuyente Receptor
-                          </th>
+
                           <th className="px-4 py-2 bg-secundary text-white">
                             Subtotal
                           </th>
@@ -478,7 +564,7 @@ const AgrupadasEmisorAlcalde = () => {
                             {showCheckboxes && (
                               <td className="border px-4 py-2 text-center">
                                 <input
-                                 className="h-6 w-6"
+                                  className="h-6 w-6"
                                   type="checkbox"
                                   value={factura.id}
                                   checked={facturasSeleccionadas.includes(
@@ -487,45 +573,21 @@ const AgrupadasEmisorAlcalde = () => {
                                   onChange={() =>
                                     handleCheckboxChange(factura.id)
                                   }
-                                  
                                 />
                               </td>
                             )}
-                            <td className="border px-4 py-2 text-center">
-                              {idx + 1}
-                            </td>
+                           
                             <td className="border px-4 text-center">
                               {factura.fechaEmision}
                             </td>
+                            
+                            
+                            
                             <td className="border px-4 text-center">
-                              {factura.codigoUnico}
+                              {factura.nombreAdquiriente}
                             </td>
                             <td className="border px-4 text-center">
-                              {factura.numeroFactura}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.formaPago}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.paisEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.departamentoEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.municipioEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.direccionEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.correoEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.telefonoEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.tipoContribuyenteEmisor}
+                              {factura.numeroDocumentoAdquiriente}
                             </td>
                             <td className="border px-4 text-center">
                               {factura.nombreComercialEmisor}
@@ -533,9 +595,7 @@ const AgrupadasEmisorAlcalde = () => {
                             <td className="border px-4 text-center">
                               {factura.nitEmisor}
                             </td>
-                            <td className="border px-4 text-center">
-                              {factura.tipoContribuyenteEmisor}
-                            </td>
+
                             <td className="border px-4">${factura.subtotal}</td>
                           </tr>
                         ))}

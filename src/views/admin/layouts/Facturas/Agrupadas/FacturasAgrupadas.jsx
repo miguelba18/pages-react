@@ -22,7 +22,7 @@ const FacturasAgrupadas = () => {
                   : "bg-white text-secundary"
             } px-4 py-2 rounded-l`}
           >
-            Adquiriente
+            Comprador
           </button>
           <button
             onClick={() => handleEmpresaChange("emisor")}
@@ -32,7 +32,7 @@ const FacturasAgrupadas = () => {
                   : "bg-white text-secundary"
             } px-4 py-2 rounded-r`} 
           >
-            Emisor
+            Vendedor
           </button>
         </div>
       

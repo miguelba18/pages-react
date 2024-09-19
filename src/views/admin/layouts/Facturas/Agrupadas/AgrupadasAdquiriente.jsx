@@ -6,7 +6,7 @@ import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
-import {  MdOutlineGroup } from "react-icons/md";
+import { MdOutlineGroup } from "react-icons/md";
 import Modal from "../../../../modal/Modal";
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useDescargarFacturas";
 import useListFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useListFacturas";
@@ -66,15 +66,7 @@ const AgrupadasAdquiriente = () => {
   }, [selectedDepartamento, setFacturas]);
 
   const handleDownload = () => {
-    if (selectedCiudad || searchQuery || selectedAnio) {
-      handleDownloadExcel({
-        ciudad: selectedCiudad || undefined,
-        filtro: searchQuery || undefined,
-        anio: selectedAnio || undefined,
-      });
-    } else {
-      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
-    }
+    handleDownloadExcel(selectedCiudad, searchQuery, selectedAnio);
   };
   const handleSearchWithResetAnio = (query) => {
     setSelectedAnio("");
@@ -157,7 +149,6 @@ const AgrupadasAdquiriente = () => {
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-      
 
       selectedFacturas.forEach((id) => {
         params.append("id", id);
@@ -226,10 +217,7 @@ const AgrupadasAdquiriente = () => {
     }
   };
 
-  
-
   const toggleDespliegue = async (factura) => {
- 
     await handleDesagrupar([factura]);
     setIsModalOpen(true);
   };
@@ -245,6 +233,100 @@ const AgrupadasAdquiriente = () => {
         return [...prev, id];
       }
     });
+  };
+
+  const handleDownloadExcelDesagrupadasAfuera = async (
+    filtros,
+    tipo = "adquirientes"
+  ) => {
+    const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
+
+    try {
+      const url = new URL(
+        "http://localhost:8080/factura/descargar-excel-persona-desagrupar/"
+      );
+      const params = new URLSearchParams();
+
+      if (selectedCiudad) {
+        params.append("ciudad", selectedCiudad);
+      }
+
+      if (filtros.numeroDocumentoAdquiriente) {
+        params.append("filtros", filtros.numeroDocumentoAdquiriente);
+      }
+      if (filtros.fechaEmision) {
+        params.append("anios", filtros.fechaEmision);
+      }
+
+      if (tipo) {
+        params.append("tipo", tipoString);
+      }
+
+      url.search = params.toString();
+      console.log("Desagrupar URL:", url.toString());
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(
+          errorMessage || "No se pudo descargar el archivo Excel."
+        );
+      }
+
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get("Content-Disposition");
+      const fileNameMatch =
+        contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
+      const fileName = fileNameMatch
+        ? fileNameMatch[1]
+        : "datos_factura_adquirientes_desagrupar.xlsx";
+
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [
+            {
+              description: "Excel files",
+              accept: {
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                  [".xlsx"],
+              },
+            },
+          ],
+        });
+        const writableStream = await handle.createWritable();
+        await writableStream.write(blob);
+        await writableStream.close();
+        toast.success("El excel se ha descargado correctamente.");
+      } else {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        toast.success("El excel se ha descargado correctamente.");
+      }
+    } catch (error) {
+      console.error("Error al descargar el archivo Excel:", error);
+      toast.error("Hubo un problema al descargar el archivo Excel.");
+    }
+  };
+
+  const handleDownloadExcelDesagrupadasOut = async (factura) => {
+    const filtros = {
+      numeroDocumentoAdquiriente: factura.numeroDocumentoAdquiriente,
+      fechaEmision: factura.fechaEmision,
+    };
+
+    await handleDownloadExcelDesagrupadasAfuera(filtros);
   };
 
   return (
@@ -291,19 +373,17 @@ const AgrupadasAdquiriente = () => {
             ))}
           </select>
         </div>
-        <div className="xl:relative mr-2 ">
+        <div hidden={!selectedCiudad} className="xl:relative mr-2 ">
           <button
             onClick={handleDownload}
-            disabled={!selectedCiudad}
             className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
           >
             <span className="">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
         </div>
-        <div className="relative xl:right-0 xl:mt-0">
+        <div hidden={!selectedCiudad} className="relative xl:right-0 xl:mt-0">
           <input
-            disabled={!selectedCiudad}
             type="number"
             value={searchQuery}
             onChange={(e) => handleSearchWithResetAnio(e.target.value)}
@@ -348,9 +428,7 @@ const AgrupadasAdquiriente = () => {
               </button>
             </div>
             <div className="mt-4 text-right font-bold">
-        
-                <p>Total facturas: ${totalSuma}</p>
-             
+              <p>Total facturas: ${totalSuma}</p>
             </div>
           </div>
           <div className="overflow-x-auto">
@@ -385,14 +463,17 @@ const AgrupadasAdquiriente = () => {
                     </select>
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre o Razón Social del Adquiriente
+                    Nombre o Razón Social del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Número Documento del Adquiriente
+                    Número Documento del Comprador
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
                     Subtotal
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Descargar Desagrupadas
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Desagrupar
@@ -402,7 +483,6 @@ const AgrupadasAdquiriente = () => {
               <tbody>
                 {facturas.length > 0 ? (
                   currentItems.map((factura, index) => {
-
                     return (
                       <React.Fragment key={factura.id}>
                         <tr className="bg-gray-100 whitespace-nowrap">
@@ -421,7 +501,22 @@ const AgrupadasAdquiriente = () => {
                               highlight={searchQuery}
                             />
                           </td>
+
                           <td className="border px-4">${factura.subtotal}</td>
+
+                          <td className="border px-4 py-2 text-center">
+                            <div className="grid justify-center">
+                              <button
+                                onClick={() =>
+                                  handleDownloadExcelDesagrupadasOut(factura)
+                                }
+                                className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+                              >
+                                <RiDownloadLine className="" />
+                              </button>
+                            </div>
+                          </td>
+
                           <td className="border px-4 py-2 text-center">
                             <div className="grid justify-center">
                               <button
@@ -433,8 +528,6 @@ const AgrupadasAdquiriente = () => {
                             </div>
                           </td>
                         </tr>
-
-                        
                       </React.Fragment>
                     );
                   })
@@ -457,7 +550,7 @@ const AgrupadasAdquiriente = () => {
             >
               {facturasDesagrupadas && (
                 <>
-                  <div className="flex justify-between py-4">
+                  <div className="flex justify-between py-4 ">
                     {isDownloadButtonVisible && (
                       <button
                         onClick={() =>
@@ -495,54 +588,30 @@ const AgrupadasAdquiriente = () => {
                   <div className="overflow-x-auto">
                     <table className="table-auto w-full">
                       <thead>
-                        
-                      
                         <tr>
                           {showCheckboxes && (
                             <th className="px-4 py-2 bg-secundary text-white">
                               Seleccionar
                             </th>
                           )}
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            #
-                          </th>
+
                           <th className="px-4 py-2 bg-secundary text-white">
                             Fecha
                           </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Cufe
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Numero de factura
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Forma de pago
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Pais Adquiriente
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Departamento Adquiriente
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Municipio Adquiriente
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Direccion Adquiriente
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Correo Adquiriente
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Telefono Adquiriente
-                          </th>
 
                           <th className="px-4 py-2 bg-secundary text-white">
-                            Nombre Adquiriente
+                            Nombre o Razón Social del Comprador
                           </th>
                           <th className="px-4 py-2 bg-secundary text-white">
-                            NIT Adquiriente
+                            NIT Comprador
                           </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            Nombre o Razón Social del Vendedor
+                          </th>
+                          <th className="px-4 py-2 bg-secundary text-white">
+                            NIT Vendedor
+                          </th>
+
                           <th className="px-4 py-2 bg-secundary text-white">
                             Subtotal
                           </th>
@@ -554,7 +623,7 @@ const AgrupadasAdquiriente = () => {
                             {showCheckboxes && (
                               <td className="border px-4 py-2 text-center">
                                 <input
-                                 className="h-6 w-6"
+                                  className="h-6 w-6"
                                   type="checkbox"
                                   value={factura.id}
                                   checked={facturasSeleccionadas.includes(
@@ -563,49 +632,27 @@ const AgrupadasAdquiriente = () => {
                                   onChange={() =>
                                     handleCheckboxChange(factura.id)
                                   }
-                                  
                                 />
                               </td>
                             )}
-                            <td className="border px-4 py-2 text-center">
-                              {idx + 1}
-                            </td>
+
                             <td className="border px-4 text-center">
                               {factura.fechaEmision}
                             </td>
-                            <td className="border px-4 text-center">
-                              {factura.codigoUnico}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.numeroFactura}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.formaPago}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.paisAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.departamentoAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.municipioAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.direccionAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.correoAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.telefonoAdquiriente}
-                            </td>
+
                             <td className="border px-4 text-center">
                               {factura.nombreAdquiriente}
                             </td>
                             <td className="border px-4 text-center">
                               {factura.numeroDocumentoAdquiriente}
                             </td>
+                            <td className="border px-4 text-center">
+                              {factura.nombreComercialEmisor}
+                            </td>
+                            <td className="border px-4 text-center">
+                              {factura.nitEmisor}
+                            </td>
+
                             <td className="border px-4">${factura.subtotal}</td>
                           </tr>
                         ))}
