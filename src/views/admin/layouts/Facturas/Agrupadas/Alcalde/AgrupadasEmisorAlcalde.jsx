@@ -202,6 +202,7 @@ const AgrupadasEmisorAlcalde = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setShowCheckboxes(false);
+    setFacturasSeleccionadas([]);
   };
 
   const handleCheckboxChange = (id) => {
@@ -305,6 +306,11 @@ const AgrupadasEmisorAlcalde = () => {
     await handleDownloadExcelDesagrupadasAfuera(filtros);
   };
 
+  const cancelSelector = () => {
+    setFacturasSeleccionadas([]);
+    setShowCheckboxes(false);
+  };
+
   return (
     <div>
       <div className="overflow-x-auto">
@@ -403,12 +409,12 @@ const AgrupadasEmisorAlcalde = () => {
                 <th className="px-4 py-2 bg-secundary text-white">
                   NIT Emisor o vendedor
                 </th>
-                <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
+                <th className="px-4 py-2 bg-secundary text-white">Total acumulado cliente municipio</th>
                 <th className="px-4 py-2 bg-secundary text-white">
-                    Descargar Desagrupadas
+                Descargar Consolidado
                   </th>
                 <th className="px-4 py-2 bg-secundary text-white">
-                  Desagrupar
+                Discriminado cliente por municipio
                 </th>
               </tr>
             </thead>
@@ -515,7 +521,7 @@ const AgrupadasEmisorAlcalde = () => {
                       </button>
                     ) : (
                       <button
-                        onClick={() => setShowCheckboxes(false)}
+                        onClick={cancelSelector}
                         className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
                       >
                         Salir del seleccionar

@@ -148,7 +148,7 @@ const ConsorciosAlcalde = () => {
         </div>
       </div>
       <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas de Consorcios
+        Facturas no Vinculantes
       </h1>
 
       <div className="flex  justify-between">
@@ -218,55 +218,55 @@ const ConsorciosAlcalde = () => {
                   <option value="2030">2030</option>
                 </select>
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">Pais Emisor</th>
+              <th className="px-4 py-2 bg-secundary text-white">Pais Vendedor</th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Departamento Emisor
+                Departamento Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Municipio Emisor
+                Municipio Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Dirección Emisor
+                Dirección Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Correo Emisor
+                Correo Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Telefono Emisor
+                Telefono Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Nombre Comercial Emisor
+                Nombre Comercial Vendedor
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">NIT Emisor</th>
+              <th className="px-4 py-2 bg-secundary text-white">NIT Vendedor</th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Tipo Contribuyente Emisor
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Nombre Adquiriente
+                Tipo Contribuyente Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Numero Documento Adquiriente
+                Nombre Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Tipo Documento Adquiriente
+                Numero Documento Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Pais Adquiriente
+                Tipo Documento Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Departamento Adquiriente
+                Pais Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Municipio Adquiriente
+                Departamento Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Dirección Adquiriente
+                Municipio Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Correo Adquiriente
+                Dirección Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Telefono Adquiriente
+                Correo Comprador
+              </th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                Telefono Comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
               {userRoleId === "Alcalde" && (

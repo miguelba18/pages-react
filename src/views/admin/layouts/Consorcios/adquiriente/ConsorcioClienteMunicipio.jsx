@@ -123,20 +123,24 @@ const ConsorcioClienteMunicipio = () => {
                   <th className="px-4 py-2 bg-secundary text-white">
                     Fecha <br />
                   </th>
+                 
+
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre o Razón Social del Adquiriente
+                    Nombre Vendedor
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Nit Vendedor
+                  </th>
+                  <th className="px-4 py-2 bg-secundary text-white">
+                    Nombre o Razón Social del Comprador
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Número Documento del Adquiriente
+                    Número Documento del Comprador
                   </th>
 
-                
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre Comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Subtotal
+                  Total acumulado
                   </th>
                 </tr>
               </thead>
@@ -166,17 +170,20 @@ const ConsorcioClienteMunicipio = () => {
                       <td className="border px-4 text-center">
                         {consorcio.fechaEmision}
                       </td>
+                      
+
+                      <td className="border px-4 py-2 text-center">
+                        {consorcio.nombreComercialEmisor}
+                      </td>
+                      <td className="border px-4 py-2 text-center">
+                        {consorcio.nitEmisor}
+                      </td>
                       <td className="border px-4 text-center">
                         {consorcio.nombreAdquiriente}
                       </td>
 
                       <td className="border px-4 py-2 text-center">
                         {consorcio.numeroDocumentoAdquiriente}
-                      </td>
-                      
-                      
-<td className="border px-4 py-2 text-center">
-                        {consorcio.nombreComercialEmisor}
                       </td>
                       <td className="border px-4 py-2 text-center">
                         <div className="flex justify-between">

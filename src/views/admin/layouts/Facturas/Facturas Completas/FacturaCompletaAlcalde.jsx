@@ -14,40 +14,83 @@ import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/adm
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 import { toast } from "react-toastify";
 const FacturaCompleta = () => {
-  const { facturas, fetchFacturas, totalSuma, setFacturas } = useListAlcalde();
+  const { facturas, fetchFacturas, totalSuma } = useListAlcalde();
   const [searchQuery, setSearchQuery] = useState("");
   const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
   const { handleDownloadExcel } = useDescargarFacturas();
   const [processedFacturas, setProcessedFacturas] = useState(new Set());
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [isSelecting, setIsSelecting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+
   const itemsPerPage = 100;
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     fetchFacturas(searchQuery, anio);
   };
   useEffect(() => {
+
     fetchFacturas(searchQuery, selectedAnio);
-  }, [searchQuery, selectedAnio, fetchFacturas]);
+
+  }, [searchQuery, selectedAnio, fetchFacturas,processedFacturas]);
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleAddConsorcio = async (id) => {
-    const resultId = await addConsorcio(id);
-    if (resultId) {
-      setProcessedFacturas(prev => new Set(prev).add(resultId));
+  const handleAddConsorcio = async (ids) => {
+    const idsArray = ids.split(',');
+    const results = await Promise.all(idsArray.map((id) => addConsorcio(id)));
+    const successfulIds = results.filter((result) => result);
 
-      fetchFacturas( searchQuery, selectedAnio).then(facturas => {
-        setFacturas(facturas.map(factura => ({
-          ...factura,
-          isProcessed: processedFacturas.has(factura.id),
-        })));
-        toast.success("Consorcio agregado con éxito", { autoClose: 1700 });
+    if (successfulIds.length > 0) {
+      successfulIds.forEach((resultId) => {
+        setProcessedFacturas((prev) => new Set(prev).add(resultId));
       });
+
+      fetchFacturas("", searchQuery, selectedAnio).then(
+        
+      );
     }
   };
+
+  
+
+  const handleToggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const newSelectedIds = new Set(prev);
+      if (newSelectedIds.has(id)) {
+        newSelectedIds.delete(id);
+      } else {
+        newSelectedIds.add(id);
+      }
+      return newSelectedIds;
+    });
+  };
+
+  const handleAddSelectedConsorcios = () => {
+    const idsArray = Array.from(selectedIds); 
+    if (idsArray.length > 0) {
+      handleAddConsorcio(idsArray.join(',')); 
+      setSelectedIds(new Set()); 
+      setIsSelecting(false);
+    } else {
+      toast.info("No se han seleccionado facturas.");
+    }
+  };
+  const handleSelectAllConsorcios = () => {
+    if (selectedIds.size === facturas.length) {
+    
+      setSelectedIds(new Set());
+    } else {
+      
+      const allIds = facturas.map(factura => factura.id);
+      setSelectedIds(new Set(allIds));
+    }
+  };
+
   const handleDownload = () => {
     handleDownloadExcel("",searchQuery, selectedAnio);
     
@@ -110,6 +153,32 @@ const FacturaCompleta = () => {
         </div>
       </div>
 
+      <div className="flex justify-end mb-2">
+            <button
+              onClick={() => setIsSelecting((prev) => !prev)}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              {isSelecting ? "Cancelar selección" : "Seleccionar consorcios"}
+            </button>
+            {isSelecting && (
+              <>
+              <button
+              onClick={handleSelectAllConsorcios}
+              className="ml-2 px-4 py-2 bg-yellow-500 text-white rounded"
+            >
+              {selectedIds.size === facturas.length ? "Deseleccionar Todos" : "Seleccionar Todos"}
+            </button>
+      
+              <button
+                onClick={handleAddSelectedConsorcios}
+                className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Agregar Consorcios
+              </button>
+              </>
+            )}
+          </div>
+
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-6">
           <thead>
@@ -144,49 +213,49 @@ const FacturaCompleta = () => {
               </th>
               <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Nombre Comercial Emisor o vendedor
+                Nombre Comercial  vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                NIT Emisor o vendedor
+                NIT vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Departamento Emisor o vendedor
+                Departamento  vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Municipio Emisor o vendedor
+                Municipio  vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Dirección Emisor o vendedor
+                Dirección  vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Correo Emisor o vendedor
+                Correo  vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Telefono Emisor
+                Telefono Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Nombre adquiriente o comprador
+                Nombre adquiriente 
+                </th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                NIT comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                NIT adquiriente o comprador
+                Departamento  comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Departamento adquiriente o comprador
+                Municipio  comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Municipio adquiriente o comprador
+                Dirección comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Dirección adquiriente o comprador
+                Correo comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Correo adquiriente o comprador
+                Telefono Comprador
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Telefono adquiriente
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
-              <th className="px-4 py-2 bg-secundary text-white">Acciones</th>
+              <th className="px-4 py-2 bg-secundary text-white">Total acumulado</th>
+              <th className="px-4 py-2 bg-secundary text-white">Agregar No vinculante</th>
             </tr>
           </thead>
           <tbody>
@@ -264,30 +333,48 @@ const FacturaCompleta = () => {
                   <td className="border px-4 py-2 text-center">
                     ${factura.subtotal}
                   </td>
-                  <td className="border px-4 py-2 text-center">
-                    <div className="flex justify-center items-center">
-                    <button
-                          onClick={() => handleAddConsorcio(factura.id)}
-                          disabled={factura.estado === 1}
-                          className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
-                            factura.estado === 1
-                              ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] hover:shadow-xl hover:shadow-green-500 cursor-not-allowed"
-                              : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl hover:shadow-blue-500 hover:scale-105 duration-300 hover:from-[#1512be] hover:to-[#717cfb]"
-                          }`}
-                          aria-label={
-                            factura.estado === 1
-                              ? "Factura procesada"
-                              : "Agregar factura"
-                          }
-                        >
-                          {factura.estado === 1 ? (
-                            <RiCheckboxCircleFill />
-                          ) : (
-                            <RiAddCircleFill />
-                          )}
-                        </button>
-                    </div>
-                  </td>
+                  <td className="border px-4 text-center">
+                        <div className="flex justify-center">
+                          <button
+                            onClick={() => {
+                              if (isSelecting) {
+                                handleToggleSelect(factura.id);
+                              } else {
+                                handleAddConsorcio(factura.id);
+                              }
+                            }}
+                            disabled={factura.estado === 1 || !isSelecting}
+                            className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
+                              factura.estado === 1
+                                ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] cursor-not-allowed"
+                                : isSelecting
+                                ? selectedIds.has(factura.id)
+                                  ? "bg-gradient-to-r from-[#ffcc00] to-[#ff9900]"
+                                  : "bg-gradient-to-r from-[#718afb] to-[#1215be] hover:scale-105"
+                                : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl"
+                            }`}
+                            aria-label={
+                              factura.estado === 1
+                                ? "Factura procesada"
+                                : isSelecting
+                                ? "Seleccionar factura"
+                                : "Agregar factura"
+                            }
+                          >
+                            {factura.estado === 1 ? (
+                              <RiCheckboxCircleFill />
+                            ) : isSelecting ? (
+                              selectedIds.has(factura.id) ? (
+                                <RiCheckboxCircleFill />
+                              ) : (
+                                <RiAddCircleFill />
+                              )
+                            ) : (
+                              <RiAddCircleFill />
+                            )}
+                          </button>
+                        </div>
+                      </td>
                 </tr>
               ))
             )}

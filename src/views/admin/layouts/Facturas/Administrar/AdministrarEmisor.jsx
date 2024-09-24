@@ -177,32 +177,32 @@ const AdministrarEmisor = () => {
             </div>
           </div>
           <div>
-            <h2 className="text-xl font-bold mb-2">Facturas Emisor</h2>
+   
             <div className="overflow-x-auto">
               <table className="table-auto w-full mt-6">
                 <thead>
                   <tr>
                     <th className="px-4 py-2 bg-secundary text-white">#</th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Nombre o Razón Social del Emisor
+                      Nombre o Razón Social del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Número Documento del Emisor
+                      Número Documento del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      País del Emisor
+                      País del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Departamento del Emisor
+                      Departamento del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Municipio del Emisor
+                      Municipio del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Dirección del Emisor
+                      Dirección del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Correo del Emisor
+                      Correo del Vendedor
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
                       Subtotal

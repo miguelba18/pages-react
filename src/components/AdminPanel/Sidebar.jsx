@@ -333,8 +333,8 @@ const Sidebar = () => {
                       onClick={() => setShowSubMenuFactura(!showSubMenuFactura)}
                       className="flex items-center justify-between w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
                     >
-                      <RiBillFill className="text-xl text-secundary" />
-                      Facturas
+                      <RiBillFill className="text-xl text-secundary h-8 w-8" />
+                      Documentos Electronicos
                       <RiArrowDropRightLine
                         className={`text-3xl ${
                           showSubMenuFactura && "rotate-90"
@@ -405,7 +405,7 @@ const Sidebar = () => {
                                 : ""
                             }`}
                           />
-                          Facturas Agrupadas
+                          Vinculantes Comprador<br/>Vendedor Municipio
                         </Link>
                       </li>
 
@@ -640,12 +640,12 @@ const Sidebar = () => {
                       !showSubMenuFacturaElectronica
                     )
                   }
-                  className="flex items-center justify-between w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
+                  className="flex items-center justify-center w-full  gap-8 px-4 py-2 hover:bg-tertiary-900 rounded-lg  "
                 >
-                  <RiBillFill className="text-xl text-secundary" />
-                  Facturas
+                  <RiBillFill className="text-xl text-secundary w-full" />
+                  Documentos Electronicos
                   <RiArrowDropRightLine
-                    className={`text-3xl ${
+                    className={`text-3xl w-full  ${
                       showSubMenuFacturaElectronica && "rotate-90"
                     }`}
                   />
@@ -714,13 +714,13 @@ const Sidebar = () => {
                     className="flex items-center  gap-4 px-4 py-2 border-l-2 border-secundary ml-6 relative before:w-3 before:h-3 before:absolute before:bg-secundary before:rounded-full before:-left-[6.5px] before:top-[32%] before:translate-y-1/2  before:border-2 before:border-tertiary-100"
                   >
                     <RiArchiveFill
-                      className={`text-xl text-secundary ${
+                      className={`text-xl text-secundary w-10 h-10 ${
                         location.pathname === "/agrupadasalcalde"
                           ? "text-white"
                           : ""
                       }`}
                     />
-                    Facturas Agrupadas
+                    Vinculantes Comprador Vendedor Municipio
                   </Link>
                 </li>
 

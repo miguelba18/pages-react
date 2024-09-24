@@ -139,25 +139,25 @@ const AgrupadasAdquiriente = () => {
     tipo = "adquirientes"
   ) => {
     const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
-
+  
     try {
       const url = new URL(
         "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
-
+  
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-
+  
       selectedFacturas.forEach((id) => {
         params.append("id", id);
       });
-
+  
       if (tipo) {
         params.append("tipo", tipoString);
       }
-
+  
       url.search = params.toString();
       const response = await fetch(url, {
         method: "POST",
@@ -165,22 +165,26 @@ const AgrupadasAdquiriente = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(
           errorMessage || "No se pudo descargar el archivo Excel."
         );
       }
-
+  
       const blob = await response.blob();
+      console.log(blob);
       const contentDisposition = response.headers.get("Content-Disposition");
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
-      const fileName = fileNameMatch
-        ? fileNameMatch[1]
-        : "datos_factura_adquiriente_desagrupar.xlsx";
+       console.log(contentDisposition)
 
+      const fileNameMatch =
+        contentDisposition && contentDisposition.match(/filename=([^;]+)/);
+      
+      const fileName = fileNameMatch ? fileNameMatch[1].trim() : ""; 
+  
+      
+  
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
           suggestedName: fileName,
@@ -188,8 +192,7 @@ const AgrupadasAdquiriente = () => {
             {
               description: "Excel files",
               accept: {
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                  [".xlsx"],
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
               },
             },
           ],
@@ -197,25 +200,28 @@ const AgrupadasAdquiriente = () => {
         const writableStream = await handle.createWritable();
         await writableStream.write(blob);
         await writableStream.close();
-        toast.success("El excel se ha descargado correctamente  .");
+        toast.success("El excel se ha descargado correctamente.");
         setShowCheckboxes(false);
         setFacturasSeleccionadas([]);
       } else {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = fileName;
+        a.download = fileName; 
         document.body.appendChild(a);
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
-        toast.success("El excel se ha descargado correctamente .");
+        toast.success("El excel se ha descargado correctamente.");
       }
     } catch (error) {
       console.error("Error al descargar el archivo Excel:", error);
       toast.error("Hubo un problema al descargar el archivo Excel.");
     }
   };
+  
+  
+  
 
   const toggleDespliegue = async (factura) => {
     await handleDesagrupar([factura]);
@@ -470,13 +476,13 @@ const AgrupadasAdquiriente = () => {
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Subtotal
+                  Total acumulado cliente municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Descargar Desagrupadas
+                  Descargar Consolidado
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Desagrupar
+                  Discriminado cliente por municipio
                   </th>
                 </tr>
               </thead>

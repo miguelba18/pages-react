@@ -237,10 +237,16 @@ const ConsorcioVendedorMunicipio = () => {
                   </select>
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">
-                  Nombre o Razón Social del Emisor
+                  Nombre o Razón Social del Vendedor
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Nit del Vendedor
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">
                   Nombre Comprador
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Nit Comprador
                 </th>
                 <th className="px-4 py-2 bg-secundary text-white">
                   Subtotal Factura
@@ -274,10 +280,16 @@ const ConsorcioVendedorMunicipio = () => {
                       />
                     </td>
                     <td className="border px-4 py-2 text-center">
+                      {consorcio.nitEmisor}
+                    </td>
+                    <td className="border px-4 py-2 text-center">
                       <HighlightedText
                         text={consorcio.nombreAdquiriente}
                         highlight={searchQuery}
                       />
+                    </td>
+                    <td className="border px-4 py-2 text-center">
+                      {consorcio.numeroDocumentoAdquiriente}
                     </td>
                     <td className="border px-4 py-2 text-center">
                       ${consorcio.subtotal}
@@ -316,7 +328,7 @@ const ConsorcioVendedorMunicipio = () => {
         {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">Error: {error}</p>}
         {factura && (
-          <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6">
+          <div className="overflow-y-auto max-h-[80vh] bg-white shadow-md rounded-lg p-6">
           <h2 className="text-2xl font-bold text-primary mb-4">Detalles de la Factura</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 break-words">
             <div className="border-b pb-2">

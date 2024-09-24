@@ -134,89 +134,90 @@ const AgrupadasEmisor = () => {
     }
   };
 
-  const handleDownloadExcelDesagrupadas = async (
-    selectedFacturas,
-    tipo = "emisores"
-  ) => {
+  const handleDownloadExcelDesagrupadas = async (selectedFacturas, tipo = "emisores") => {
     const tipoString = typeof tipo === "string" ? tipo : "emisores";
 
     try {
-      const url = new URL(
-        "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
-      );
-      const params = new URLSearchParams();
+        const url = new URL("http://localhost:8080/factura/descargar-excel-persona-desagrupar");
+        const params = new URLSearchParams();
 
-      if (selectedCiudad) {
-        params.append("ciudad", selectedCiudad);
-      }
-      selectedFacturas.forEach((id) => {
-        params.append("id", id);
-      });
-
-      if (tipo) {
-        params.append("tipo", tipoString);
-      }
-
-      url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(
-          errorMessage || "No se pudo descargar el archivo Excel."
-        );
-      }
-
-      const blob = await response.blob();
-      const contentDisposition = response.headers.get("Content-Disposition");
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
-      const fileName = fileNameMatch
-        ? fileNameMatch[1]
-        : "datos_factura_emisor_desagrupar.xlsx";
-
-      if (window.showSaveFilePicker) {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: fileName,
-          types: [
-            {
-              description: "Excel files",
-              accept: {
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                  [".xlsx"],
-              },
-            },
-          ],
+        if (selectedCiudad) {
+            params.append("ciudad", selectedCiudad);
+        }
+        selectedFacturas.forEach((id) => {
+            params.append("id", id);
         });
-        const writableStream = await handle.createWritable();
-        await writableStream.write(blob);
-        await writableStream.close();
-        toast.success("El excel se ha descargado correctamente  .");
-        setFacturasSeleccionadas([]);
-        setShowCheckboxes(false);
-      } else {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-        toast.success("El excel se ha descargado correctamente .");
-        setShowCheckboxes(false);
-      }
+
+        if (tipo) {
+            params.append("tipo", tipoString);
+        }
+
+        url.search = params.toString();
+        console.log("Desagrupar URL:", url.toString());
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || "No se pudo descargar el archivo Excel.");
+        }
+
+        const contentDisposition = response.headers.get("content-disposition");
+      let fileName = '2022_PERPOL_DISTRIBUCIONES_SAS_901346585.xlsx'; 
+
+      console.log("Content-Disposition", contentDisposition);
+
+      
+      
+
+
+ 
+        const blob = await response.blob();
+
+     
+        if (window.showSaveFilePicker) {
+            const handle = await window.showSaveFilePicker({
+                suggestedName: fileName,
+                types: [
+                    {
+                        description: "Excel files",
+                        accept: {
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+                        },
+                    },
+                ],
+            });
+            const writableStream = await handle.createWritable();
+            await writableStream.write(blob); 
+            await writableStream.close();
+            toast.success("El excel se ha descargado correctamente.");
+            setFacturasSeleccionadas([]);
+            setShowCheckboxes(false);
+        } else {
+            const urlBlob = window.URL.createObjectURL(blob); 
+            const a = document.createElement("a");
+            a.href = urlBlob;
+            a.download = fileName; 
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(urlBlob); 
+            toast.success("El excel se ha descargado correctamente.");
+            setShowCheckboxes(false);
+        }
     } catch (error) {
-      console.error("Error al descargar el archivo Excel:", error);
-      toast.error("Hubo un problema al descargar el archivo Excel.");
+        console.error("Error al descargar el archivo Excel:", error);
+        toast.error("Hubo un problema al descargar el archivo Excel.");
     }
-  };
+};
+
+  
+  
 
   const toggleDespliegue = async (factura) => {
     await handleDesagrupar([factura]);
@@ -225,6 +226,7 @@ const AgrupadasEmisor = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setShowCheckboxes(false);
+    setFacturasSeleccionadas([]);
   };
 
   const handleCheckboxChange = (id) => {
@@ -329,6 +331,12 @@ const AgrupadasEmisor = () => {
 
     await handleDownloadExcelDesagrupadasAfuera(filtros);
   };
+
+  const cancelSelector = () => {
+    setFacturasSeleccionadas([]);
+    setShowCheckboxes(false);
+  };
+  
 
 
   return (
@@ -467,13 +475,13 @@ const AgrupadasEmisor = () => {
                     NIT Emisor o vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Subtotal
+                  Total acumulado cliente municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Descargar Desagrupadas
+                  Discriminado cliente por municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Desagrupar
+                  Descargar Consolidado
                   </th>
                 </tr>
               </thead>
@@ -575,7 +583,7 @@ const AgrupadasEmisor = () => {
                       </button>
                     ) : (
                       <button
-                        onClick={() => setShowCheckboxes(false)}
+                        onClick={cancelSelector}
                         className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
                       >
                         Salir del seleccionar

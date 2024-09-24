@@ -105,6 +105,7 @@ const AgrupadasAdquirienteAlcalde = () => {
 
       const blob = await response.blob();
       const contentDisposition = response.headers.get("Content-Disposition");
+      
       const fileNameMatch =
         contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
       const fileName = fileNameMatch
@@ -394,11 +395,11 @@ const AgrupadasAdquirienteAlcalde = () => {
                 Número Documento del Comprador
               </th>
 
-              <th className="px-4 py-2 bg-secundary text-white">Subtotal</th>
+              <th className="px-4 py-2 bg-secundary text-white">Total acumulado cliente municipio</th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Descargar Desagrupadas
+              Descargar Consolidado
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">Desagrupar</th>
+              <th className="px-4 py-2 bg-secundary text-white">Discriminado cliente por municipio</th>
             </tr>
           </thead>
           <tbody>

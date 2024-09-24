@@ -184,7 +184,7 @@ const Consorcios = () => {
         </div>
       </div>
       <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas de Consorcios
+        Facturas no Vinculantes
       </h1>
 
       {selectedCiudad && (
@@ -259,64 +259,64 @@ const Consorcios = () => {
                     </select>
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Pais Emisor
+                    Pais Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Departamento Emisor
+                    Departamento Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Municipio Emisor
+                    Municipio Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Dirección Emisor
+                    Dirección Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Correo Emisor
+                    Correo Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Telefono Emisor
+                    Telefono Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre Comercial Emisor
+                    Nombre Comercial Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    NIT Emisor
+                    NIT Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Tipo Contribuyente Emisor
+                    Tipo Contribuyente Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre Adquiriente
+                    Nombre Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Numero Documento Adquiriente
+                    Numero Documento Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Tipo Documento Adquiriente
+                    Tipo Documento Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Pais Adquiriente
+                    Pais Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Departamento Adquiriente
+                    Departamento Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Municipio Adquiriente
+                    Municipio Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Dirección Adquiriente
+                    Dirección Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Correo Adquiriente
+                    Correo Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Telefono Adquiriente
+                    Telefono Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Subtotal
+                    Total Acumulado
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Eliminar
+                    Eliminar No vinculante
                   </th>
                 </tr>
               </thead>

@@ -189,22 +189,22 @@ const AdministrarAdquiriente = () => {
                 <tr>
                   <th className="px-4 py-2 bg-secundary text-white">#</th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre o Razón Social del Adquiriente
+                    Nombre o Razón Social del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Número Documento del Adquiriente
+                    Número Documento del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Departamento del Adquiriente
+                    Departamento del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Municipio del Adquiriente
+                    Municipio del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Dirección del Adquiriente
+                    Dirección del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Correo del Adquiriente
+                    Correo del Comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Subtotal
