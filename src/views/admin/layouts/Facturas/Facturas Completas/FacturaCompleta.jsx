@@ -48,14 +48,14 @@ const FacturaCompleta = () => {
 
   useEffect(() => {
     if (selectedCiudad) {
-      fetchFacturas(selectedCiudad, searchQuery, selectedAnio).then();
+      fetchFacturas(selectedCiudad, "", selectedAnio).then();
     } else {
       setFacturas([]);
     }
   }, [
     fetchFacturas,
     selectedCiudad,
-    searchQuery,
+
     selectedAnio,
     processedFacturas,
     setFacturas,
@@ -64,11 +64,6 @@ const FacturaCompleta = () => {
   useEffect(() => {
     setFacturas([]);
   }, [selectedDepartamento, setFacturas]);
-
-  const handleSearch = (query, anio) => {
-    setSearchQuery(query);
-    fetchFacturas(selectedCiudad, query, anio);
-  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -140,10 +135,8 @@ const FacturaCompleta = () => {
     setFacturaToDelete(null);
   };
 
-  const handleSearchWithResetAnio = (query) => {
-    setSelectedAnio("");
-    handleSearch(query, "");
-    setResetAnio(true);
+  const handleSearch = (query, anio) => {
+    fetchFacturas(selectedCiudad, query, anio);
   };
 
   useEffect(() => {
@@ -238,22 +231,26 @@ const FacturaCompleta = () => {
             </button>
           </div>
 
-          <div className="relative xl:right-0 xl:mt-0">
+          <div className="relative xl:right-0   ">
             <input
-              disabled={!selectedCiudad}
+            disabled={!selectedCiudad}
               type="text"
               value={searchQuery}
-              onChange={(e) =>
-                handleSearchWithResetAnio(e.target.value, facturasDisponibles)
-              }
+              onChange={(e) => setSearchQuery(e.target.value)} 
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch(searchQuery, selectedAnio); 
+                }
+              }}
+              placeholder="Buscar facturas..."
               className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-              placeholder="Search"
-              required
             />
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-              <RiSearchLine className="h-8 w-8 p-1 xl:mb-2 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
-            </div>
+            <RiSearchLine className="h-8 w-8 p-1 xl:mb-3 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
           </div>
+            
+          </div>
+
         </div>
       </div>
 

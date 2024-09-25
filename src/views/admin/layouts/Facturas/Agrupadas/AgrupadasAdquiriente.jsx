@@ -134,57 +134,62 @@ const AgrupadasAdquiriente = () => {
       console.error("Error en handleDesagrupar:", error);
     }
   };
+
   const handleDownloadExcelDesagrupadas = async (
     selectedFacturas,
     tipo = "adquirientes"
   ) => {
     const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
-  
+
     try {
       const url = new URL(
         "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
       );
       const params = new URLSearchParams();
-  
+
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-  
       selectedFacturas.forEach((id) => {
         params.append("id", id);
       });
-  
+
       if (tipo) {
         params.append("tipo", tipoString);
       }
-  
+
       url.search = params.toString();
+      console.log("Desagrupar URL:", url.toString());
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(
           errorMessage || "No se pudo descargar el archivo Excel."
         );
       }
-  
-      const blob = await response.blob();
-      console.log(blob);
-      const contentDisposition = response.headers.get("Content-Disposition");
-       console.log(contentDisposition)
 
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename=([^;]+)/);
-      
-      const fileName = fileNameMatch ? fileNameMatch[1].trim() : ""; 
-  
-      
-  
+      // Extraer el nombre del archivo desde el encabezado Content-Disposition
+      const contentDisposition = response.headers.get("content-disposition");
+      let fileName = "archivo.xlsx"; // Valor por defecto si no se encuentra en la respuesta
+
+      if (contentDisposition) {
+        // Buscar el nombre del archivo en el encabezado 'Content-Disposition'
+        const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+        if (matches && matches[1]) {
+          fileName = matches[1]; // Asignar el nombre de archivo generado en el backend
+        }
+      }
+
+      const blob = await response.blob();
+
+      // Proceso de descarga
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
           suggestedName: fileName,
@@ -192,7 +197,8 @@ const AgrupadasAdquiriente = () => {
             {
               description: "Excel files",
               accept: {
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                  [".xlsx"],
               },
             },
           ],
@@ -201,18 +207,20 @@ const AgrupadasAdquiriente = () => {
         await writableStream.write(blob);
         await writableStream.close();
         toast.success("El excel se ha descargado correctamente.");
-        setShowCheckboxes(false);
         setFacturasSeleccionadas([]);
+        setShowCheckboxes(false);
       } else {
-        const url = window.URL.createObjectURL(blob);
+        // Para navegadores más antiguos
+        const urlBlob = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName; 
+        a.href = urlBlob;
+        a.download = fileName; // Usar el nombre de archivo del backend
         document.body.appendChild(a);
         a.click();
         a.remove();
-        window.URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(urlBlob);
         toast.success("El excel se ha descargado correctamente.");
+        setShowCheckboxes(false);
       }
     } catch (error) {
       console.error("Error al descargar el archivo Excel:", error);

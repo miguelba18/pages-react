@@ -29,11 +29,14 @@ const FacturaCompleta = () => {
     setSelectedAnio(anio);
     fetchFacturas(searchQuery, anio);
   };
+  const handleSearch = (query, anio) => {
+    fetchFacturas( query, anio);
+  };
   useEffect(() => {
 
-    fetchFacturas(searchQuery, selectedAnio);
+    fetchFacturas( selectedAnio);
 
-  }, [searchQuery, selectedAnio, fetchFacturas,processedFacturas]);
+  }, [ selectedAnio, fetchFacturas,processedFacturas]);
 
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -100,7 +103,7 @@ const FacturaCompleta = () => {
     <div>
       
       <div className="xl:flex justify-end">
-        <div className="xl:relative mr-4 xl:mt-6">
+        <div className="xl:relative mr-4">
           <button
             onClick={handleDownload}
             className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
@@ -110,22 +113,24 @@ const FacturaCompleta = () => {
           </button>
         </div>
 
-        <div className="relative xl:right-0 xl:mt-6">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              fetchFacturas(e.target.value, selectedAnio);
-            }}
-            className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-            placeholder="Search"
-            required
-          />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
+        <div className="relative xl:right-0   ">
+            <input
+           
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)} 
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleSearch(searchQuery, selectedAnio); 
+                }
+              }}
+              placeholder="Buscar facturas..."
+              className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
+            />
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
             <RiSearchLine className="h-8 w-8 p-1 xl:mb-0 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
           </div>
-        </div>
+          </div>
       </div>
 
       <div className="flex  justify-between">
