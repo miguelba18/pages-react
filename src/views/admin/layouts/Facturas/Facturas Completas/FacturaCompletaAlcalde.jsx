@@ -29,14 +29,13 @@ const FacturaCompleta = () => {
     setSelectedAnio(anio);
     fetchFacturas(searchQuery, anio);
   };
-  const handleSearch = (query, anio) => {
-    fetchFacturas( query, anio);
-  };
+  
   useEffect(() => {
 
-    fetchFacturas( selectedAnio);
+    fetchFacturas(searchQuery, selectedAnio);
 
-  }, [ selectedAnio, fetchFacturas,processedFacturas]);
+  }, [searchQuery, selectedAnio, fetchFacturas,processedFacturas]);
+  
 
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -114,19 +113,17 @@ const FacturaCompleta = () => {
         </div>
 
         <div className="relative xl:right-0   ">
-            <input
-           
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)} 
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch(searchQuery, selectedAnio); 
-                }
-              }}
-              placeholder="Buscar facturas..."
-              className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-            />
+        <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              fetchFacturas(e.target.value, selectedAnio);
+            }}
+            className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
+            placeholder="Search"
+            required
+          />
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
             <RiSearchLine className="h-8 w-8 p-1 xl:mb-0 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
           </div>

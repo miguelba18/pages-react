@@ -9,7 +9,7 @@ const FacturasAgrupadas = () => {
   return (
     <div>
     <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-      Facturas Agrupadas
+      Vinculantes
     </h1>
 
     <div>
@@ -22,7 +22,7 @@ const FacturasAgrupadas = () => {
                   : "bg-white text-secundary"
             } px-4 py-2 rounded-l`}
           >
-            Comprador
+            Vendedor clientes en el municipio
           </button>
           <button
             onClick={() => handleEmpresaChange("emisor")}

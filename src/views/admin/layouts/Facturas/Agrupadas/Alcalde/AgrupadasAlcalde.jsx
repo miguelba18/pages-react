@@ -9,6 +9,9 @@ const AgrupadasAlcalde = () => {
 };
   return (
     <div>
+      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
+      Vinculantes
+    </h1>
       <div>
         <div className="mt-4 mb-8">
           <button
@@ -19,7 +22,7 @@ const AgrupadasAlcalde = () => {
                   : "bg-white text-secundary"
             } px-4 py-2 rounded-l`}
           >
-            Comprador
+             Vendedor clientes en el municipio
           </button>
           <button
             onClick={() => handleEmpresaChange("emisor")}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import {
   RiDownloadLine,
@@ -7,7 +7,6 @@ import {
   RiArrowRightSLine,
 } from "react-icons/ri";
 import { MdOutlineGroup } from "react-icons/md";
-import Modal from "../../../../modal/Modal";
 import useDescargarFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useDescargarFacturas";
 import useListFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useListFacturas";
 import useAuthToken from "../../../../hook/Token/useAuthToken";
@@ -24,12 +23,7 @@ const AgrupadasAdquiriente = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAnio, setSelectedAnio] = useState("");
   const [resetAnio, setResetAnio] = useState(false);
-  const [totalSumaDesagrupadas, setTotalSumaDesagrupadas] = useState(0);
-  const [facturasDesagrupadas, setFacturasDesagrupadas] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [facturasSeleccionadas, setFacturasSeleccionadas] = useState([]);
-  const [showCheckboxes, setShowCheckboxes] = useState(false);
-  const isDownloadButtonVisible = facturasSeleccionadas.length > 0;
+  
   const {
     departamentos,
     filteredCiudades,
@@ -84,22 +78,15 @@ const AgrupadasAdquiriente = () => {
     fetchFacturas(selectedCiudad, query, anio);
   };
   const handleDesagrupar = async (facturas, tipo = "adquirientes") => {
-    console.log(facturas);
-    if (!Array.isArray(facturas)) {
-      throw new Error("El parámetro `facturas` no es un array");
-    } else {
-      console.log("es array");
-    }
-
     try {
       const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
       const url = new URL("http://localhost:8080/factura/persona-desagrupar");
       const params = new URLSearchParams();
-
+  
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-
+  
       facturas.forEach((factura) => {
         if (factura.numeroDocumentoAdquiriente) {
           params.append("filtros", factura.numeroDocumentoAdquiriente);
@@ -108,13 +95,14 @@ const AgrupadasAdquiriente = () => {
           params.append("anios", factura.fechaEmision);
         }
       });
+  
       if (tipo) {
         params.append("tipo", tipoString);
       }
-
+  
       url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
-
+      
+  
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -122,34 +110,32 @@ const AgrupadasAdquiriente = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         throw new Error("Error al desagrupar las facturas");
       }
-
+  
       const data = await response.json();
-      setFacturasDesagrupadas(data.facturas);
-      setTotalSumaDesagrupadas(data.subtotalSuma);
+      return data.facturas;
+      
     } catch (error) {
       console.error("Error en handleDesagrupar:", error);
     }
   };
+  
+  
 
-  const handleDownloadExcelDesagrupadas = async (
-    selectedFacturas,
-    tipo = "adquirientes"
-  ) => {
+  const handleDownloadExcelDesagrupadas = useCallback(async (selectedFacturas, tipo = "adquirientes") => {
     const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
 
     try {
-      const url = new URL(
-        "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
-      );
+      const url = new URL("http://localhost:8080/factura/descargar-excel-persona-desagrupar");
       const params = new URLSearchParams();
 
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
+
       selectedFacturas.forEach((id) => {
         params.append("id", id);
       });
@@ -158,8 +144,8 @@ const AgrupadasAdquiriente = () => {
         params.append("tipo", tipoString);
       }
 
+    
       url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
 
       const response = await fetch(url, {
         method: "POST",
@@ -167,29 +153,26 @@ const AgrupadasAdquiriente = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+  
+
+      
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(
-          errorMessage || "No se pudo descargar el archivo Excel."
-        );
+        throw new Error(errorMessage || "No se pudo descargar el archivo Excel.");
       }
 
-      // Extraer el nombre del archivo desde el encabezado Content-Disposition
-      const contentDisposition = response.headers.get("content-disposition");
-      let fileName = "archivo.xlsx"; // Valor por defecto si no se encuentra en la respuesta
+      const contentDisposition = response.headers.get("Content-Disposition");
+      let fileName = "archivo.xlsx";
 
       if (contentDisposition) {
-        // Buscar el nombre del archivo en el encabezado 'Content-Disposition'
         const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
         if (matches && matches[1]) {
-          fileName = matches[1]; // Asignar el nombre de archivo generado en el backend
+          fileName = matches[1];
         }
       }
 
       const blob = await response.blob();
-
-      // Proceso de descarga
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
           suggestedName: fileName,
@@ -207,77 +190,85 @@ const AgrupadasAdquiriente = () => {
         await writableStream.write(blob);
         await writableStream.close();
         toast.success("El excel se ha descargado correctamente.");
-        setFacturasSeleccionadas([]);
-        setShowCheckboxes(false);
-      } else {
-        // Para navegadores más antiguos
-        const urlBlob = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = urlBlob;
-        a.download = fileName; // Usar el nombre de archivo del backend
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(urlBlob);
-        toast.success("El excel se ha descargado correctamente.");
-        setShowCheckboxes(false);
-      }
+       
+
+      
+    } else {
+       
+      const urlBlob = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = urlBlob;
+      a.download = fileName; 
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(urlBlob);
+      toast.success("El excel se ha descargado correctamente.");
+      
+    }
+
+
     } catch (error) {
       console.error("Error al descargar el archivo Excel:", error);
-      toast.error("Hubo un problema al descargar el archivo Excel.");
+     
+    }
+  }, [token, selectedCiudad])
+
+  const handleDesagruparYDescargar = async (factura, tipo = "adquirientes") => {
+    try {
+      
+      const desagrupadas = await handleDesagrupar([factura], tipo);
+  
+     
+      if (desagrupadas && desagrupadas.length > 0) {
+        const facturasASeleccionar = desagrupadas.map((factura) => factura.id);
+  
+      
+        await handleDownloadExcelDesagrupadas(facturasASeleccionar, tipo);
+      } else {
+        console.error("No hay facturas desagrupadas para descargar.");
+        toast.error("No hay facturas disponibles para descargar.");
+      }
+    } catch (error) {
+      console.error("Error al desagrupar y descargar:", error);
+      toast.error("Hubo un problema al desagrupar o descargar las facturas.");
     }
   };
   
   
-  
-
   const toggleDespliegue = async (factura) => {
-    await handleDesagrupar([factura]);
-    setIsModalOpen(true);
-  };
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setShowCheckboxes(false);
-  };
-  const handleCheckboxChange = (id) => {
-    setFacturasSeleccionadas((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((facturaId) => facturaId !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
+    try {
+      
+      await handleDesagruparYDescargar(factura);
+    } catch (error) {
+      console.error("Error al desagrupar o descargar:", error);
+      toast.error("Hubo un problema al desagrupar o descargar las facturas.");
+    }
   };
 
-  const handleDownloadExcelDesagrupadasAfuera = async (
-    filtros,
-    tipo = "adquirientes"
-  ) => {
+
+  const handleDownloadExcelDesagrupadasRojo = useCallback(async (selectedFacturas, tipo = "adquirientes") => {
     const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
 
     try {
-      const url = new URL(
-        "http://localhost:8080/factura/descargar-excel-persona-desagrupar/"
-      );
+      const url = new URL("http://localhost:8080/factura/descargar-excel-persona-desagrupar-rojo");
       const params = new URLSearchParams();
 
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
 
-      if (filtros.numeroDocumentoAdquiriente) {
-        params.append("filtros", filtros.numeroDocumentoAdquiriente);
-      }
-      if (filtros.fechaEmision) {
-        params.append("anios", filtros.fechaEmision);
-      }
+      selectedFacturas.forEach((id) => {
+        params.append("id", id);
+      });
 
       if (tipo) {
         params.append("tipo", tipoString);
       }
 
+    
       url.search = params.toString();
-      console.log("Desagrupar URL:", url.toString());
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -287,19 +278,20 @@ const AgrupadasAdquiriente = () => {
 
       if (!response.ok) {
         const errorMessage = await response.text();
-        throw new Error(
-          errorMessage || "No se pudo descargar el archivo Excel."
-        );
+        throw new Error(errorMessage || "No se pudo descargar el archivo Excel.");
+      }
+
+      const contentDisposition = response.headers.get("Content-Disposition");
+      let fileName = "archivo.xlsx";
+
+      if (contentDisposition) {
+        const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+        if (matches && matches[1]) {
+          fileName = matches[1];
+        }
       }
 
       const blob = await response.blob();
-      const contentDisposition = response.headers.get("Content-Disposition");
-      const fileNameMatch =
-        contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
-      const fileName = fileNameMatch
-        ? fileNameMatch[1]
-        : "datos_factura_adquirientes_desagrupar.xlsx";
-
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
           suggestedName: fileName,
@@ -317,31 +309,69 @@ const AgrupadasAdquiriente = () => {
         await writableStream.write(blob);
         await writableStream.close();
         toast.success("El excel se ha descargado correctamente.");
-      } else {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-        toast.success("El excel se ha descargado correctamente.");
-      }
+       
+
+      
+    } else {
+       
+      const urlBlob = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = urlBlob;
+      a.download = fileName; 
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(urlBlob);
+      toast.success("El excel se ha descargado correctamente.");
+      
+    }
+
+
     } catch (error) {
       console.error("Error al descargar el archivo Excel:", error);
-      toast.error("Hubo un problema al descargar el archivo Excel.");
+ 
+    }
+  }, [token, selectedCiudad])
+
+  const handleDesagruparYDescargarRojo = async (factura) => {
+    try {
+      
+      const facturasDesagrupadas = await handleDesagrupar([factura]);
+  
+      
+      if (facturasDesagrupadas && facturasDesagrupadas.length > 0) {
+        
+        const facturasASeleccionar = facturasDesagrupadas.map((factura) => factura.id);
+  
+        
+        await handleDownloadExcelDesagrupadasRojo(facturasASeleccionar);
+      } else {
+        throw new Error("No se encontraron facturas desagrupadas.");
+      }
+    } catch (error) {
+      console.error("Error en handleDesagruparYDescargarRojo:", error);
+      toast.error("Hubo un problema al desagrupar o descargar las facturas.");
     }
   };
 
-  const handleDownloadExcelDesagrupadasOut = async (factura) => {
-    const filtros = {
-      numeroDocumentoAdquiriente: factura.numeroDocumentoAdquiriente,
-      fechaEmision: factura.fechaEmision,
-    };
-
-    await handleDownloadExcelDesagrupadasAfuera(filtros);
+  const toggleDespliegueRojo = async (factura) => {
+    try {
+      
+      await handleDesagruparYDescargarRojo(factura);
+    } catch (error) {
+      console.error("Error al desagrupar o descargar:", error);
+      toast.error("Hubo un problema al desagrupar o descargar las facturas.");
+    }
   };
+
+  
+  
+  
+  
+  
+
+  
+  
 
   return (
     <div>
@@ -392,7 +422,7 @@ const AgrupadasAdquiriente = () => {
             onClick={handleDownload}
             className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
           >
-            <span className="">Descargar facturas</span>
+            <span className="">Descargar Consolidados</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
         </div>
@@ -477,20 +507,22 @@ const AgrupadasAdquiriente = () => {
                     </select>
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Nombre o Razón Social del Comprador
+                    Nombre o Razón Social del Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Número Documento del Comprador
+                    Número Documento del Vendedor
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
-                  Total acumulado cliente municipio
+                    Total acumulado cliente municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                  Descargar Consolidado
+                    
+
+                    Discriminado cliente por municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                  Discriminado cliente por municipio
+                  Discriminado cliente por factura municipio
                   </th>
                 </tr>
               </thead>
@@ -507,11 +539,11 @@ const AgrupadasAdquiriente = () => {
                             {factura.fechaEmision}
                           </td>
                           <td className="border px-4 text-center">
-                            {factura.nombreAdquiriente}
+                            {factura.nombreComercialEmisor}
                           </td>
                           <td className="border px-4 text-center">
                             <HighlightedText
-                              text={factura.numeroDocumentoAdquiriente}
+                              text={factura.nitEmisor}
                               highlight={searchQuery}
                             />
                           </td>
@@ -520,25 +552,40 @@ const AgrupadasAdquiriente = () => {
 
                           <td className="border px-4 py-2 text-center">
                             <div className="grid justify-center">
-                              <button
-                                onClick={() =>
-                                  handleDownloadExcelDesagrupadasOut(factura)
-                                }
-                                className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
-                              >
-                                <RiDownloadLine className="" />
-                              </button>
+                            <div>
+                                <button
+                                  onClick={() => toggleDespliegue(factura)}
+                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                                 
+                                 
+                                
+                            
+                                >
+                                  <RiDownloadLine className="h-6 w-6" />
+                                </button>
+
+                                
+                              </div>
+                             
                             </div>
                           </td>
 
                           <td className="border px-4 py-2 text-center">
                             <div className="grid justify-center">
-                              <button
-                                onClick={() => toggleDespliegue(factura)}
-                                className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                              >
-                                <MdOutlineGroup className="h-6 w-6" />
-                              </button>
+                              <div>
+                                <button
+                                  onClick={() => toggleDespliegueRojo(factura)}
+                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185] "
+                              
+                                    
+                                 
+                           
+                                >
+                                  <MdOutlineGroup className="h-6 w-6" />
+                                </button>
+
+                                
+                              </div>
                             </div>
                           </td>
                         </tr>
@@ -556,126 +603,6 @@ const AgrupadasAdquiriente = () => {
                 )}
               </tbody>
             </table>
-            <Modal
-              isOpen={isModalOpen}
-              onClose={handleCloseModal}
-              title="Facturas Desagrupadas"
-              showConfirmButton={false}
-            >
-              {facturasDesagrupadas && (
-                <>
-                  <div className="flex justify-between py-4 ">
-                    {isDownloadButtonVisible && (
-                      <button
-                        onClick={() =>
-                          handleDownloadExcelDesagrupadas(facturasSeleccionadas)
-                        }
-                        className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
-                      >
-                        Descargar facturas
-                      </button>
-                    )}
-                    <div className="text-center font-bold">
-                      <p>
-                        Total facturas Desagrupadas:
-                        <br /> ${totalSumaDesagrupadas}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mb-4">
-                    {!showCheckboxes ? (
-                      <button
-                        onClick={() => setShowCheckboxes(true)}
-                        className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
-                      >
-                        Seleccionar Facturas
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => setShowCheckboxes(false)}
-                        className="bg-secundary text-white px-4 py-2 rounded-xl shadow-md hover:bg-secundary-dark focus:outline-none focus:ring-2 focus:ring-secundary focus:ring-opacity-50"
-                      >
-                        Salir del seleccionar
-                      </button>
-                    )}
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="table-auto w-full">
-                      <thead>
-                        <tr>
-                          {showCheckboxes && (
-                            <th className="px-4 py-2 bg-secundary text-white">
-                              Seleccionar
-                            </th>
-                          )}
-
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Fecha
-                          </th>
-
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Nombre o Razón Social del Comprador
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            NIT Comprador
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Nombre o Razón Social del Vendedor
-                          </th>
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            NIT Vendedor
-                          </th>
-
-                          <th className="px-4 py-2 bg-secundary text-white">
-                            Subtotal
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {facturasDesagrupadas.map((factura, idx) => (
-                          <tr key={idx} className="bg-white whitespace-nowrap">
-                            {showCheckboxes && (
-                              <td className="border px-4 py-2 text-center">
-                                <input
-                                  className="h-6 w-6"
-                                  type="checkbox"
-                                  value={factura.id}
-                                  checked={facturasSeleccionadas.includes(
-                                    factura.id
-                                  )}
-                                  onChange={() =>
-                                    handleCheckboxChange(factura.id)
-                                  }
-                                />
-                              </td>
-                            )}
-
-                            <td className="border px-4 text-center">
-                              {factura.fechaEmision}
-                            </td>
-
-                            <td className="border px-4 text-center">
-                              {factura.nombreAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.numeroDocumentoAdquiriente}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.nombreComercialEmisor}
-                            </td>
-                            <td className="border px-4 text-center">
-                              {factura.nitEmisor}
-                            </td>
-
-                            <td className="border px-4">${factura.subtotal}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </>
-              )}
-            </Modal>
           </div>
         </>
       )}

@@ -162,9 +162,9 @@ function App() {
           <Route
             path="agrupadasalcalde"
             element={
-              <RestrictedRouteAlcalde>
+              
                 <AgrupadasAlcalde />
-              </RestrictedRouteAlcalde>
+             
             }
           />
 

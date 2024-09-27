@@ -707,7 +707,7 @@ const Sidebar = () => {
                       ? "bg-secundary text-white rounded-lg"
                       : "rounded-lg hover:bg-tertiary-900 transition-colors "
                   }
-                  hidden={userRoleId !== "Alcalde"}
+                  
                 >
                   <Link
                     to="/agrupadasalcalde"
