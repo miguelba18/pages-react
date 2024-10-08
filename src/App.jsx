@@ -8,12 +8,18 @@ import RegistroAdmin from "./views/admin/layouts/RegistroAdmin/RegistroAdmin";
 import Inquietud from "./views/admin/layouts/Inquietudes/Inquietud";
 
 import AdministrarFacturas from "./views/admin/layouts/Facturas/Administrar/AdministrarFacturas";
-import FacturasAgrupadas from "./views/admin/layouts/Facturas/Agrupadas/FacturasAgrupadas";
+
+import AgrupadasAdquiriente from "./views/admin/layouts/Facturas/Agrupadas/AgrupadasAdquiriente";
+import AgrupadasEmisor from "./views/admin/layouts/Facturas/Agrupadas/AgrupadasEmisor";
 import FacturaCompleta from "./views/admin/layouts/Facturas/Facturas Completas/FacturaCompleta";
 import FacturaCompletaAlcalde from "./views/admin/layouts/Facturas/Facturas Completas/FacturaCompletaAlcalde";
-import AgrupadasAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAlcalde";
+
+import AgrupadasEmisorAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasEmisorAlcalde";
+import AgrupadasAdquirienteAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAdquirienteAlcalde"
+
 import Consorcios from "./views/admin/layouts/Consorcios/todos los consorcios/Consorcios";
 import Contribuyente from "./views/admin/layouts/Contribuyente/Contribuyente";
+import FacturaCompletaTodas from "./views/admin/layouts/Facturas/Facturas Completas/FacturaCompletaTodas";
 
 import ConsorcioClienteMunicipio from "./views/admin/layouts/Consorcios/adquiriente/ConsorcioClienteMunicipio";
 import ConsorcioVendedorMunicipio from "./views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio";
@@ -64,6 +70,10 @@ function App() {
           <Route path="perfil" element={<Perfil />} />
           <Route path="contribuyente" element={<Contribuyente />} />
           <Route path="documentosoporte" element={<DocumentoSoporte />} />
+          <Route
+            path="facturacompletatodas"
+            element={<FacturaCompletaTodas />}
+          />
 
           <Route
             path="documentocompradoralcalde"
@@ -122,7 +132,23 @@ function App() {
               </RestrictedRouteSecretarioPersonal>
             }
           />
-   
+          <Route
+            path="agrupadasadquirientealcalde"
+            element={
+              <RestrictedRouteSecretarioPersonal>
+                <AgrupadasAdquirienteAlcalde />
+              </RestrictedRouteSecretarioPersonal>
+            }
+          />
+          <Route
+            path="agrupadasemisoralcalde"
+            element={
+              <RestrictedRouteSecretarioPersonal>
+                <AgrupadasEmisorAlcalde />
+              </RestrictedRouteSecretarioPersonal>
+            }
+          />
+
           <Route path="facturaelectronica" element={<FacturaElectronica />} />
 
           {/* Rutas que solo va a ver el Alcalde*/}
@@ -157,14 +183,6 @@ function App() {
               <RestrictedRouteAlcalde>
                 <EnviarCorreoAlcalde />
               </RestrictedRouteAlcalde>
-            }
-          />
-          <Route
-            path="agrupadasalcalde"
-            element={
-              
-                <AgrupadasAlcalde />
-             
             }
           />
 
@@ -234,13 +252,22 @@ function App() {
             }
           />
           <Route
-            path="facturasagrupadas"
+            path="agrupadasadquiriente"
             element={
               <RestrictedRouteAdmin>
-                <FacturasAgrupadas />
+                <AgrupadasAdquiriente />
               </RestrictedRouteAdmin>
             }
           />
+          <Route
+            path="agrupadasemisor"
+            element={
+              <RestrictedRouteAdmin>
+                <AgrupadasEmisor />
+              </RestrictedRouteAdmin>
+            }
+          />
+
           <Route
             path="facturacompleta"
             element={
@@ -281,8 +308,6 @@ function App() {
               </RestrictedRouteAdmin>
             }
           />
-
-          
         </Route>
 
         <Route path="/login" element={<Login />} />

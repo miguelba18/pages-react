@@ -12,6 +12,7 @@ const Adquiriente = () => {
   const [totalSubtotal, setTotalSubtotal] = useState(0);
   const itemsPerPage = 100;
   const [currentPage, setCurrentPage] = useState(1);
+  
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     searchAdquirientes(searchQuery, anio);
