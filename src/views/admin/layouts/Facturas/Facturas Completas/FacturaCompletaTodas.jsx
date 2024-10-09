@@ -15,11 +15,32 @@ import useListFacturasTodas from "../../../../hook/Facturas/Factura Completa/use
 
 import useDeleteFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDeleteFacturas";
 import Modal from "../../../../modal/Modal";
-
+import useAuthToken from "../../../../hook/Token/useAuthToken";
+import { useNavigate } from "react-router-dom";
 
 const FacturaCompletaTodas = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
+  const [userRoleId, setUserRoleId] = useState(null);
+  const {token} = useAuthToken();
+  const {navigate} = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const roleId = decodedToken.role;
+
+        setUserRoleId(roleId);
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+        window.localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, [navigate, token]);
  
 
 
@@ -167,9 +188,11 @@ const FacturaCompletaTodas = () => {
                   <th className="px-4 py-2 bg-secundary text-white">
                     Total acumulado
                   </th>
+                  {userRoleId === "ADMIN" && (
                   <th className="px-4 py-2 bg-secundary text-white">
                     Eliminar Factura
                   </th>
+                  )}
                     
                 </tr>
               </thead>
@@ -239,6 +262,7 @@ const FacturaCompletaTodas = () => {
                         {factura.telefonoAdquiriente}
                       </td>
                       <td className="border px-4">${factura.subtotal}</td>
+                      {userRoleId === "ADMIN" && (
                       <td className="border px-4 py-2 text-center">
                         <div className="flex justify-center items-center">
                           <button
@@ -249,6 +273,7 @@ const FacturaCompletaTodas = () => {
                           </button>
                         </div>
                       </td>
+                      )}
                       
                     </tr>
                   ))

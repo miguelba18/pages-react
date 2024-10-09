@@ -59,13 +59,13 @@ const Login = () => {
   };
 
   const settings = {
-    dots: true, // Muestra indicadores de deslizamiento
-    infinite: true, // Ciclo infinito del carrusel
-    speed: 500, // Velocidad de transición
-    slidesToShow: 1, // Cuántas imágenes mostrar a la vez
-    slidesToScroll: 1, // Cuántas imágenes desplazarse a la vez
-    autoplay: true, // Desplazamiento automático
-    autoplaySpeed: 3000, // Tiempo de espera antes de desplazar
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
 
   const images = [
@@ -73,142 +73,144 @@ const Login = () => {
     "../../../../src/assets/imgcarousel/login2.jpg",
     "../../../../src/assets/imgcarousel/login3.jpg",
     "../../../../src/assets/imgcarousel/login4.jpg",
-
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center xl:min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url("../../../../src/assets/img/fondologin.avif")' }}>
-  
-  <h1 className="text-3xl md:text-5xl font-bold text-gray-500 text-center mb-8">
-    Bienvenido a{" "}
-    <span className="text-gray-500 font-bold">SIM SAS</span>
-  </h1>
+    <div
+      className="flex flex-col items-center justify-center xl:min-h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: 'url("../../../../src/assets/img/fondologin.avif")',
+      }}
+    >
+      <h1 className="text-3xl md:text-5xl font-bold text-gray-500 text-center mb-8">
+        Bienvenido a <span className="text-gray-500 font-bold">SIM SAS</span>
+      </h1>
 
-  <div className="xl:flex items-center justify-center w-full ">
-    
-    <div className="grid justify-center items-center  py-16 xl:py-0 w-1/2 bg-opacity-70 ">
-      <div  className="rounded-md ml-2 border-t-4 border-t-[#66d2bb] border-transparent  w-full p-10 bg-white/80">
-        <section>
-          {error && (
-            <Alert
-              className=""
-              icon={
-                <RiErrorWarningFill className="mt-3" fontSize="inherit" />
-              }
-              severity="error"
-              variant="filled"
-            >
-              <AlertTitle>Error</AlertTitle>
-              Usuario y Contraseña incorrectos
-            </Alert>
-          )}
-          <h1
-            id="Form"
-            className="text-3xl md:text-3xl font-semibold text-gray-500 xl:px-8 text-center mt-10 "
-          >
-            Iniciar Sesión
-          </h1>
-          <form onSubmit={handleLogin} className="xl:p-8 mt-8 xl:mt-0">
-            <div className="text-center">
-              <div className="relative">
-                <input
-                  type="email"
-                  className="border border-gray-300 w-full px-4 py-2 pl-12 focus:outline-none focus:ring-1 focus:shadow-md focus:shadow-blue-400 text-black placeholder-black placeholder-opacity-70 transition-shadow duration-200 ease-in-out"
-                  placeholder="Correo"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <RiAdminLine className="text-gray-500" />
-                </div>
-              </div>
-            </div>
-            <div className="text-center mt-6">
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="border border-gray-300 w-full px-4 py-2 pl-12 focus:outline-none focus:ring-1 focus:shadow-md focus:shadow-blue-400 text-black placeholder-black placeholder-opacity-70 transition-shadow duration-200 ease-in-out"
-                  placeholder="Contraseña"
-                  onChange={(e) => setPassword(e.target.value)}
-                  value={password}
-                  required
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  {showPassword ? (
-                    <RiEyeOffLine
-                      className="text-gray-500 cursor-pointer"
-                      onClick={togglePasswordVisibility}
-                    />
-                  ) : (
-                    <RiEyeLine
-                      className="text-gray-500 cursor-pointer"
-                      onClick={togglePasswordVisibility}
-                    />
-                  )}
-                </div>
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <RiLockPasswordLine className="text-gray-500" />
-                </div>
-              </div>
-            </div>
-
-            <div className=" flex justify-between items-center pt-6">
-              <Link
-                to="/home"
-                className="relative inline-flex items-center justify-center gap-2 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] h-9 rounded-md px-3 group"
-              >
-                <svg
-                  className="lucide lucide-arrow-left"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  height="22"
-                  width="22"
-                  xmlns="http://www.w3.org/2000/svg"
+      <div className="xl:flex items-center justify-center w-full ">
+        <div className="grid justify-center items-center  py-16 xl:py-0 w-1/2 bg-opacity-70 ">
+          <div className="rounded-md ml-2 border-t-4 border-t-[#66d2bb] border-transparent  w-full p-10 bg-white/80">
+            <section>
+              {error && (
+                <Alert
+                  className=""
+                  icon={
+                    <RiErrorWarningFill className="mt-3" fontSize="inherit" />
+                  }
+                  severity="error"
+                  variant="filled"
                 >
-                  <path d="m12 19-7-7 7-7"></path>
-                  <path d="M19 12H5"></path>
-                </svg>
-                <span className="origin-left scale-0 transition-transform group-hover:scale-100">
-                  Back{" "}
-                </span>
-              </Link>
-              <Link
-                to="/olvidarcontraseña"
-                className="text-sm xl:text-md text-black ml-8  hover:text-[#66d2bb]"
+                  <AlertTitle>Error</AlertTitle>
+                  Usuario y Contraseña incorrectos
+                </Alert>
+              )}
+              <h1
+                id="Form"
+                className="text-3xl md:text-3xl font-semibold text-gray-500 xl:px-8 text-center mt-10 "
               >
-                ¿Olvidaste la contraseña?
-              </Link>
-            </div>
-            <button
-              type="submit"
-              className="text-center w-[100%] px-6 py-3 rounded-full mt-8 bg-black/80 text-white hover:bg-[#66d2bb] hover:shadow-xl hover:shadow-[#66d2bb] hover:text-white transition duration-300 ease-in-out cursor-pointer"
-            >
-              Acceder
-            </button>
-          </form>
-        </section>
+                Iniciar Sesión
+              </h1>
+              <form onSubmit={handleLogin} className="xl:p-8 mt-8 xl:mt-0">
+                <div className="text-center">
+                  <div className="relative">
+                    <input
+                      type="email"
+                      className="border border-gray-300 w-full px-4 py-2 pl-12 focus:outline-none focus:ring-1 focus:shadow-md focus:shadow-blue-400 text-black placeholder-black placeholder-opacity-70 transition-shadow duration-200 ease-in-out"
+                      placeholder="Correo"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                      <RiAdminLine className="text-gray-500" />
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center mt-6">
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="border border-gray-300 w-full px-4 py-2 pl-12 focus:outline-none focus:ring-1 focus:shadow-md focus:shadow-blue-400 text-black placeholder-black placeholder-opacity-70 transition-shadow duration-200 ease-in-out"
+                      placeholder="Contraseña"
+                      onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      required
+                    />
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                      {showPassword ? (
+                        <RiEyeOffLine
+                          className="text-gray-500 cursor-pointer"
+                          onClick={togglePasswordVisibility}
+                        />
+                      ) : (
+                        <RiEyeLine
+                          className="text-gray-500 cursor-pointer"
+                          onClick={togglePasswordVisibility}
+                        />
+                      )}
+                    </div>
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+                      <RiLockPasswordLine className="text-gray-500" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className=" flex justify-between items-center pt-6">
+                  <Link
+                    to="/home"
+                    className="relative inline-flex items-center justify-center gap-2 text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white hover:bg-[#F5F5F5] h-9 rounded-md px-3 group"
+                  >
+                    <svg
+                      className="lucide lucide-arrow-left"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      height="22"
+                      width="22"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="m12 19-7-7 7-7"></path>
+                      <path d="M19 12H5"></path>
+                    </svg>
+                    <span className="origin-left scale-0 transition-transform group-hover:scale-100">
+                      Back{" "}
+                    </span>
+                  </Link>
+                  <Link
+                    to="/olvidarcontraseña"
+                    className="text-sm xl:text-md text-black ml-8  hover:text-[#66d2bb]"
+                  >
+                    ¿Olvidaste la contraseña?
+                  </Link>
+                </div>
+                <button
+                  type="submit"
+                  className="text-center w-[100%] px-6 py-3 rounded-full mt-8 bg-black/80 text-white hover:bg-[#66d2bb] hover:shadow-xl hover:shadow-[#66d2bb] hover:text-white transition duration-300 ease-in-out cursor-pointer"
+                >
+                  Acceder
+                </button>
+              </form>
+            </section>
+          </div>
+        </div>
+
+        <div className="xl:w-[40%]  flex justify-center items-center py-4 xl:py-0">
+          <Slider
+            {...settings}
+            className="w-[80%] h-[50%] rounded-xl xl:rounded-l-3xl"
+          >
+            {images.map((img, idx) => (
+              <div key={idx}>
+                <img
+                  src={img}
+                  alt={`slide-${idx}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </Slider>
+        </div>
       </div>
     </div>
-
-    <div className="xl:w-[40%]  flex justify-center items-center py-4 xl:py-0">
-      <Slider {...settings} className="w-[80%] h-[50%] rounded-xl xl:rounded-l-3xl">
-        {images.map((img, idx) => (
-          <div key={idx}>
-            <img
-              src={img}
-              alt={`slide-${idx}`}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-      </Slider>
-    </div>
-  </div>
-</div>
-
-  
   );
 };
 

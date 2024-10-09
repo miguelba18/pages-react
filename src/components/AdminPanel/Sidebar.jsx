@@ -101,7 +101,7 @@ const Sidebar = () => {
             <ul className="list-none">
               {userRoleId === "ADMIN" && (
                 <>
-                  <li className="">
+                  
                     <button
                       onClick={() => setShowSubMenu(!showSubMenu)}
                       className="flex items-center w-full mb-2  gap-2 px-3 py-2 hover:bg-tertiary-900 rounded-lg  "
@@ -494,7 +494,7 @@ const Sidebar = () => {
                         </Link>
                       </li>
                     </ul>
-                  </li>
+                  
                 </>
               )}
 

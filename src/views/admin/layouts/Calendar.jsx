@@ -122,7 +122,7 @@ Calendar.propTypes = {
   recordatoriosPorDia: PropTypes.object.isRequired,
   weeks: PropTypes.array.isRequired,
   isPastDate: PropTypes.func.isRequired,
-  selectedDay: PropTypes.number.isRequired,
+  selectedDay: PropTypes.instanceOf(Date),
 };
 
 export default Calendar;
