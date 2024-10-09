@@ -8,6 +8,7 @@ import {
 } from "react-icons/ri";
 import HighlightedText from "../../../../utils/HighlightedText";
 import useDownloadContribuyente from "../../../hook/Contribuyente/useDownloadContribuyente";
+import Select from "react-select";
 
 const Contribuyente = () => {
   const {
@@ -35,17 +36,17 @@ const Contribuyente = () => {
   const [selectedCorreo, setSelectedCorreo] = useState("");
   const [selectedTelefono, setSelectedTelefono] = useState("");
   const [isFacturaSelected, setIsFacturaSelected] = useState(false);
+  const [filteredContribuyente, setFilteredContribuyente] = useState([]); 
 
   useEffect(() => {
     fetchContribuyentes(searchQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = contribuyentes.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleSelectNit = (e) => {
-    setSelectedNit(e.target.value);
+  const handleSelectNit = (selectedOption) => {
+    setSelectedNit(selectedOption ? selectedOption.value : "");
     setSelectedId("");
     setSelectedDepartamento("");
     setSelectedCorreo("");
@@ -102,10 +103,6 @@ const Contribuyente = () => {
     setSelectedDireccion("");
   };
 
-
-
-  
-
   useEffect(() => {
     if (selectedNit) {
       fetchFacturaByNit(selectedNit).then(() => {
@@ -125,7 +122,6 @@ const Contribuyente = () => {
     } else {
       setIsFacturaSelected(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDepartamento]);
 
   useEffect(() => {
@@ -136,7 +132,6 @@ const Contribuyente = () => {
     } else {
       setIsFacturaSelected(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMunicipio]);
 
   useEffect(() => {
@@ -192,10 +187,17 @@ const Contribuyente = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, setFactura]);
 
-  const handleSelect = (id) => {
-    setSelectedId(id);
-    setSelectedNit("");
-    setSelectedDepartamento("");
+  const handleSelect = (selectedOption) => {
+    setSelectedId(selectedOption ? selectedOption.value : "");
+    
+    if (selectedOption) {
+      const filtered = contribuyentes.filter(
+        (contribuyente) => contribuyente.id === selectedOption.value
+      );
+      setFilteredContribuyente(filtered); 
+    } else {
+      setFilteredContribuyente([]); 
+    }
   };
 
   const handleDownload = () => {
@@ -205,6 +207,7 @@ const Contribuyente = () => {
   const handleSearch = (query) => {
     setSearchQuery(query);
     setSelectedId("");
+    fetchContribuyentes(query); 
   };
 
   const tableRows = () => {
@@ -287,6 +290,34 @@ const Contribuyente = () => {
     }
   };
 
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: '34px',
+      fontSize: '14px',
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal", 
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999, 
+    }),
+  };
+  const nitOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.nitContribuyente,
+    label: contribuyente.nitContribuyente,
+  }));
+  const contribuyenteOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.id,
+    label: contribuyente.nombreContribuyente,
+  }));
+
   return (
     <div>
       <div className="flex justify-end items-center px-4 py-6">
@@ -344,36 +375,29 @@ const Contribuyente = () => {
               <th className="px-4 py-2 bg-secundary text-white">#</th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Contribuyente <br />
-                <select
-                  value={selectedId}
-                  onChange={(e) => handleSelect(e.target.value)}
-                  className="mt-4 text-secundary rounded-md px-2 w-full  py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option key={contribuyente.id} value={contribuyente.id}>
-                      {contribuyente.nombreContribuyente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  value={contribuyenteOptions.find(
+                    (option) => option.value === selectedId
+                  )}
+                  onChange={handleSelect}
+                  options={contribuyenteOptions}
+                  placeholder="Selecciona un nombre"
+                  isClearable
+                  styles={customStyles} 
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nit Contribuyente <br />
-                <select
-                  value={selectedNit}
+                <Select
+                  value={nitOptions.find(
+                    (option) => option.value === selectedNit
+                  )}
                   onChange={handleSelectNit}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.nitContribuyente}
-                    >
-                      {contribuyente.nitContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={nitOptions}
+                  placeholder="Selecciona un NIT"
+                  isClearable
+                  styles={customStyles} 
+                />
               </th>
 
               <th className="px-4 py-2 bg-secundary text-white">
