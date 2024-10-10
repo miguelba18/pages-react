@@ -8,6 +8,7 @@ import {
 } from "react-icons/ri";
 import HighlightedText from "../../../../utils/HighlightedText";
 import useDownloadContribuyente from "../../../hook/Contribuyente/useDownloadContribuyente";
+import Select from "react-select";
 
 const Contribuyente = () => {
   const {
@@ -21,7 +22,7 @@ const Contribuyente = () => {
     fetchFacturaByCorreo,
     fetchFacturaByTelefono,
     factura,
-    setFactura
+    setFactura,
   } = useListContribuyente();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -38,73 +39,47 @@ const Contribuyente = () => {
 
   useEffect(() => {
     fetchContribuyentes(searchQuery);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = contribuyentes.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleSelectNit = (e) => {
-    setSelectedNit(e.target.value);
-    setSelectedId("");
-    setSelectedDepartamento("");
-    setSelectedCorreo("");
-    setSelectedTelefono("");
-    setSelectedMunicipio("");
-    setSelectedDireccion("")
-
+  const handleSelectNit = (selectedOption) => {
+    setSelectedNit(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedNit]);
   };
 
-  const handleSelectDepartamento = (e) => {
-    setSelectedDepartamento(e.target.value);
-    setSelectedNit("");
-    setSelectedId("");
-    setSelectedDireccion("");
-    setSelectedCorreo("");
-    setSelectedTelefono("");
-    setSelectedMunicipio("");
-
-  };
-  const handleSelectMunicipio = (e) => {
-    setSelectedMunicipio(e.target.value);
-    setSelectedNit("");
-    setSelectedDepartamento("");
-    setSelectedId("");
-    setSelectedCorreo("");
-    setSelectedTelefono("");
-    setSelectedDireccion("");
-  };
-  const handleSelectDireccion = (e) => {
-    setSelectedDireccion(e.target.value);
-    setSelectedNit("");
-    setSelectedDepartamento("");
-    setSelectedId("");
-    setSelectedCorreo("");
-    setSelectedTelefono("");
-    setSelectedMunicipio("");
-  };
-  const handleSelectCorreo = (e) => {
-    setSelectedCorreo(e.target.value);
-    setSelectedNit("");
-    setSelectedDepartamento("");
-    setSelectedId("");
-    setSelectedTelefono("");
-    setSelectedMunicipio("");
-    setSelectedDireccion("");
-  };
-  const handleSelectTelefono = (e) => {
-    setSelectedTelefono(e.target.value);
-    setSelectedNit("");
-    setSelectedDepartamento("");
-    setSelectedId("");
-    setSelectedCorreo("");
-    setSelectedMunicipio("");
-    setSelectedDireccion("");
+  const handleSelectContribuyente = (selectedOption) => {
+    setSelectedId(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedId]);
   };
 
+  const handleSelectDepartamento = (selectedOption) => {
+    setSelectedDepartamento(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedDepartamento]);
+  };
 
+  const handleSelectMunicipio = (selectedOption) => {
+    setSelectedMunicipio(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedMunicipio]);
+  };
 
-  
+  const handleSelectDireccion = (selectedOption) => {
+    setSelectedDireccion(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedDireccion]);
+  };
+
+  const handleSelectCorreo = (selectedOption) => {
+    setSelectedCorreo(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedCorreo]);
+  };
+
+  const handleSelectTelefono = (selectedOption) => {
+    setSelectedTelefono(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedTelefono]);
+  };
 
   useEffect(() => {
     if (selectedNit) {
@@ -136,6 +111,7 @@ const Contribuyente = () => {
     } else {
       setIsFacturaSelected(false);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMunicipio]);
 
@@ -172,9 +148,6 @@ const Contribuyente = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTelefono]);
 
-
-
-
   useEffect(() => {
     if (selectedId) {
       fetchFacturaById(selectedId).then(() => {
@@ -189,14 +162,8 @@ const Contribuyente = () => {
     } else {
       setIsFacturaSelected(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedId, setFactura]);
-
-  const handleSelect = (id) => {
-    setSelectedId(id);
-    setSelectedNit("");
-    setSelectedDepartamento("");
-  };
 
   const handleDownload = () => {
     handleDownloadExcel(searchQuery);
@@ -205,6 +172,7 @@ const Contribuyente = () => {
   const handleSearch = (query) => {
     setSearchQuery(query);
     setSelectedId("");
+    fetchContribuyentes(query);
   };
 
   const tableRows = () => {
@@ -287,6 +255,71 @@ const Contribuyente = () => {
     }
   };
 
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "34px",
+      fontSize: "14px",
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+  };
+  const nitOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.nitContribuyente,
+    label: contribuyente.nitContribuyente,
+  }));
+  const contribuyenteOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.id,
+    label: contribuyente.nombreContribuyente,
+  }));
+  const departamentoOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.departamentoContribuyente,
+    label: contribuyente.departamentoContribuyente,
+  }));
+  const municipioOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.municipioContribuyente,
+    label: contribuyente.municipioContribuyente,
+  }));
+  const direccionOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.direccionContribuyente,
+    label: contribuyente.direccionContribuyente,
+  }));
+  const correoOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.correoContribuyente,
+    label: contribuyente.correoContribuyente,
+  }));
+  const telefonoOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.telefonoContribuyente,
+    label: contribuyente.telefonoContribuyente,
+  }));
+
+  const resetAllSelectsExcept = (excludedSetters) => {
+    const allSetters = [
+      setSelectedNit,
+      setSelectedId,
+      setSelectedDepartamento,
+      setSelectedCorreo,
+      setSelectedTelefono,
+      setSelectedMunicipio,
+      setSelectedDireccion,
+    ];
+
+    allSetters.forEach((setter) => {
+      if (!excludedSetters.includes(setter)) {
+        setter("");
+      }
+    });
+  };
+
   return (
     <div>
       <div className="flex justify-end items-center px-4 py-6">
@@ -301,7 +334,7 @@ const Contribuyente = () => {
         </div>
         <div className="relative xl:right-0">
           <input
-            type="number"
+            type="text"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
@@ -344,127 +377,122 @@ const Contribuyente = () => {
               <th className="px-4 py-2 bg-secundary text-white">#</th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Contribuyente <br />
-                <select
-                  value={selectedId}
-                  onChange={(e) => handleSelect(e.target.value)}
-                  className="mt-4 text-secundary rounded-md px-2 w-full  py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option key={contribuyente.id} value={contribuyente.id}>
-                      {contribuyente.nombreContribuyente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  value={
+                    contribuyenteOptions.find(
+                      (option) => option.value === selectedId
+                    ) || null
+                  }
+                  onChange={handleSelectContribuyente}
+                  options={contribuyenteOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nit Contribuyente <br />
-                <select
-                  value={selectedNit}
+                <Select
+                  value={
+                    nitOptions.find((option) => option.value === selectedNit) ||
+                    null
+                  }
                   onChange={handleSelectNit}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.nitContribuyente}
-                    >
-                      {contribuyente.nitContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={nitOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
 
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento Contribuyente
-                <select
-                  value={selectedDepartamento}
+                <Select
+                  value={
+                    departamentoOptions.find(
+                      (option) => option.value === selectedDepartamento
+                    ) || null
+                  }
                   onChange={handleSelectDepartamento}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.departamentoContribuyente}
-                    >
-                      {contribuyente.departamentoContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={departamentoOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio Contribuyente
-                <select
-                  value={selectedMunicipio}
+                <Select
+                  value={
+                    municipioOptions.find(
+                      (option) => option.value === selectedMunicipio
+                    ) || null
+                  }
                   onChange={handleSelectMunicipio}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.municipioContribuyente}
-                    >
-                      {contribuyente.municipioContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={municipioOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección Contribuyente
-                <select
-                  value={selectedDireccion}
+                <Select
+                  value={
+                    direccionOptions.find(
+                      (option) => option.value === selectedDireccion
+                    ) || null
+                  }
                   onChange={handleSelectDireccion}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.direccionContribuyente}
-                    >
-                      {contribuyente.direccionContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={direccionOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo Contribuyente
-                <select
-                  value={selectedCorreo}
+                <Select
+                  value={
+                    correoOptions.find(
+                      (option) => option.value === selectedCorreo
+                    ) || null
+                  }
                   onChange={handleSelectCorreo}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.correoContribuyente}
-                    >
-                      {contribuyente.correoContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={correoOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Teléfono Contribuyente
-                <select
-                  value={selectedTelefono}
+                <Select
+                  value={
+                    telefonoOptions.find(
+                      (option) => option.value === selectedTelefono
+                    ) || null
+                  }
                   onChange={handleSelectTelefono}
-                  className="mt-4 text-secundary rounded-md px-2 w-full py-1 bg-tertiary-100 focus:outline-none focus:ring-2 focus:ring-secundary focus:border-transparent"
-                >
-                  <option value="">Todos</option>
-                  {contribuyentes.map((contribuyente) => (
-                    <option
-                      key={contribuyente.id}
-                      value={contribuyente.telefonoContribuyente}
-                    >
-                      {contribuyente.telefonoContribuyente}
-                    </option>
-                  ))}
-                </select>
+                  options={telefonoOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
             </tr>
           </thead>
