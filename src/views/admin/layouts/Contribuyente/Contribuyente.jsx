@@ -332,7 +332,7 @@ const Contribuyente = () => {
         </div>
         <div className="relative xl:right-0">
           <input
-            type="number"
+            type="text"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
