@@ -6,7 +6,7 @@ import {
   RiAddCircleFill,
   RiCheckboxCircleFill,
   RiArrowLeftSLine,
-  RiArrowRightSLine
+  RiArrowRightSLine,
 } from "react-icons/ri";
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
@@ -29,21 +29,17 @@ const FacturaCompleta = () => {
     setSelectedAnio(anio);
     fetchFacturas(searchQuery, anio);
   };
-  
+
   useEffect(() => {
-
     fetchFacturas(searchQuery, selectedAnio);
-
-  }, [searchQuery, selectedAnio, fetchFacturas,processedFacturas]);
-  
-
+  }, [searchQuery, selectedAnio, fetchFacturas, processedFacturas]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleAddConsorcio = async (ids) => {
-    const idsArray = ids.split(',');
+    const idsArray = ids.split(",");
     const results = await Promise.all(idsArray.map((id) => addConsorcio(id)));
     const successfulIds = results.filter((result) => result);
 
@@ -52,13 +48,9 @@ const FacturaCompleta = () => {
         setProcessedFacturas((prev) => new Set(prev).add(resultId));
       });
 
-      fetchFacturas("", searchQuery, selectedAnio).then(
-        
-      );
+      fetchFacturas("", searchQuery, selectedAnio).then();
     }
   };
-
-  
 
   const handleToggleSelect = (id) => {
     setSelectedIds((prev) => {
@@ -73,10 +65,10 @@ const FacturaCompleta = () => {
   };
 
   const handleAddSelectedConsorcios = () => {
-    const idsArray = Array.from(selectedIds); 
+    const idsArray = Array.from(selectedIds);
     if (idsArray.length > 0) {
-      handleAddConsorcio(idsArray.join(',')); 
-      setSelectedIds(new Set()); 
+      handleAddConsorcio(idsArray.join(","));
+      setSelectedIds(new Set());
       setIsSelecting(false);
     } else {
       toast.info("No se han seleccionado facturas.");
@@ -84,23 +76,19 @@ const FacturaCompleta = () => {
   };
   const handleSelectAllConsorcios = () => {
     if (selectedIds.size === facturas.length) {
-    
       setSelectedIds(new Set());
     } else {
-      
-      const allIds = facturas.map(factura => factura.id);
+      const allIds = facturas.map((factura) => factura.id);
       setSelectedIds(new Set(allIds));
     }
   };
 
   const handleDownload = () => {
-    handleDownloadExcel("",searchQuery, selectedAnio);
-    
+    handleDownloadExcel("", searchQuery, selectedAnio);
   };
 
   return (
     <div>
-      
       <div className="xl:flex justify-end">
         <div className="xl:relative mr-4">
           <button
@@ -113,7 +101,7 @@ const FacturaCompleta = () => {
         </div>
 
         <div className="relative xl:right-0   ">
-        <input
+          <input
             type="text"
             value={searchQuery}
             onChange={(e) => {
@@ -124,10 +112,10 @@ const FacturaCompleta = () => {
             placeholder="Search"
             required
           />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
             <RiSearchLine className="h-8 w-8 p-1 xl:mb-0 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
           </div>
-          </div>
+        </div>
       </div>
 
       <div className="flex  justify-between">
@@ -156,30 +144,32 @@ const FacturaCompleta = () => {
       </div>
 
       <div className="flex justify-end mb-2">
+        <button
+          onClick={() => setIsSelecting((prev) => !prev)}
+          className="px-4 py-2 bg-blue-500 text-white rounded"
+        >
+          {isSelecting ? "Cancelar selección" : "Seleccionar consorcios"}
+        </button>
+        {isSelecting && (
+          <>
             <button
-              onClick={() => setIsSelecting((prev) => !prev)}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              {isSelecting ? "Cancelar selección" : "Seleccionar consorcios"}
-            </button>
-            {isSelecting && (
-              <>
-              <button
               onClick={handleSelectAllConsorcios}
               className="ml-2 px-4 py-2 bg-yellow-500 text-white rounded"
             >
-              {selectedIds.size === facturas.length ? "Deseleccionar Todos" : "Seleccionar Todos"}
+              {selectedIds.size === facturas.length
+                ? "Deseleccionar Todos"
+                : "Seleccionar Todos"}
             </button>
-      
-              <button
-                onClick={handleAddSelectedConsorcios}
-                className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
-              >
-                Agregar Consorcios
-              </button>
-              </>
-            )}
-          </div>
+
+            <button
+              onClick={handleAddSelectedConsorcios}
+              className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
+            >
+              Agregar Consorcios
+            </button>
+          </>
+        )}
+      </div>
 
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-6">
@@ -215,37 +205,37 @@ const FacturaCompleta = () => {
               </th>
               <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Nombre Comercial  vendedor
+                Nombre Comercial vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Departamento  vendedor
+                Departamento vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Municipio  vendedor
+                Municipio vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Dirección  vendedor
+                Dirección vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Correo  vendedor
+                Correo vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Vendedor
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Nombre adquiriente 
-                </th>
+                Nombre adquiriente
+              </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Departamento  comprador
+                Departamento comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Municipio  comprador
+                Municipio comprador
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
@@ -256,8 +246,12 @@ const FacturaCompleta = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">Total acumulado</th>
-              <th className="px-4 py-2 bg-secundary text-white">Agregar No vinculante</th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                Total acumulado
+              </th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                Agregar No vinculante
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -277,7 +271,9 @@ const FacturaCompleta = () => {
                       : "bg-white whitespace-nowrap"
                   }
                 >
-                  <td className="border px-4 py-2 text-center">{indexOfFirstItem +index + 1}</td>
+                  <td className="border px-4 py-2 text-center">
+                    {indexOfFirstItem + index + 1}
+                  </td>
                   <td className="border px-4 py-2 text-center">
                     {factura.fechaEmision}
                   </td>
@@ -336,47 +332,47 @@ const FacturaCompleta = () => {
                     ${factura.subtotal}
                   </td>
                   <td className="border px-4 text-center">
-                        <div className="flex justify-center">
-                          <button
-                            onClick={() => {
-                              if (isSelecting) {
-                                handleToggleSelect(factura.id);
-                              } else {
-                                handleAddConsorcio(factura.id);
-                              }
-                            }}
-                            disabled={factura.estado === 1 || !isSelecting}
-                            className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
-                              factura.estado === 1
-                                ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] cursor-not-allowed"
-                                : isSelecting
-                                ? selectedIds.has(factura.id)
-                                  ? "bg-gradient-to-r from-[#ffcc00] to-[#ff9900]"
-                                  : "bg-gradient-to-r from-[#718afb] to-[#1215be] hover:scale-105"
-                                : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl"
-                            }`}
-                            aria-label={
-                              factura.estado === 1
-                                ? "Factura procesada"
-                                : isSelecting
-                                ? "Seleccionar factura"
-                                : "Agregar factura"
-                            }
-                          >
-                            {factura.estado === 1 ? (
-                              <RiCheckboxCircleFill />
-                            ) : isSelecting ? (
-                              selectedIds.has(factura.id) ? (
-                                <RiCheckboxCircleFill />
-                              ) : (
-                                <RiAddCircleFill />
-                              )
-                            ) : (
-                              <RiAddCircleFill />
-                            )}
-                          </button>
-                        </div>
-                      </td>
+                    <div className="flex justify-center">
+                      <button
+                        onClick={() => {
+                          if (isSelecting) {
+                            handleToggleSelect(factura.id);
+                          } else {
+                            handleAddConsorcio(factura.id);
+                          }
+                        }}
+                        disabled={factura.estado === 1 || !isSelecting}
+                        className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
+                          factura.estado === 1
+                            ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] cursor-not-allowed"
+                            : isSelecting
+                            ? selectedIds.has(factura.id)
+                              ? "bg-gradient-to-r from-[#ffcc00] to-[#ff9900]"
+                              : "bg-gradient-to-r from-[#718afb] to-[#1215be] hover:scale-105"
+                            : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl"
+                        }`}
+                        aria-label={
+                          factura.estado === 1
+                            ? "Factura procesada"
+                            : isSelecting
+                            ? "Seleccionar factura"
+                            : "Agregar factura"
+                        }
+                      >
+                        {factura.estado === 1 ? (
+                          <RiCheckboxCircleFill />
+                        ) : isSelecting ? (
+                          selectedIds.has(factura.id) ? (
+                            <RiCheckboxCircleFill />
+                          ) : (
+                            <RiAddCircleFill />
+                          )
+                        ) : (
+                          <RiAddCircleFill />
+                        )}
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))
             )}

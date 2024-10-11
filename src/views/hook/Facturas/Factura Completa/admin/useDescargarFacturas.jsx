@@ -9,38 +9,42 @@ const useDescargarFacturas = () => {
       toast.error("No se encontró el token de autorización en el localStorage.");
       return;
     }
-
-    let url = "http://localhost:8080/factura/descargar-excel-todas";
-
   
+    let url = "http://localhost:8080/factura/descargar-excel-todas";
+  
+    const params = new URLSearchParams();
     if (ciudad) {
-      url += `?ciudad=${ciudad}`;
+      params.append("ciudad", ciudad);
     }
     if (filtro) {
-        url += ciudad? `&filtro=${filtro}` : `?filtro=${filtro}`;
+      params.append("filtro", filtro);
     }
     if (anio) {
-      url += ciudad? `&anio=${anio}` : `?anio=${anio}`;
+      params.append("anio", anio);
     }
-
+  
+    if (params.toString()) {
+      url += `?${params.toString()}`;
+    }
+  
     try {
       const response = await fetch(url, {
-        method: "POST", 
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(errorMessage || "No se pudo descargar el archivo Excel.");
       }
-
+  
       const blob = await response.blob();
       const contentDisposition = response.headers.get("Content-Disposition");
       const fileNameMatch = contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
       const fileName = fileNameMatch ? fileNameMatch[1] : "datos_todas_las_facturas.xlsx";
-
+  
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
           suggestedName: fileName,
@@ -71,6 +75,7 @@ const useDescargarFacturas = () => {
       toast.error("Hubo un problema al descargar el archivo Excel.");
     }
   };
+  
 
   return { handleDownloadExcel };
 };

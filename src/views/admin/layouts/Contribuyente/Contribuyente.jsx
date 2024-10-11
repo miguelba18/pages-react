@@ -45,6 +45,8 @@ const Contribuyente = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = contribuyentes.slice(indexOfFirstItem, indexOfLastItem);
+  const [selectedNombreContribuyente, setSelectedNombreContribuyente] =
+    useState("");
 
   const handleSelectNit = (selectedOption) => {
     setSelectedNit(selectedOption ? selectedOption.value : "");
@@ -52,9 +54,23 @@ const Contribuyente = () => {
   };
 
   const handleSelectContribuyente = (selectedOption) => {
-    setSelectedId(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedId]);
+    setSelectedNombreContribuyente(selectedOption ? selectedOption.label : "");
+    
+    // Si hay un contribuyente seleccionado, aplicamos el filtro
+    if (selectedOption) {
+      const contribuyenteFiltrado = contribuyentes.filter(
+        (contribuyente) => contribuyente.nombreContribuyente === selectedOption.label
+      );
+      setFactura(contribuyenteFiltrado); // Establece solo el contribuyente seleccionado
+      setIsFacturaSelected(true); // Indica que hay un contribuyente seleccionado
+    } else {
+      setIsFacturaSelected(false); // No hay un contribuyente seleccionado
+      setFactura(contribuyentes); // Restablece todos los contribuyentes si se borra la selección
+    }
+  
+    resetAllSelectsExcept([setSelectedNombreContribuyente]);
   };
+  
 
   const handleSelectDepartamento = (selectedOption) => {
     setSelectedDepartamento(selectedOption ? selectedOption.value : "");
@@ -100,7 +116,7 @@ const Contribuyente = () => {
     } else {
       setIsFacturaSelected(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDepartamento]);
 
   useEffect(() => {
@@ -166,7 +182,18 @@ const Contribuyente = () => {
   }, [selectedId, setFactura]);
 
   const handleDownload = () => {
-    handleDownloadExcel(searchQuery);
+    const filters = {
+      nombre: selectedNombreContribuyente, 
+      nit: selectedNit,
+      departamento: selectedDepartamento,
+      municipio: selectedMunicipio,
+      direccion: selectedDireccion,
+      correo: selectedCorreo,
+      telefono: selectedTelefono,
+      filtro: searchQuery,
+    };
+
+    handleDownloadExcel(filters);
   };
 
   const handleSearch = (query) => {
@@ -380,7 +407,7 @@ const Contribuyente = () => {
                 <Select
                   value={
                     contribuyenteOptions.find(
-                      (option) => option.value === selectedId
+                      (option) => option.label === selectedNombreContribuyente // Aquí usas `label`, ya que el nombre es lo que quieres filtrar
                     ) || null
                   }
                   onChange={handleSelectContribuyente}
