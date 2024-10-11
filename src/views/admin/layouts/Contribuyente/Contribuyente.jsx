@@ -36,41 +36,53 @@ const Contribuyente = () => {
   const [selectedCorreo, setSelectedCorreo] = useState("");
   const [selectedTelefono, setSelectedTelefono] = useState("");
   const [isFacturaSelected, setIsFacturaSelected] = useState(false);
+  const [selectedNombreContribuyente, setSelectedNombreContribuyente] = useState(null);
+
+  
 
   useEffect(() => {
     fetchContribuyentes(searchQuery);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery]);
+  }, []);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = contribuyentes.slice(indexOfFirstItem, indexOfLastItem);
-  const [selectedNombreContribuyente, setSelectedNombreContribuyente] =
-    useState("");
 
+  const handleSelectContribuyente = (selectedOption) => {
+    if (selectedOption) {
+      const contribuyenteSeleccionado = contribuyentes.find(
+        (contribuyente) => contribuyente.id === selectedOption.value
+      );
+      
+     
+      setSelectedId(contribuyenteSeleccionado.id);
+      setSelectedNombreContribuyente(contribuyenteSeleccionado.nombreContribuyente);
+    
+      setSelectedNit("");
+      setSelectedDepartamento("");
+      setSelectedMunicipio("");
+      setSelectedDireccion("");
+      setSelectedCorreo("");
+      setSelectedTelefono("");
+    } else {
+  
+      setSelectedId("");
+      setSelectedNombreContribuyente("");
+      setSelectedNit("");
+      setSelectedDepartamento("");
+      setSelectedMunicipio("");
+      setSelectedDireccion("");
+      setSelectedCorreo("");
+      setSelectedTelefono("");
+    }
+  };
+  
+  
   const handleSelectNit = (selectedOption) => {
     setSelectedNit(selectedOption ? selectedOption.value : "");
     resetAllSelectsExcept([setSelectedNit]);
   };
-
-  const handleSelectContribuyente = (selectedOption) => {
-    setSelectedNombreContribuyente(selectedOption ? selectedOption.label : "");
-    
-    // Si hay un contribuyente seleccionado, aplicamos el filtro
-    if (selectedOption) {
-      const contribuyenteFiltrado = contribuyentes.filter(
-        (contribuyente) => contribuyente.nombreContribuyente === selectedOption.label
-      );
-      setFactura(contribuyenteFiltrado); // Establece solo el contribuyente seleccionado
-      setIsFacturaSelected(true); // Indica que hay un contribuyente seleccionado
-    } else {
-      setIsFacturaSelected(false); // No hay un contribuyente seleccionado
-      setFactura(contribuyentes); // Restablece todos los contribuyentes si se borra la selección
-    }
-  
-    resetAllSelectsExcept([setSelectedNombreContribuyente]);
-  };
-  
 
   const handleSelectDepartamento = (selectedOption) => {
     setSelectedDepartamento(selectedOption ? selectedOption.value : "");
@@ -182,25 +194,106 @@ const Contribuyente = () => {
   }, [selectedId, setFactura]);
 
   const handleDownload = () => {
+    
     const filters = {
-      nombre: selectedNombreContribuyente, 
-      nit: selectedNit,
-      departamento: selectedDepartamento,
-      municipio: selectedMunicipio,
-      direccion: selectedDireccion,
-      correo: selectedCorreo,
-      telefono: selectedTelefono,
-      filtro: searchQuery,
+      nombre: selectedNombreContribuyente || undefined, 
+      nit: selectedNit || undefined,
+      departamento: selectedDepartamento || undefined,
+      municipio: selectedMunicipio || undefined,
+      direccion: selectedDireccion || undefined,
+      correo: selectedCorreo || undefined,
+      telefono: selectedTelefono || undefined,
+      filtro: searchQuery || undefined,
     };
-
-    handleDownloadExcel(filters);
+  
+ 
+    const activeFilters = Object.keys(filters).filter(
+      key => filters[key] !== undefined && filters[key] !== ""
+    );
+  
+    const filterToSend = activeFilters.includes("nombre") && activeFilters.length > 1 
+      ? activeFilters.filter(key => key !== "nombre")[0]
+      : activeFilters[0];
+  
+    const finalFilters = filterToSend ? { [filterToSend]: filters[filterToSend] } : {};
+    handleDownloadExcel(finalFilters);
   };
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "34px",
+      fontSize: "14px",
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+  };
+  const nitOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.nitContribuyente,
+    label: contribuyente.nitContribuyente,
+  }));
+  const contribuyenteOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.id,
+    label: contribuyente.nombreContribuyente,
+  }));
+  const departamentoOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.departamentoContribuyente,
+    label: contribuyente.departamentoContribuyente,
+  }));
+  const municipioOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.municipioContribuyente,
+    label: contribuyente.municipioContribuyente,
+  }));
+  const direccionOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.direccionContribuyente,
+    label: contribuyente.direccionContribuyente,
+  }));
+  const correoOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.correoContribuyente,
+    label: contribuyente.correoContribuyente,
+  }));
+  const telefonoOptions = contribuyentes.map((contribuyente) => ({
+    value: contribuyente.telefonoContribuyente,
+    label: contribuyente.telefonoContribuyente,
+  }));
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    setSelectedId("");
+    
+    
     fetchContribuyentes(query);
+  
+    
+    resetAllSelectsExcept([setSearchQuery]);
   };
+  
+  const resetAllSelectsExcept = (excludedSetters) => {
+    const allSetters = [
+      setSelectedNit,
+      setSelectedId,
+      setSelectedDepartamento,
+      setSelectedCorreo,
+      setSelectedTelefono,
+      setSelectedMunicipio,
+      setSelectedDireccion,
+    ];
+  
+ 
+    allSetters.forEach((setter) => {
+      if (!excludedSetters.includes(setter)) {
+        setter("");  
+      }
+    });
+  };
+  
 
   const tableRows = () => {
     if (isFacturaSelected && factura) {
@@ -282,70 +375,7 @@ const Contribuyente = () => {
     }
   };
 
-  const customStyles = {
-    control: (base) => ({
-      ...base,
-      minHeight: "34px",
-      fontSize: "14px",
-    }),
-    option: (styles, { isFocused, isSelected }) => ({
-      ...styles,
-      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
-      color: "#333",
-      fontWeight: isSelected ? "bold" : "normal",
-      cursor: "pointer",
-    }),
-    menu: (base) => ({
-      ...base,
-      zIndex: 9999,
-    }),
-  };
-  const nitOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.nitContribuyente,
-    label: contribuyente.nitContribuyente,
-  }));
-  const contribuyenteOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.id,
-    label: contribuyente.nombreContribuyente,
-  }));
-  const departamentoOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.departamentoContribuyente,
-    label: contribuyente.departamentoContribuyente,
-  }));
-  const municipioOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.municipioContribuyente,
-    label: contribuyente.municipioContribuyente,
-  }));
-  const direccionOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.direccionContribuyente,
-    label: contribuyente.direccionContribuyente,
-  }));
-  const correoOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.correoContribuyente,
-    label: contribuyente.correoContribuyente,
-  }));
-  const telefonoOptions = contribuyentes.map((contribuyente) => ({
-    value: contribuyente.telefonoContribuyente,
-    label: contribuyente.telefonoContribuyente,
-  }));
-
-  const resetAllSelectsExcept = (excludedSetters) => {
-    const allSetters = [
-      setSelectedNit,
-      setSelectedId,
-      setSelectedDepartamento,
-      setSelectedCorreo,
-      setSelectedTelefono,
-      setSelectedMunicipio,
-      setSelectedDireccion,
-    ];
-
-    allSetters.forEach((setter) => {
-      if (!excludedSetters.includes(setter)) {
-        setter("");
-      }
-    });
-  };
+  
 
   return (
     <div>
@@ -367,6 +397,7 @@ const Contribuyente = () => {
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
             placeholder="Search"
             required
+            
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
             <RiSearchLine className="h-8 w-8 p-1 rounded-md shadow-2xl text-secundary font-semibold" />
@@ -402,12 +433,15 @@ const Contribuyente = () => {
           <thead>
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
-              <th className="px-4 py-2 bg-secundary text-white">
+
+              <th  className="px-4 py-2 bg-secundary text-white">
                 Nombre Contribuyente <br />
+                <div hidden={searchQuery}>
                 <Select
+              
                   value={
                     contribuyenteOptions.find(
-                      (option) => option.label === selectedNombreContribuyente // Aquí usas `label`, ya que el nombre es lo que quieres filtrar
+                      (option) => option.value === selectedId
                     ) || null
                   }
                   onChange={handleSelectContribuyente}
@@ -417,10 +451,13 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
+                  
                 />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nit Contribuyente <br />
+                <div hidden={searchQuery}>
                 <Select
                   value={
                     nitOptions.find((option) => option.value === selectedNit) ||
@@ -433,11 +470,12 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
 
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento Contribuyente
+                <div hidden={searchQuery}>
                 <Select
                   value={
                     departamentoOptions.find(
@@ -451,10 +489,11 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio Contribuyente
+                <div hidden={searchQuery}>
                 <Select
                   value={
                     municipioOptions.find(
@@ -468,10 +507,11 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección Contribuyente
+                <div hidden={searchQuery}>
                 <Select
                   value={
                     direccionOptions.find(
@@ -485,10 +525,11 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo Contribuyente
+                <div hidden={searchQuery}>
                 <Select
                   value={
                     correoOptions.find(
@@ -502,10 +543,10 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                Teléfono Contribuyente
+                Teléfono Contribuyente<div hidden={searchQuery}>
                 <Select
                   value={
                     telefonoOptions.find(
@@ -519,7 +560,7 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
             </tr>
           </thead>

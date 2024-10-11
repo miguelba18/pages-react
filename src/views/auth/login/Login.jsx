@@ -82,12 +82,12 @@ const Login = () => {
         backgroundImage: 'url("../../../../src/assets/img/fondologin.avif")',
       }}
     >
-      <h1 className="text-3xl md:text-5xl font-bold text-gray-500 text-center mb-8">
+      <h1 className="text-3xl md:text-5xl font-bold text-gray-500 text-center mt-10 xl:mt-0 xl:mb-10">
         Bienvenido a <span className="text-gray-500 font-bold">SIM SAS</span>
       </h1>
 
       <div className="xl:flex items-center justify-center w-full ">
-        <div className="grid justify-center items-center  py-16 xl:py-0 w-1/2 bg-opacity-70 ">
+        <div className="grid justify-center items-center  py-16 xl:py-0 xl:w-1/2 bg-opacity-70 ">
           <div className="rounded-md ml-2 border-t-4 border-t-[#66d2bb] border-transparent  w-full p-10 bg-white/80">
             <section>
               {error && (
