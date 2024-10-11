@@ -10,6 +10,7 @@ import {
 } from "react-icons/ri";
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
+import Select from "react-select";
 
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 import { toast } from "react-toastify";
@@ -23,6 +24,31 @@ const FacturaCompleta = () => {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCUFE, setSelectedCUFE] = useState("");
+  const [selectedNombreComercialVendedor, setSelectedNombreComercialVendedor] =
+    useState("");
+  const [selectedNitEmisor, setSelectedNitEmisor] = useState("");
+  const [selectedDepartamentoEmisor, setSelectedDepartamentoEmisor] =
+    useState("");
+  const [selectedMunicipioEmisor, setSelectedMunicipioEmisor] = useState("");
+  const [selectedDireccionEmisor, setSelectedDireccionEmisor] = useState("");
+  const [selectedCorreoEmisor, setSelectedCorreoEmisor] = useState("");
+  const [selectedTelefonoEmisor, setSelectedTelefonoEmisor] = useState("");
+  const [selectedNombreAdquiriente, setSelectedNombreAdquirente] = useState("");
+  const [
+    selectedNumeroDocumentoAdquiriente,
+    setSelectedNumeroDocumentoAdquiriente,
+  ] = useState("");
+  const [selectedDepartamentoAdquiriente, setSelectedDepartamentoAdquiriente] =
+    useState("");
+  const [selectedMunicipioAdquiriente, setSelectedMunicipioAdquiriente] =
+    useState("");
+  const [selectedDireccionAdquiriente, setSelectedDireccionAdquiriente] =
+    useState("");
+  const [selectedCorreoAdquiriente, setSelectedCorreoAdquiriente] =
+    useState("");
+  const [selectedTelefonoAdquiriente, setSelectedTelefonoAdquiriente] =
+    useState("");
 
   const itemsPerPage = 100;
   const handleAnioChange = (anio) => {
@@ -31,16 +57,26 @@ const FacturaCompleta = () => {
       searchQuery,
       anio,
       selectedCUFE,
-      selectedNombreComercialVendedor
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      selectedNumeroDocumentoAdquiriente,
+      selectedDepartamentoAdquiriente,
+      selectedMunicipioAdquiriente,
+      selectedDireccionAdquiriente
     );
   };
-  const handleCUFEChange = (e) => {
-    const cufe = e.target.value;
-    setSelectedCUFE(cufe);
-    fetchFacturas(searchQuery, selectedAnio, cufe);
+  const handleselectCufe = (selectedOption) => {
+    console.log("CUFE seleccionado:", selectedOption);
+    setSelectedCUFE(selectedOption ? selectedOption.value : "");
+    resetAllSelectsExcept([setSelectedCUFE]);
   };
-  const [selectedCUFE, setSelectedCUFE] = useState("");
-  
+
   const handleNombreComercialVendedorChange = (e) => {
     const nombreComercialEmisor = e.target.value;
     setSelectedNombreComercialVendedor(nombreComercialEmisor);
@@ -51,21 +87,252 @@ const FacturaCompleta = () => {
       nombreComercialEmisor
     );
   };
-
-  const [selectedNombreComercialVendedor, setSelectedNombreComercialVendedor] = useState("");
+  const handleNitEmisorChange = (e) => {
+    const nitEmisor = e.target.value;
+    setSelectedNitEmisor(nitEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      nitEmisor
+    );
+  };
+  const handleDepartamentoEmisorChange = (e) => {
+    const departamentoEmisor = e.target.value;
+    setSelectedDepartamentoEmisor(departamentoEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      departamentoEmisor
+    );
+  };
+  const handleMunicipioEmisorChange = (e) => {
+    const municipioEmisor = e.target.value;
+    setSelectedMunicipioEmisor(municipioEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      municipioEmisor
+    );
+  };
+  const handleDireccionEmisorChange = (e) => {
+    const direccionEmisor = e.target.value;
+    setSelectedDireccionEmisor(direccionEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      direccionEmisor
+    );
+  };
+  const handleCorreoEmisorChange = (e) => {
+    const correoEmisor = e.target.value;
+    setSelectedCorreoEmisor(correoEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      correoEmisor
+    );
+  };
+  const handleTelefonoEmisorChange = (e) => {
+    const telefonoEmisor = e.target.value;
+    setSelectedTelefonoEmisor(telefonoEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      telefonoEmisor
+    );
+  };
+  const handleNombreAdquirienteChange = (e) => {
+    const nombreAdquiriente = e.target.value;
+    setSelectedNombreAdquirente(nombreAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      nombreAdquiriente
+    );
+  };
+  const handleNumeroDocumentoAdquirienteChange = (e) => {
+    const numeroDocumentoAdquiriente = e.target.value;
+    setSelectedNumeroDocumentoAdquiriente(numeroDocumentoAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      numeroDocumentoAdquiriente
+    );
+  };
+  const handleDepartamentoAdquirienteChange = (e) => {
+    const departamentoAdquiriente = e.target.value;
+    setSelectedDepartamentoAdquiriente(departamentoAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      selectedNumeroDocumentoAdquiriente,
+      departamentoAdquiriente
+    );
+  };
+  const handleMunicipioAdquirienteChange = (e) => {
+    const municipioAdquiriente = e.target.value;
+    setSelectedMunicipioAdquiriente(municipioAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      selectedNumeroDocumentoAdquiriente,
+      selectedDepartamentoAdquiriente,
+      municipioAdquiriente
+    );
+  };
+  const handleDireccionAdquirienteChange = (e) => {
+    const direccionAdquiriente = e.target.value;
+    setSelectedDireccionAdquiriente(direccionAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      selectedNumeroDocumentoAdquiriente,
+      selectedDepartamentoAdquiriente,
+      selectedMunicipioAdquiriente,
+      direccionAdquiriente
+    );
+  };
+  const handleCorreoAdquirienteChange = (e) => {
+    const correoAdquiriente = e.target.value;
+    setSelectedCorreoAdquiriente(correoAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      selectedNumeroDocumentoAdquiriente,
+      selectedDepartamentoAdquiriente,
+      selectedMunicipioAdquiriente,
+      selectedDireccionAdquiriente,
+      correoAdquiriente
+    );
+  };
+  const handleTelefonoAdquirienteChange = (e) => {
+    const telefonoAdquiriente = e.target.value;
+    setSelectedTelefonoAdquiriente(telefonoAdquiriente);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor,
+      selectedNombreAdquiriente,
+      selectedNumeroDocumentoAdquiriente,
+      selectedDepartamentoAdquiriente,
+      selectedMunicipioAdquiriente,
+      selectedDireccionAdquiriente,
+      selectedCorreoAdquiriente,
+      telefonoAdquiriente
+    );
+  };
 
   useEffect(() => {
     fetchFacturas(
       searchQuery,
       selectedAnio,
       selectedCUFE,
-      selectedNombreComercialVendedor
+      selectedNombreComercialVendedor,
+      selectedNitEmisor,
+      selectedDepartamentoEmisor,
+      selectedMunicipioEmisor,
+      selectedDireccionEmisor,
+      selectedCorreoEmisor,
+      selectedTelefonoEmisor
     );
   }, [
     searchQuery,
     selectedAnio,
     selectedCUFE,
     selectedNombreComercialVendedor,
+    selectedNitEmisor,
+    selectedDepartamentoEmisor,
+    selectedMunicipioEmisor,
+    selectedDireccionEmisor,
+    selectedCorreoEmisor,
+    selectedTelefonoEmisor,
     fetchFacturas,
     processedFacturas,
   ]);
@@ -127,6 +394,56 @@ const FacturaCompleta = () => {
 
     handleDownloadExcel({ filtro, ciudad, anio, codigoUnico });
   };
+
+  const resetAllSelectsExcept = (excludedSetters) => {
+    const allSetters = [
+      setSelectedAnio,
+      setSelectedCUFE,
+      setSelectedNombreComercialVendedor,
+      setSelectedNitEmisor,
+      setSelectedDepartamentoEmisor,
+      setSelectedMunicipioEmisor,
+      setSelectedDireccionEmisor,
+      setSelectedCorreoEmisor,
+      setSelectedTelefonoEmisor,
+      setSelectedNombreAdquirente,
+      setSelectedNumeroDocumentoAdquiriente,
+      setSelectedDepartamentoAdquiriente,
+      setSelectedMunicipioAdquiriente,
+      setSelectedDireccionAdquiriente,
+      setSelectedCorreoAdquiriente,
+      setSelectedTelefonoAdquiriente,
+    ];
+
+    allSetters.forEach((setter) => {
+      if (!excludedSetters.includes(setter)) {
+        setter("");
+      }
+    });
+  };
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "34px",
+      fontSize: "14px",
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+  };
+  const cufeOptions = facturas.map((factura) => ({
+    value: factura.codigoUnico,
+    label: factura.codigoUnico,
+  }));
+  console.log(facturas);
 
   return (
     <div>
@@ -246,19 +563,22 @@ const FacturaCompleta = () => {
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 CUFE
-                <select
-                  id="cufe"
-                  value={selectedCUFE}
-                  onChange={handleCUFEChange}
-                  className="p-2 border rounded-md ml-2 bg-white text-black"
-                >
-                  <option value="">Todos</option>
-                  {facturas.map((factura) => (
-                    <option key={factura.id} value={factura.codigoUnico}>
-                      {factura.codigoUnico}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  value={
+                    selectedCUFE
+                      ? cufeOptions.find(
+                          (option) => option.value === selectedCUFE
+                        )
+                      : null
+                  }
+                  onChange={handleselectCufe}
+                  options={cufeOptions}
+                  placeholder="Todos"
+                  isClearable
+                  styles={customStyles}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
               </th>
 
               <th className="px-4 py-2 bg-secundary text-white">
@@ -283,42 +603,255 @@ const FacturaCompleta = () => {
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
+                <select
+                  id="nitemisor"
+                  value={selectedNitEmisor}
+                  onChange={handleNitEmisorChange}
+                  className="p-2 border rounded-md ml-2  bg-white text-black"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(facturas.map((factura) => factura.nitEmisor))
+                  ).map((nitEmisor, index) => (
+                    <option key={index} value={nitEmisor}>
+                      {nitEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento vendedor
+                <select
+                  id="departamentoEmisor"
+                  value={selectedDepartamentoEmisor}
+                  onChange={handleDepartamentoEmisorChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.departamentoEmisor)
+                    )
+                  ).map((departamentoEmisor, index) => (
+                    <option key={index} value={departamentoEmisor}>
+                      {departamentoEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio vendedor
+                <select
+                  id="municipioEmisor"
+                  value={selectedMunicipioEmisor}
+                  onChange={handleMunicipioEmisorChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(facturas.map((factura) => factura.municipioEmisor))
+                  ).map((municipioEmisor, index) => (
+                    <option key={index} value={municipioEmisor}>
+                      {municipioEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección vendedor
+                <select
+                  id="direccionEmisor"
+                  value={selectedDireccionEmisor}
+                  onChange={handleDireccionEmisorChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(facturas.map((factura) => factura.direccionEmisor))
+                  ).map((direccionEmisor, index) => (
+                    <option key={index} value={direccionEmisor}>
+                      {direccionEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo vendedor
+                <select
+                  id="correoEmisor"
+                  value={selectedCorreoEmisor}
+                  onChange={handleCorreoEmisorChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(facturas.map((factura) => factura.correoEmisor))
+                  ).map((correoEmisor, index) => (
+                    <option key={index} value={correoEmisor}>
+                      {correoEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Vendedor
+                <select
+                  id="telefonoEmisor"
+                  value={selectedTelefonoEmisor}
+                  onChange={handleTelefonoEmisorChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(facturas.map((factura) => factura.telefonoEmisor))
+                  ).map((telefonoEmisor, index) => (
+                    <option key={index} value={telefonoEmisor}>
+                      {telefonoEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre adquiriente
+                <select
+                  id="nombreAdquiriente"
+                  value={selectedNombreAdquiriente}
+                  onChange={handleNombreAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.nombreAdquiriente)
+                    )
+                  ).map((nombreAdquiriente, index) => (
+                    <option key={index} value={nombreAdquiriente}>
+                      {nombreAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT comprador
+                <select
+                  id="nitAdquiriente"
+                  value={selectedNumeroDocumentoAdquiriente}
+                  onChange={handleNumeroDocumentoAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map(
+                        (factura) => factura.numeroDocumentoAdquiriente
+                      )
+                    )
+                  ).map((numeroDocumentoAdquiriente, index) => (
+                    <option key={index} value={numeroDocumentoAdquiriente}>
+                      {numeroDocumentoAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento comprador
+                <select
+                  id="departamentoAdquiriente"
+                  value={selectedDepartamentoAdquiriente}
+                  onChange={handleDepartamentoAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.departamentoAdquiriente)
+                    )
+                  ).map((departamentoAdquiriente, index) => (
+                    <option key={index} value={departamentoAdquiriente}>
+                      {departamentoAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio comprador
+                <select
+                  id="municipioAdquiriente"
+                  value={selectedMunicipioAdquiriente}
+                  onChange={handleMunicipioAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.municipioAdquiriente)
+                    )
+                  ).map((municipioAdquiriente, index) => (
+                    <option key={index} value={municipioAdquiriente}>
+                      {municipioAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
+                <select
+                  id="direccionAdquiriente"
+                  value={selectedDireccionAdquiriente}
+                  onChange={handleDireccionAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.direccionAdquiriente)
+                    )
+                  ).map((direccionAdquiriente, index) => (
+                    <option key={index} value={direccionAdquiriente}>
+                      {direccionAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo comprador
+                <select
+                  id="correoAdquiriente"
+                  value={selectedCorreoAdquiriente}
+                  onChange={handleCorreoAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.correoAdquiriente)
+                    )
+                  ).map((correoAdquiriente, index) => (
+                    <option key={index} value={correoAdquiriente}>
+                      {correoAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
+                <select
+                  id="telefonoAdquiriente"
+                  value={selectedTelefonoAdquiriente}
+                  onChange={handleTelefonoAdquirienteChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.telefonoAdquiriente)
+                    )
+                  ).map((telefonoAdquiriente, index) => (
+                    <option key={index} value={telefonoAdquiriente}>
+                      {telefonoAdquiriente}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Total acumulado
@@ -385,7 +918,7 @@ const FacturaCompleta = () => {
                     {factura.nombreAdquiriente}
                   </td>
                   <td className="border px-4 py-2 text-center">
-                    {factura.nitAdquiriente}
+                    {factura.numeroDocumentoAdquiriente}
                   </td>
                   <td className="border px-4 py-2 text-center">
                     {factura.departamentoAdquiriente}
@@ -451,6 +984,7 @@ const FacturaCompleta = () => {
               ))
             )}
           </tbody>
+
           <tfoot>
             <tr>
               <th className="px-4 py-2 bg-secundary text-white" colSpan="17">

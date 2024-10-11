@@ -293,6 +293,8 @@ const Contribuyente = () => {
       }
     });
   };
+    console.log(contribuyentes)
+
   
 
   const tableRows = () => {
@@ -307,7 +309,9 @@ const Contribuyente = () => {
           }
         >
           <td className="border px-4 py-2 text-center">{index + 1}</td>
+
           <td className="border px-4 text-center">
+            
             {facturaItem.nombreContribuyente}
           </td>
           <td className="border px-4 py-2 text-center">
@@ -347,7 +351,11 @@ const Contribuyente = () => {
             {indexOfFirstItem + index + 1}
           </td>
           <td className="border px-4 text-center">
-            {contribuyente.nombreContribuyente}
+          <HighlightedText
+              text={contribuyente.nombreContribuyente}
+              highlight={searchQuery}
+            />
+          
           </td>
           <td className="border px-4 py-2 text-center">
             <HighlightedText
@@ -374,6 +382,7 @@ const Contribuyente = () => {
       ));
     }
   };
+  
 
   
 

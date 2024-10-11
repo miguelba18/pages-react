@@ -7,7 +7,7 @@ const useListAlcalde = () => {
   const [totalSuma, setTotalSuma] = useState(0);
 
   const fetchFacturas = useCallback(
-    async (query, anio, codigoUnico,nombreComercialEmisor ) => { 
+    async (query, anio, codigoUnico,nombreComercialEmisor, nitEmisor, departamentoEmisor,municipioEmisor,direccionEmisor,correoEmisor,telefonoEmisor,nombreAdquiriente,numeroDocumentoAdquiriente,departamentoAdquiriente,municipioAdquiriente,direccionAdquiriente,correoAdquiriente,telefonoAdquiriente ) => { 
       try {
         let url = `http://localhost:8080/factura/listar`;
         const params = new URLSearchParams();
@@ -24,6 +24,47 @@ const useListAlcalde = () => {
         if (nombreComercialEmisor) {  
           params.append("nombreComercialEmisor", nombreComercialEmisor); 
         }
+        if (nitEmisor) {
+          params.append("nitEmisor", nitEmisor);
+        }
+        if(departamentoEmisor){
+          params.append("departamentoEmisor", departamentoEmisor);
+        }
+        if(municipioEmisor){
+          params.append("municipioEmisor", municipioEmisor);
+        }
+        if(direccionEmisor){
+          params.append("direccionEmisor", direccionEmisor);
+        }
+        if(correoEmisor){
+          params.append("correoEmisor", correoEmisor);
+        }
+        if(telefonoEmisor){
+          params.append("telefonoEmisor", telefonoEmisor);
+        }
+        if(nombreAdquiriente){
+          params.append("nombreAdquiriente", nombreAdquiriente);
+        }
+        if(numeroDocumentoAdquiriente){
+          params.append("numeroDocumentoAdquiriente", numeroDocumentoAdquiriente);
+        }
+        if(departamentoAdquiriente){
+          params.append("departamentoAdquiriente", departamentoAdquiriente);
+        }
+        if(municipioAdquiriente){
+          params.append("municipioAdquiriente", municipioAdquiriente);
+        }
+        if(direccionAdquiriente){
+          params.append("direccionAdquiriente", direccionAdquiriente);
+        }
+        if(correoAdquiriente){
+          params.append("correoAdquiriente", correoAdquiriente);
+        }
+        if(telefonoAdquiriente){
+          params.append("telefonoAdquiriente", telefonoAdquiriente);
+        }
+
+
 
         if (params.toString()) {
           url += `?${params.toString()}`;
