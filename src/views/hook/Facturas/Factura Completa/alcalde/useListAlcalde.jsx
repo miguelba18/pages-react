@@ -7,16 +7,22 @@ const useListAlcalde = () => {
   const [totalSuma, setTotalSuma] = useState(0);
 
   const fetchFacturas = useCallback(
-    async ( query, anio) => {
+    async (query, anio, codigoUnico,nombreComercialEmisor ) => { 
       try {
         let url = `http://localhost:8080/factura/listar`;
         const params = new URLSearchParams();
-        
+
         if (query) {
           params.append("filtro", query);
         }
         if (anio) {
           params.append("anio", anio);
+        }
+        if (codigoUnico) {  
+          params.append("codigoUnico", codigoUnico);
+        } 
+        if (nombreComercialEmisor) {  
+          params.append("nombreComercialEmisor", nombreComercialEmisor); 
         }
 
         if (params.toString()) {
@@ -45,8 +51,6 @@ const useListAlcalde = () => {
     },
     [token]
   );
-
-  
 
   return { facturas, fetchFacturas, totalSuma, setFacturas };
 };

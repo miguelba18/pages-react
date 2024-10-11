@@ -4,7 +4,7 @@ import useAuthToken from "../../../Token/useAuthToken";
 const useDescargarFacturas = () => {
   const { token } = useAuthToken();
 
-  const handleDownloadExcel = async ({ filtro, ciudad, anio }) => {
+  const handleDownloadExcel = async ({ filtro, ciudad, anio, codigoUnico  }) => {
     if (!token) {
       toast.error("No se encontró el token de autorización en el localStorage.");
       return;
@@ -21,6 +21,9 @@ const useDescargarFacturas = () => {
     }
     if (anio) {
       params.append("anio", anio);
+    }
+    if (codigoUnico) {  
+      params.append("codigoUnico", codigoUnico);
     }
   
     if (params.toString()) {

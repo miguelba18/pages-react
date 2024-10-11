@@ -27,12 +27,48 @@ const FacturaCompleta = () => {
   const itemsPerPage = 100;
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    fetchFacturas(searchQuery, anio);
+    fetchFacturas(
+      searchQuery,
+      anio,
+      selectedCUFE,
+      selectedNombreComercialVendedor
+    );
+  };
+  const handleCUFEChange = (e) => {
+    const cufe = e.target.value;
+    setSelectedCUFE(cufe);
+    fetchFacturas(searchQuery, selectedAnio, cufe);
+  };
+  const [selectedCUFE, setSelectedCUFE] = useState("");
+  
+  const handleNombreComercialVendedorChange = (e) => {
+    const nombreComercialEmisor = e.target.value;
+    setSelectedNombreComercialVendedor(nombreComercialEmisor);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      nombreComercialEmisor
+    );
   };
 
+  const [selectedNombreComercialVendedor, setSelectedNombreComercialVendedor] = useState("");
+
   useEffect(() => {
-    fetchFacturas(searchQuery, selectedAnio);
-  }, [searchQuery, selectedAnio, fetchFacturas, processedFacturas]);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      selectedCUFE,
+      selectedNombreComercialVendedor
+    );
+  }, [
+    searchQuery,
+    selectedAnio,
+    selectedCUFE,
+    selectedNombreComercialVendedor,
+    fetchFacturas,
+    processedFacturas,
+  ]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -84,7 +120,12 @@ const FacturaCompleta = () => {
   };
 
   const handleDownload = () => {
-    handleDownloadExcel("", searchQuery, selectedAnio);
+    const filtro = searchQuery;
+    const ciudad = "";
+    const anio = selectedAnio || null;
+    const codigoUnico = selectedCUFE || null;
+
+    handleDownloadExcel({ filtro, ciudad, anio, codigoUnico });
   };
 
   return (
@@ -106,7 +147,7 @@ const FacturaCompleta = () => {
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
-              fetchFacturas(e.target.value, selectedAnio);
+              fetchFacturas(e.target.value, selectedAnio, selectedCUFE);
             }}
             className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
             placeholder="Search"
@@ -203,9 +244,42 @@ const FacturaCompleta = () => {
                   <option value="2030">2030</option>
                 </select>
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
+              <th className="px-4 py-2 bg-secundary text-white">
+                CUFE
+                <select
+                  id="cufe"
+                  value={selectedCUFE}
+                  onChange={handleCUFEChange}
+                  className="p-2 border rounded-md ml-2 bg-white text-black"
+                >
+                  <option value="">Todos</option>
+                  {facturas.map((factura) => (
+                    <option key={factura.id} value={factura.codigoUnico}>
+                      {factura.codigoUnico}
+                    </option>
+                  ))}
+                </select>
+              </th>
+
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Comercial vendedor
+                <select
+                  id="nombreComercialVendedor"
+                  value={selectedNombreComercialVendedor}
+                  onChange={handleNombreComercialVendedorChange}
+                  className="p-1 rounded border border-gray-300 text-black mt-2"
+                >
+                  <option value="">Todos</option>
+                  {Array.from(
+                    new Set(
+                      facturas.map((factura) => factura.nombreComercialEmisor)
+                    )
+                  ).map((nombreComercialEmisor, index) => (
+                    <option key={index} value={nombreComercialEmisor}>
+                      {nombreComercialEmisor}
+                    </option>
+                  ))}
+                </select>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
