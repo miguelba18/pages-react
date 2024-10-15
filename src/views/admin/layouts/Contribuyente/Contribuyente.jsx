@@ -8,6 +8,7 @@ import {
 import HighlightedText from "../../../../utils/HighlightedText";
 import useDownloadContribuyente from "../../../hook/Contribuyente/useDownloadContribuyente";
 import Select, { components } from "react-select";
+import PropTypes from "prop-types";
 
 const Contribuyente = () => {
   const {
@@ -26,7 +27,6 @@ const Contribuyente = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const { handleDownloadExcel } = useDownloadContribuyente();
-  const [selectedId, setSelectedId] = useState("");
   const [selectedNit, setSelectedNit] = useState([]);
   const [selectedDepartamento, setSelectedDepartamento] = useState([]);
   const [selectedMunicipio, setSelectedMunicipio] = useState([]);
@@ -35,18 +35,21 @@ const Contribuyente = () => {
   const [selectedTelefono, setSelectedTelefono] = useState([]);
   const [isFacturaSelected, setIsFacturaSelected] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [selectedNombreContribuyente, setSelectedNombreContribuyente] =
-    useState([]);
+  
 
   const Option = (props) => {
     return (
       <components.Option {...props}>
         <input
           type="checkbox"
+          
           checked={props.isSelected}
           onChange={() => null}
         />{" "}
-        <label>{props.label}</label>
+        
+        <label >
+          {props.label}
+          </label>
       </components.Option>
     );
   };
@@ -68,9 +71,11 @@ const Contribuyente = () => {
   
       if (selectedIdsArray.length > 0) {
         fetchFacturaById(selectedIdsArray).then(() => {
-          setIsFacturaSelected(true); 
+          setIsFacturaSelected(true);
+          resetAllSelectsExcept([setSelectedIds]); 
         });
       }
+
     } else {
       setSelectedIds([]); 
       setIsFacturaSelected(false); 
@@ -83,6 +88,7 @@ const Contribuyente = () => {
     if (selectedOptions && selectedOptions.length > 0) {
       const selectedNitsArray = selectedOptions.map((option) => option.value);
       setSelectedNit(selectedNitsArray);
+      resetAllSelectsExcept([setSelectedNit])
     } else {
       setSelectedNit([]);
     }
@@ -94,6 +100,7 @@ const Contribuyente = () => {
         (option) => option.value
       );
       setSelectedDepartamento(selectedDepartamentosArray);
+      resetAllSelectsExcept([setSelectedDepartamento]);
     } else {
       setSelectedDepartamento([]);
     }
@@ -105,6 +112,7 @@ const Contribuyente = () => {
         (option) => option.value
       );
       setSelectedMunicipio(selectedMunicipiosArray); 
+      resetAllSelectsExcept([setSelectedMunicipio]);
     } else {
       setSelectedMunicipio([]); 
     }
@@ -116,6 +124,7 @@ const Contribuyente = () => {
         (option) => option.value
       );
       setSelectedDireccion(selectedDireccionesArray);
+      resetAllSelectsExcept([setSelectedDireccion]);  
     } else {
       setSelectedDireccion([]); 
     }
@@ -126,7 +135,8 @@ const Contribuyente = () => {
       const selectedCorreosArray = selectedOptions.map(
         (option) => option.value
       );
-      setSelectedCorreo(selectedCorreosArray); 
+      setSelectedCorreo(selectedCorreosArray);
+      resetAllSelectsExcept([setSelectedCorreo]); 
     } else {
       setSelectedCorreo([]); 
     }
@@ -137,10 +147,30 @@ const Contribuyente = () => {
       const selectedTelefonosArray = selectedOptions.map(
         (option) => option.value
       );
-      setSelectedTelefono(selectedTelefonosArray); 
+      setSelectedTelefono(selectedTelefonosArray);
+      resetAllSelectsExcept([setSelectedTelefono]);
     } else {
       setSelectedTelefono([]); 
     }
+  };
+
+  const resetAllSelectsExcept = (excludedSetters) => {
+    const allSetters = [
+      setSelectedNit,
+      setSelectedIds,
+      setSelectedDepartamento,
+      setSelectedCorreo,
+      setSelectedTelefono,
+      setSelectedMunicipio,
+      setSelectedDireccion,
+    ];
+  
+ 
+    allSetters.forEach((setter) => {
+      if (!excludedSetters.includes(setter)) {
+        setter("");  
+      }
+    });
   };
 
   useEffect(() => {
@@ -152,6 +182,7 @@ const Contribuyente = () => {
       setIsFacturaSelected(false);
     }
    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedNit]);
 
   useEffect(() => {
@@ -220,6 +251,7 @@ const Contribuyente = () => {
     } else {
       setIsFacturaSelected(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedIds, contribuyentes]);
   
   const handleDownload = () => {
@@ -239,8 +271,16 @@ const Contribuyente = () => {
   const customStyles = {
     control: (base) => ({
       ...base,
-      minHeight: "34px",
-      fontSize: "14px",
+      minHeight: "38px",           
+      fontSize: "14px",            
+      minWidth: '200px',          
+      width: '100%',              
+      boxSizing: 'border-box',     
+      border: '1px solid #ccc',    
+      borderRadius: '4px',         
+      '&:hover': {
+        borderColor: '#888',        
+      },
     }),
     option: (styles, { isFocused, isSelected }) => ({
       ...styles,
@@ -251,7 +291,27 @@ const Contribuyente = () => {
     }),
     menu: (base) => ({
       ...base,
-      zIndex: 9999,
+      zIndex: 9999,                 
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: '#e0e0e0',  
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: '#000',                
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: '#ff0000',            
+      ':hover': {
+        backgroundColor: '#f00',    
+        color: '#fff',               
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: '#999',                
     }),
   };
   const nitOptions = contribuyentes.map((contribuyente) => ({
@@ -282,6 +342,27 @@ const Contribuyente = () => {
     value: contribuyente.telefonoContribuyente,
     label: contribuyente.telefonoContribuyente,
   }));
+
+  const uniqueOptions = (options) => {
+    const seen = new Set();
+    return options.filter(option => {
+     
+      if (typeof option.value === 'string') {
+        const lowerCaseValue = option.value.toLowerCase(); 
+        const duplicate = seen.has(lowerCaseValue);
+        seen.add(lowerCaseValue); 
+        return !duplicate; 
+      }
+      return false; 
+    });
+  };
+  
+  const filteredNitOptions = uniqueOptions(nitOptions);
+  const filteredDepartamentoOptions = uniqueOptions(departamentoOptions);
+  const filteredMunicipioOptions = uniqueOptions(municipioOptions);
+  const filteredDireccionOptions = uniqueOptions(direccionOptions);
+  const filteredCorreoOptions = uniqueOptions(correoOptions);
+  const filteredTelefonoOptions = uniqueOptions(telefonoOptions);
 
   const tableRows = () => {
     if (isFacturaSelected && factura) {
@@ -426,20 +507,21 @@ const Contribuyente = () => {
                 />
               </th>
 
-              <th className="px-4 py-2 bg-secundary text-white">
+              <th className="px-4 py-2 bg-secundary text-white ">
                 Nit Contribuyente <br />
                 <Select
                   isMulti
-                  value={nitOptions.filter((option) =>
+                  value={filteredNitOptions.filter((option) =>
                     selectedNit.includes(option.value)
                   )}
                   onChange={handleSelectNit}
-                  options={nitOptions}
-                  placeholder="Todos"
+                  options={filteredNitOptions}
+                  placeholder="Nit Contribuyente"
                   isClearable
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
+                  
                 />
               </th>
 
@@ -447,11 +529,11 @@ const Contribuyente = () => {
                 Departamento Contribuyente
                 <Select
                   isMulti
-                  value={departamentoOptions.filter((option) =>
+                  value={filteredDepartamentoOptions.filter((option) =>
                     selectedDepartamento.includes(option.value)
                   )}
                   onChange={handleSelectDepartamento}
-                  options={departamentoOptions}
+                  options={filteredDepartamentoOptions}
                   placeholder="Todos"
                   isClearable
                   styles={customStyles}
@@ -464,11 +546,11 @@ const Contribuyente = () => {
                 Municipio Contribuyente
                 <Select
                   isMulti
-                  value={municipioOptions.filter((option) =>
+                  value={filteredMunicipioOptions.filter((option) =>
                     selectedMunicipio.includes(option.value)
                   )}
                   onChange={handleSelectMunicipio}
-                  options={municipioOptions}
+                  options={filteredMunicipioOptions}
                   placeholder="Todos"
                   isClearable
                   styles={customStyles}
@@ -481,11 +563,11 @@ const Contribuyente = () => {
                 Dirección Contribuyente
                 <Select
                   isMulti
-                  value={direccionOptions.filter((option) =>
+                  value={filteredDireccionOptions.filter((option) =>
                     selectedDireccion.includes(option.value)
                   )}
                   onChange={handleSelectDireccion}
-                  options={direccionOptions}
+                  options={filteredDireccionOptions}
                   placeholder="Todos"
                   isClearable
                   styles={customStyles}
@@ -498,11 +580,11 @@ const Contribuyente = () => {
                 Correo Contribuyente
                 <Select
                   isMulti
-                  value={correoOptions.filter((option) =>
+                  value={filteredCorreoOptions.filter((option) =>
                     selectedCorreo.includes(option.value)
                   )}
                   onChange={handleSelectCorreo}
-                  options={correoOptions}
+                  options={filteredCorreoOptions}
                   placeholder="Todos"
                   isClearable
                   styles={customStyles}
@@ -515,11 +597,11 @@ const Contribuyente = () => {
                 Teléfono Contribuyente
                 <Select
                   isMulti
-                  value={telefonoOptions.filter((option) =>
+                  value={filteredTelefonoOptions.filter((option) =>
                     selectedTelefono.includes(option.value)
                   )}
                   onChange={handleSelectTelefono}
-                  options={telefonoOptions}
+                  options={filteredTelefonoOptions}
                   placeholder="Todos"
                   isClearable
                   styles={customStyles}
@@ -537,3 +619,7 @@ const Contribuyente = () => {
 };
 
 export default Contribuyente;
+Contribuyente.propTypes = {
+  label: PropTypes.string,  
+  isSelected: PropTypes.bool
+}

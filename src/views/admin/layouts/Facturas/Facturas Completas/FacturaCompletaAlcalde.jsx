@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import {
-  RiSearchLine,
   RiDownloadLine,
   RiAddCircleFill,
   RiCheckboxCircleFill,
@@ -13,6 +12,7 @@ import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/adm
 import Select from "react-select";
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 import { toast } from "react-toastify";
+
 const FacturaCompleta = () => {
   const {
     facturas,
@@ -34,19 +34,17 @@ const FacturaCompleta = () => {
     departamentosEmisores,
   } = useListAlcalde();
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
   const { handleDownloadExcel } = useDescargarFacturas();
-  const [processedFacturas, setProcessedFacturas] = useState(new Set());
+  const [setProcessedFacturas] = useState(new Set());
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
     []
   );
-
-  // Additional selected states for new filters
   const [selectedTelefonosAdquirientes, setSelectedTelefonosAdquirientes] =
     useState([]);
   const [selectedCorreosAdquirientes, setSelectedCorreosAdquirientes] =
@@ -77,6 +75,50 @@ const FacturaCompleta = () => {
   );
   const [selectedDepartamentosEmisores, setSelectedDepartamentosEmisores] =
     useState([]);
+
+  const handleToggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const newSelectedIds = new Set(prev);
+      if (newSelectedIds.has(id)) {
+        newSelectedIds.delete(id);
+      } else {
+        newSelectedIds.add(id);
+      }
+      return newSelectedIds;
+    });
+  };
+  const handleAddConsorcio = async (ids) => {
+    const idsArray = ids.split(",");
+    const results = await Promise.all(idsArray.map((id) => addConsorcio(id)));
+    const successfulIds = results.filter((result) => result);
+
+    if (successfulIds.length > 0) {
+      successfulIds.forEach((resultId) => {
+        setProcessedFacturas((prev) => new Set(prev).add(resultId));
+      });
+
+      fetchFacturas("", searchQuery, selectedAnio).then();
+    }
+  };
+
+  const handleAddSelectedConsorcios = () => {
+    const idsArray = Array.from(selectedIds);
+    if (idsArray.length > 0) {
+      handleAddConsorcio(idsArray.join(","));
+      setSelectedIds(new Set());
+      setIsSelecting(false);
+    } else {
+      toast.info("No se han seleccionado facturas.");
+    }
+  };
+  const handleSelectAllConsorcios = () => {
+    if (selectedIds.size === facturas.length) {
+      setSelectedIds(new Set());
+    } else {
+      const allIds = facturas.map((factura) => factura.id);
+      setSelectedIds(new Set(allIds));
+    }
+  };
 
   const itemsPerPage = 100;
 
@@ -152,35 +194,542 @@ const FacturaCompleta = () => {
   };
 
   const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      border: state.isFocused ? "2px solid #7f22f2" : "2px solid #efb810",
-      borderRadius: "0.375rem",
-      padding: "0.5rem",
-      boxShadow: state.isFocused ? "0 0 0 1px #7f22f2" : "",
+    control: (base) => ({
+      ...base,
+      minHeight: "38px",
+      fontSize: "14px",
+      minWidth: "200px",
+      width: "100%",
+      boxSizing: "border-box",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
       "&:hover": {
-        borderColor: "#7f22f2",
+        borderColor: "#888",
       },
     }),
-    menu: (provided) => ({
-      ...provided,
-      zIndex: 9999,
-      position: "absolute",
-      marginTop: "4px",
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
     }),
-    option: (provided, state) => ({
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    multiValue: (provided) => ({
       ...provided,
-      backgroundColor: state.isSelected
-        ? "#7f22f2"
-        : state.isFocused
-        ? "#efb810"
-        : null,
-      color: state.isSelected ? "#fff" : "#333",
+      backgroundColor: "#e0e0e0",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#000",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#ff0000",
+      ":hover": {
+        backgroundColor: "#f00",
+        color: "#fff",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#999",
     }),
   };
-  useEffect(() => {
-    console.log("NITs Emisores cargados: ", nitsEmisores);
-  }, [nitsEmisores]);
+  const resetAllSelectsExcept = (excludedSetter) => {
+    const allSetters = [
+      setSelectedNombresComerciales,
+      setSelectedNitsEmisores,
+      setSelectedTelefonosAdquirientes,
+      setSelectedCorreosAdquirientes,
+      setSelectedDireccionesAdquirientes,
+      setSelectedMunicipiosAdquirientes,
+      setSelectedDepartamentosAdquirientes,
+      setSelectedNumerosDocumentoAdquirientes,
+      setSelectedNombresAdquirientes,
+      setSelectedTelefonosEmisores,
+      setSelectedCorreosEmisores,
+      setSelectedDireccionesEmisores,
+      setSelectedMunicipiosEmisores,
+      setSelectedDepartamentosEmisores,
+    ];
+  
+    // Resetea todos los selects menos el que fue excluido
+    allSetters.forEach((setter) => {
+      if (setter !== excludedSetter) {
+        setter([]); // Resetea el select
+      }
+    });
+  };
+  
+  const getNombresComercialesOptions = (nombresComerciales) => {
+    return nombresComerciales.map((nombre) => ({
+      value: nombre,
+      label: nombre,
+    }));
+  };
+  const handleSelectNombresComerciales = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNombresComerciales(selectedValues);
+  
+  
+    resetAllSelectsExcept(setSelectedNombresComerciales);
+  
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedValues,  
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedNitsEmisores,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getNitsEmisoresOptions = (nitsEmisores) => {
+    return nitsEmisores.map((nit) => ({
+      value: nit,
+      label: nit,
+    }));
+  };
+  const handleSelectNitsEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNitsEmisores(selectedValues);
+  
+    
+    resetAllSelectsExcept(setSelectedNitsEmisores);
+  
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedValues, 
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getTelefonosAdquirientesOptions = (telefonosAdquirientes) => {
+    return telefonosAdquirientes.map((telefono) => ({
+      value: telefono,
+      label: telefono,
+    }));
+  };
+  const handleSelectTelefonosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedTelefonosAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedTelefonosAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedValues,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedNitsEmisores,
+      selectedValues,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getCorreosAdquirientesOptions = (correosAdquirientes) => {
+    return correosAdquirientes.map((correo) => ({
+      value: correo,
+      label: correo,
+    }));
+  };
+  const handleSelectCorreosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedCorreosAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedCorreosAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedValues,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedValues,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getDireccionesAdquirientesOptions = (direccionesAdquirientes) => {
+    return direccionesAdquirientes.map((direccion) => ({
+      value: direccion,
+      label: direccion,
+    }));
+  };
+  const handleSelectDireccionesAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDireccionesAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedDireccionesAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedValues,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getMunicipiosAdquirientesOptions = (municipiosAdquirientes) => {
+    return municipiosAdquirientes.map((municipio) => ({
+      value: municipio,
+      label: municipio,
+    }));
+  };
+  const handleSelectMunicipiosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedMunicipiosAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedMunicipiosAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedValues,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedValues,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getDepartamentosAdquirientesOptions = (departamentosAdquirientes) => {
+    return departamentosAdquirientes.map((departamento) => ({
+      value: departamento,
+      label: departamento,
+    }));
+  };
+  const handleSelectDepartamentosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDepartamentosAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedDepartamentosAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedValues,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedValues
+    );
+  };
+  
+  const getNombresAdquirientesOptions = (nombresAdquirientes) => {
+    return nombresAdquirientes.map((nombre) => ({
+      value: nombre,
+      label: nombre,
+    }));
+  };
+  const handleSelectNombresAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNombresAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedNombresAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedValues,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  const getNumerosDocumentoAdquirientesOptions = (numerosDocumentoAdquirientes) => {
+    return numerosDocumentoAdquirientes.map((numero) => ({
+      value: numero,
+      label: numero,
+    }));
+  };
+  const handleSelectNumerosDocumentoAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNumerosDocumentoAdquirientes(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedNumerosDocumentoAdquirientes);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedValues,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedValues,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  
+  
+  const getTelefonosEmisoresOptions = (telefonosEmisores) => {
+    return telefonosEmisores.map((telefono) => ({
+      value: telefono,
+      label: telefono,
+    }));
+  };
+  const handleSelectTelefonosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedTelefonosEmisores(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedTelefonosEmisores);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedValues,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getCorreosEmisoresOptions = (correosEmisores) => {
+    return correosEmisores.map((correo) => ({
+      value: correo,
+      label: correo,
+    }));
+  };
+  const handleSelectCorreosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedCorreosEmisores(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedCorreosEmisores);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedValues,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedValues,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getDireccionesEmisoresOptions = (direccionesEmisores) => {
+    return direccionesEmisores.map((direccion) => ({
+      value: direccion,
+      label: direccion,
+    }));
+  };
+  const handleSelectDireccionesEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDireccionesEmisores(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedDireccionesEmisores);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedValues,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedValues,
+      selectedDepartamentosEmisores
+    );
+  };
+  
+  const getMunicipiosEmisoresOptions = (municipiosEmisores) => {
+    return municipiosEmisores.map((municipio) => ({
+      value: municipio,
+      label: municipio,
+    }));
+  };
+  const handleSelectMunicipiosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedMunicipiosEmisores(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedMunicipiosEmisores);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedValues,
+      selectedDepartamentosEmisores
+    );
+  };
+  const getDepartamentosEmisoresOptions = (departamentosEmisores) => {
+    return departamentosEmisores.map((departamento) => ({
+      value: departamento,
+      label: departamento,
+    }));
+  };
+  const handleSelectDepartamentosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDepartamentosEmisores(selectedValues);
+    
+    resetAllSelectsExcept(setSelectedDepartamentosEmisores);
+    
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedNitsEmisores,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedValues,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedValues
+    );
+  };
+
+
+
+
+  
+
+  
 
   return (
     <div>
@@ -285,515 +834,227 @@ const FacturaCompleta = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Comercial vendedor
                 <Select
-                  options={nombresComerciales.map((nombre) => ({
-                    value: nombre,
-                    label: nombre,
-                  }))}
-                  value={selectedNombresComerciales.map((nombre) => ({
-                    value: nombre,
-                    label: nombre,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedNombresComerciales(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedValues,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNumerosDocumentoAdquirientes,
-                      selectedNombresAdquirientes,
-                      selectedNitsEmisores,
-                      selectedTelefonosEmisores,
-                      selectedCorreosEmisores,
-                      selectedDireccionesEmisores,
-                      selectedMunicipiosEmisores,
-                      selectedDepartamentosEmisores
-                    );
-                  }}
-                  placeholder="Selecciona nombres comerciales"
+                  options={getNombresComercialesOptions(nombresComerciales)}
+                  value={getNombresComercialesOptions(
+                    selectedNombresComerciales
+                  )}
+                  onChange={handleSelectNombresComerciales}
+                  placeholder="Selecciona nombre comercial"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
                 <Select
-  options={nitsEmisores.map((nit) => ({
-    value: nit,
-    label: nit,
-  }))}
-  value={selectedNitsEmisores.map((nit) => ({
-    value: nit,
-    label: nit,
-  }))}
-  onChange={(selectedOptions) => {
-    const selectedValues = selectedOptions.map(
-      (option) => option.value
-    );
-    setSelectedNitsEmisores(selectedValues);
-    console.log("NITs seleccionados:", selectedValues);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedValues 
-    );
-  }}
-  placeholder="Selecciona NITs de emisores"
-  isMulti
-  styles={customStyles}
-  closeMenuOnSelect={false}
-/>
-
-
+                  options={getNitsEmisoresOptions(nitsEmisores)}
+                  value={getNitsEmisoresOptions(
+                    selectedNitsEmisores
+                  )}
+                  onChange={handleSelectNitsEmisores}
+                  placeholder="Selecciona nit Emisor"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
+                />
+                
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento vendedor
                 <Select
-                  options={departamentosEmisores.map((departamento) => ({
-                    value: departamento,
-                    label: departamento,
-                  }))}
-                  value={selectedDepartamentosEmisores.map((departamento) => ({
-                    value: departamento,
-                    label: departamento,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedDepartamentosEmisores(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNombresAdquirientes,
-                      selectedNitsEmisores,
-                      selectedTelefonosEmisores,
-                      selectedCorreosEmisores,
-                      selectedDireccionesEmisores,
-                      selectedMunicipiosEmisores,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona departamentos de emisores"
+                  options={getDepartamentosEmisoresOptions(departamentosEmisores)}
+                  value={getDepartamentosEmisoresOptions(
+                    selectedDepartamentosEmisores
+                  )}
+                  onChange={handleSelectDepartamentosEmisores}
+                  placeholder="Selecciona Departamento Emisor"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
+                
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio vendedor
                 <Select
-                  options={municipiosEmisores.map((municipio) => ({
-                    value: municipio,
-                    label: municipio,
-                  }))}
-                  value={selectedMunicipiosEmisores.map((municipio) => ({
-                    value: municipio,
-                    label: municipio,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedMunicipiosEmisores(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNombresAdquirientes,
-                      selectedNitsEmisores,
-                      selectedTelefonosEmisores,
-                      selectedCorreosEmisores,
-                      selectedDireccionesEmisores,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona municipios de emisores"
+                  options={getMunicipiosEmisoresOptions(municipiosEmisores)}
+                  value={getMunicipiosEmisoresOptions(
+                    selectedMunicipiosEmisores
+                  )}
+                  onChange={handleSelectMunicipiosEmisores}
+                  placeholder="Selecciona Municipio Emisor"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección vendedor
                 <Select
-                  options={direccionesEmisores.map((direccion) => ({
-                    value: direccion,
-                    label: direccion,
-                  }))}
-                  value={selectedDireccionesEmisores.map((direccion) => ({
-                    value: direccion,
-                    label: direccion,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedDireccionesEmisores(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNombresAdquirientes,
-                      selectedNitsEmisores,
-                      selectedTelefonosEmisores,
-                      selectedCorreosEmisores,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona direcciones de emisores"
+                  options={getDireccionesEmisoresOptions(direccionesEmisores)}
+                  value={getDireccionesEmisoresOptions(
+                    selectedDireccionesEmisores
+                  )}
+                  onChange={handleSelectDireccionesEmisores}
+                  placeholder="Selecciona direccion emisor"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo vendedor
                 <Select
-                  options={correosEmisores.map((correo) => ({
-                    value: correo,
-                    label: correo,
-                  }))}
-                  value={selectedCorreosEmisores.map((correo) => ({
-                    value: correo,
-                    label: correo,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedCorreosEmisores(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNumerosDocumentoAdquirientes,
-                      selectedNombresAdquirientes,
-                      selectedNitsEmisores,
-                      selectedTelefonosEmisores,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona correos de emisores"
+                  options={getCorreosEmisoresOptions(correosEmisores)}
+                  value={getCorreosEmisoresOptions(
+                    selectedCorreosEmisores
+                  )}
+                  onChange={handleSelectCorreosEmisores}
+                  placeholder="Selecciona Correo Emisor"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Vendedor
                 <Select
-                  options={telefonosEmisores.map((telefono) => ({
-                    value: telefono,
-                    label: telefono,
-                  }))}
-                  value={selectedTelefonosEmisores.map((telefono) => ({
-                    value: telefono,
-                    label: telefono,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedTelefonosEmisores(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNumerosDocumentoAdquirientes,
-                      selectedNombresAdquirientes,
-                      selectedNitsEmisores,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona teléfonos de emisores"
+                  options={getTelefonosEmisoresOptions(telefonosEmisores)}
+                  value={getTelefonosEmisoresOptions(
+                    selectedTelefonosEmisores
+                  )}
+                  onChange={handleSelectTelefonosEmisores}
+                  placeholder="Selecciona Telefono Emisor"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
+                
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre adquiriente
                 <Select
-                  options={nombresAdquirientes.map((nombre) => ({
-                    value: nombre,
-                    label: nombre,
-                  }))}
-                  value={selectedNombresAdquirientes.map((nombre) => ({
-                    value: nombre,
-                    label: nombre,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedNombresAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedNumerosDocumentoAdquirientes,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona nombres de adquirientes"
+                  options={getNombresAdquirientesOptions(nombresAdquirientes)}
+                  value={getNombresAdquirientesOptions(
+                    selectedNombresAdquirientes
+                  )}
+                  onChange={handleSelectNombresAdquirientes}
+                  placeholder="Selecciona Nombre Comprador"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
-                NIT comprador
+                # Documento comprador
                 <Select
-                  options={numerosDocumentoAdquirientes.map((documento) => ({
-                    value: documento,
-                    label: documento,
-                  }))}
-                  value={selectedNumerosDocumentoAdquirientes.map(
-                    (documento) => ({
-                      value: documento,
-                      label: documento,
-                    })
+                  options={getNumerosDocumentoAdquirientesOptions(numerosDocumentoAdquirientes)}
+                  value={getNumerosDocumentoAdquirientesOptions(
+                    selectedNumerosDocumentoAdquirientes
                   )}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedNumerosDocumentoAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedDepartamentosAdquirientes,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona números de documento de adquirientes"
+                  onChange={handleSelectNumerosDocumentoAdquirientes}
+                  placeholder="Selecciona Correo Emisor"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento comprador
                 <Select
-                  options={departamentosAdquirientes.map((departamento) => ({
-                    value: departamento,
-                    label: departamento,
-                  }))}
-                  value={selectedDepartamentosAdquirientes.map(
-                    (departamento) => ({
-                      value: departamento,
-                      label: departamento,
-                    })
+                  options={getDepartamentosAdquirientesOptions(departamentosAdquirientes)}
+                  value={getDepartamentosAdquirientesOptions(
+                    selectedDepartamentosAdquirientes
                   )}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedDepartamentosAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedMunicipiosAdquirientes,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona departamentos de adquirientes"
+                  onChange={handleSelectDepartamentosAdquirientes}
+                  placeholder="Selecciona Departamento Comprador"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio comprador
                 <Select
-                  options={municipiosAdquirientes.map((municipio) => ({
-                    value: municipio,
-                    label: municipio,
-                  }))}
-                  value={selectedMunicipiosAdquirientes.map((municipio) => ({
-                    value: municipio,
-                    label: municipio,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedMunicipiosAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedDireccionesAdquirientes,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona municipios de adquirientes"
-                  isMulti
+                  options={getMunicipiosAdquirientesOptions(municipiosAdquirientes)}
+                  value={getMunicipiosAdquirientesOptions(
+                    selectedMunicipiosAdquirientes
+                  )}
+                  onChange={handleSelectMunicipiosAdquirientes}
+                  placeholder="Selecciona Municipio Comprador"
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
                 <Select
-                  options={direccionesAdquirientes.map((direccion) => ({
-                    value: direccion,
-                    label: direccion,
-                  }))}
-                  value={selectedDireccionesAdquirientes.map((direccion) => ({
-                    value: direccion,
-                    label: direccion,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedDireccionesAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedCorreosAdquirientes,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona direcciones de adquirientes"
+                  options={getDireccionesAdquirientesOptions(direccionesAdquirientes)}
+                  value={getDireccionesAdquirientesOptions(
+                    selectedDireccionesAdquirientes
+                  )}
+                  onChange={handleSelectDireccionesAdquirientes}
+                  placeholder="Selecciona Direccion Comprador"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo comprador
                 <Select
-                  options={correosAdquirientes.map((correo) => ({
-                    value: correo,
-                    label: correo,
-                  }))}
-                  value={selectedCorreosAdquirientes.map((correo) => ({
-                    value: correo,
-                    label: correo,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedCorreosAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedTelefonosAdquirientes,
-                      selectedValues
-                    );
-                  }}
-                  placeholder="Selecciona correos de adquirientes"
+                  options={getCorreosAdquirientesOptions(correosAdquirientes)}
+                  value={getCorreosAdquirientesOptions(
+                    selectedCorreosAdquirientes
+                  )}
+                  onChange={handleSelectCorreosAdquirientes}
+                  placeholder="Selecciona Correo Comprador"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
                 <Select
-                  options={telefonosAdquirientes.map((telefono) => ({
-                    value: telefono,
-                    label: telefono,
-                  }))}
-                  value={selectedTelefonosAdquirientes.map((telefono) => ({
-                    value: telefono,
-                    label: telefono,
-                  }))}
-                  onChange={(selectedOptions) => {
-                    const selectedValues = selectedOptions.map(
-                      (option) => option.value
-                    );
-                    setSelectedTelefonosAdquirientes(selectedValues);
-                    fetchFacturas(
-                      searchQuery,
-                      selectedAnio,
-                      "",
-                      selectedNombresComerciales,
-                      selectedValues 
-                    );
-                  }}
-                  placeholder="Selecciona teléfonos de adquirientes"
+                  options={getTelefonosAdquirientesOptions(telefonosAdquirientes)}
+                  value={getTelefonosAdquirientesOptions(
+                    selectedTelefonosAdquirientes
+                  )}
+                  onChange={handleSelectTelefonosAdquirientes}
+                  placeholder="Selecciona Telefono Comprador"
                   isMulti
                   styles={customStyles}
                   closeMenuOnSelect={false}
+                  menuPlacement="auto"
+                  menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
@@ -836,7 +1097,7 @@ const FacturaCompleta = () => {
                       highlight={searchQuery}
                     />
                   </td>
-                  <td className="border px-4">
+                  <td className="border px-4 text-center">
                     <HighlightedText
                       text={factura.nitEmisor}
                       highlight={searchQuery}

@@ -59,7 +59,6 @@ const useListAlcalde = () => {
 
   const fetchFacturas = useCallback(
     async (query, anio, codigoUnico, nombreComercialEmisor = [], telefonoAdquiriente = [], correoAdquiriente = [], direccionAdquiriente = [], municipioAdquiriente = [], departamentoAdquiriente = [], numeroDocumentoAdquiriente = [], nombreAdquiriente = [], nitEmisor = [], telefonoEmisor = [], correoEmisor = [], direccionEmisor = [], municipioEmisor = [], departamentoEmisor = []) => {
-      console.log("Iniciando fetchFacturas con filtros:", { query, anio, codigoUnico, nombreComercialEmisor, nitEmisor });
       try {
         let url = `http://localhost:8080/factura/listar`;
         const params = new URLSearchParams();
@@ -133,7 +132,6 @@ const useListAlcalde = () => {
         }
   
         const data = await response.json();
-        console.log("Datos obtenidos de fetchFacturas:", data);
         setFacturas(data.facturas);
         setTotalSuma(data.totalSuma);
       } catch (error) {
@@ -175,6 +173,8 @@ const useListAlcalde = () => {
     fetchMunicipiosEmisores,
     fetchDepartamentosEmisores
   ]);
+
+  
 
   return {
     facturas,
