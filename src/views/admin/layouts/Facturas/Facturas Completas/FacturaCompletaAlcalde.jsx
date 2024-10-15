@@ -11,11 +11,29 @@ import {
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
 import Select from "react-select";
-
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 import { toast } from "react-toastify";
 const FacturaCompleta = () => {
-  const { facturas, fetchFacturas, totalSuma } = useListAlcalde();
+  const {
+    facturas,
+    fetchFacturas,
+    totalSuma,
+    nombresComerciales,
+    telefonosAdquirientes,
+    correosAdquirientes,
+    direccionesAdquirientes,
+    municipiosAdquirientes,
+    departamentosAdquirientes,
+    numerosDocumentoAdquirientes,
+    nombresAdquirientes,
+    nitsEmisores,
+    telefonosEmisores,
+    correosEmisores,
+    direccionesEmisores,
+    municipiosEmisores,
+    departamentosEmisores,
+  } = useListAlcalde();
+
   const [searchQuery, setSearchQuery] = useState("");
   const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
@@ -24,288 +42,64 @@ const FacturaCompleta = () => {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCUFE, setSelectedCUFE] = useState("");
-  const [selectedNombreComercialVendedor, setSelectedNombreComercialVendedor] =
-    useState("");
-  const [selectedNitEmisor, setSelectedNitEmisor] = useState("");
-  const [selectedDepartamentoEmisor, setSelectedDepartamentoEmisor] =
-    useState("");
-  const [selectedMunicipioEmisor, setSelectedMunicipioEmisor] = useState("");
-  const [selectedDireccionEmisor, setSelectedDireccionEmisor] = useState("");
-  const [selectedCorreoEmisor, setSelectedCorreoEmisor] = useState("");
-  const [selectedTelefonoEmisor, setSelectedTelefonoEmisor] = useState("");
-  const [selectedNombreAdquiriente, setSelectedNombreAdquirente] = useState("");
+  const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
+    []
+  );
+
+  // Additional selected states for new filters
+  const [selectedTelefonosAdquirientes, setSelectedTelefonosAdquirientes] =
+    useState([]);
+  const [selectedCorreosAdquirientes, setSelectedCorreosAdquirientes] =
+    useState([]);
+  const [selectedDireccionesAdquirientes, setSelectedDireccionesAdquirientes] =
+    useState([]);
+  const [selectedMunicipiosAdquirientes, setSelectedMunicipiosAdquirientes] =
+    useState([]);
   const [
-    selectedNumeroDocumentoAdquiriente,
-    setSelectedNumeroDocumentoAdquiriente,
-  ] = useState("");
-  const [selectedDepartamentoAdquiriente, setSelectedDepartamentoAdquiriente] =
-    useState("");
-  const [selectedMunicipioAdquiriente, setSelectedMunicipioAdquiriente] =
-    useState("");
-  const [selectedDireccionAdquiriente, setSelectedDireccionAdquiriente] =
-    useState("");
-  const [selectedCorreoAdquiriente, setSelectedCorreoAdquiriente] =
-    useState("");
-  const [selectedTelefonoAdquiriente, setSelectedTelefonoAdquiriente] =
-    useState("");
+    selectedDepartamentosAdquirientes,
+    setSelectedDepartamentosAdquirientes,
+  ] = useState([]);
+  const [
+    selectedNumerosDocumentoAdquirientes,
+    setSelectedNumerosDocumentoAdquirientes,
+  ] = useState([]);
+  const [selectedNombresAdquirientes, setSelectedNombresAdquirientes] =
+    useState([]);
+  const [selectedNitsEmisores, setSelectedNitsEmisores] = useState([]);
+  const [selectedTelefonosEmisores, setSelectedTelefonosEmisores] = useState(
+    []
+  );
+  const [selectedCorreosEmisores, setSelectedCorreosEmisores] = useState([]);
+  const [selectedDireccionesEmisores, setSelectedDireccionesEmisores] =
+    useState([]);
+  const [selectedMunicipiosEmisores, setSelectedMunicipiosEmisores] = useState(
+    []
+  );
+  const [selectedDepartamentosEmisores, setSelectedDepartamentosEmisores] =
+    useState([]);
 
   const itemsPerPage = 100;
+
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     fetchFacturas(
       searchQuery,
       anio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      selectedNumeroDocumentoAdquiriente,
-      selectedDepartamentoAdquiriente,
-      selectedMunicipioAdquiriente,
-      selectedDireccionAdquiriente
-    );
-  };
-  const handleselectCufe = (selectedOption) => {
-    console.log("CUFE seleccionado:", selectedOption);
-    setSelectedCUFE(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedCUFE]);
-  };
-
-  const handleNombreComercialVendedorChange = (e) => {
-    const nombreComercialEmisor = e.target.value;
-    setSelectedNombreComercialVendedor(nombreComercialEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      nombreComercialEmisor
-    );
-  };
-  const handleNitEmisorChange = (e) => {
-    const nitEmisor = e.target.value;
-    setSelectedNitEmisor(nitEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      nitEmisor
-    );
-  };
-  const handleDepartamentoEmisorChange = (e) => {
-    const departamentoEmisor = e.target.value;
-    setSelectedDepartamentoEmisor(departamentoEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      departamentoEmisor
-    );
-  };
-  const handleMunicipioEmisorChange = (e) => {
-    const municipioEmisor = e.target.value;
-    setSelectedMunicipioEmisor(municipioEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      municipioEmisor
-    );
-  };
-  const handleDireccionEmisorChange = (e) => {
-    const direccionEmisor = e.target.value;
-    setSelectedDireccionEmisor(direccionEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      direccionEmisor
-    );
-  };
-  const handleCorreoEmisorChange = (e) => {
-    const correoEmisor = e.target.value;
-    setSelectedCorreoEmisor(correoEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      correoEmisor
-    );
-  };
-  const handleTelefonoEmisorChange = (e) => {
-    const telefonoEmisor = e.target.value;
-    setSelectedTelefonoEmisor(telefonoEmisor);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      telefonoEmisor
-    );
-  };
-  const handleNombreAdquirienteChange = (e) => {
-    const nombreAdquiriente = e.target.value;
-    setSelectedNombreAdquirente(nombreAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      nombreAdquiriente
-    );
-  };
-  const handleNumeroDocumentoAdquirienteChange = (e) => {
-    const numeroDocumentoAdquiriente = e.target.value;
-    setSelectedNumeroDocumentoAdquiriente(numeroDocumentoAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      numeroDocumentoAdquiriente
-    );
-  };
-  const handleDepartamentoAdquirienteChange = (e) => {
-    const departamentoAdquiriente = e.target.value;
-    setSelectedDepartamentoAdquiriente(departamentoAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      selectedNumeroDocumentoAdquiriente,
-      departamentoAdquiriente
-    );
-  };
-  const handleMunicipioAdquirienteChange = (e) => {
-    const municipioAdquiriente = e.target.value;
-    setSelectedMunicipioAdquiriente(municipioAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      selectedNumeroDocumentoAdquiriente,
-      selectedDepartamentoAdquiriente,
-      municipioAdquiriente
-    );
-  };
-  const handleDireccionAdquirienteChange = (e) => {
-    const direccionAdquiriente = e.target.value;
-    setSelectedDireccionAdquiriente(direccionAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      selectedNumeroDocumentoAdquiriente,
-      selectedDepartamentoAdquiriente,
-      selectedMunicipioAdquiriente,
-      direccionAdquiriente
-    );
-  };
-  const handleCorreoAdquirienteChange = (e) => {
-    const correoAdquiriente = e.target.value;
-    setSelectedCorreoAdquiriente(correoAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      selectedNumeroDocumentoAdquiriente,
-      selectedDepartamentoAdquiriente,
-      selectedMunicipioAdquiriente,
-      selectedDireccionAdquiriente,
-      correoAdquiriente
-    );
-  };
-  const handleTelefonoAdquirienteChange = (e) => {
-    const telefonoAdquiriente = e.target.value;
-    setSelectedTelefonoAdquiriente(telefonoAdquiriente);
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor,
-      selectedNombreAdquiriente,
-      selectedNumeroDocumentoAdquiriente,
-      selectedDepartamentoAdquiriente,
-      selectedMunicipioAdquiriente,
-      selectedDireccionAdquiriente,
-      selectedCorreoAdquiriente,
-      telefonoAdquiriente
+      "",
+      selectedNombresComerciales,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedNitsEmisores,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
     );
   };
 
@@ -313,137 +107,80 @@ const FacturaCompleta = () => {
     fetchFacturas(
       searchQuery,
       selectedAnio,
-      selectedCUFE,
-      selectedNombreComercialVendedor,
-      selectedNitEmisor,
-      selectedDepartamentoEmisor,
-      selectedMunicipioEmisor,
-      selectedDireccionEmisor,
-      selectedCorreoEmisor,
-      selectedTelefonoEmisor
+      "",
+      selectedNombresComerciales,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedNitsEmisores,
+      selectedTelefonosEmisores,
+      selectedCorreosEmisores,
+      selectedDireccionesEmisores,
+      selectedMunicipiosEmisores,
+      selectedDepartamentosEmisores
     );
   }, [
     searchQuery,
     selectedAnio,
-    selectedCUFE,
-    selectedNombreComercialVendedor,
-    selectedNitEmisor,
-    selectedDepartamentoEmisor,
-    selectedMunicipioEmisor,
-    selectedDireccionEmisor,
-    selectedCorreoEmisor,
-    selectedTelefonoEmisor,
+    selectedNombresComerciales,
+    selectedTelefonosAdquirientes,
+    selectedCorreosAdquirientes,
+    selectedDireccionesAdquirientes,
+    selectedMunicipiosAdquirientes,
+    selectedDepartamentosAdquirientes,
+    selectedNumerosDocumentoAdquirientes,
+    selectedNombresAdquirientes,
+    selectedNitsEmisores,
+    selectedTelefonosEmisores,
+    selectedCorreosEmisores,
+    selectedDireccionesEmisores,
+    selectedMunicipiosEmisores,
+    selectedDepartamentosEmisores,
     fetchFacturas,
-    processedFacturas,
   ]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleAddConsorcio = async (ids) => {
-    const idsArray = ids.split(",");
-    const results = await Promise.all(idsArray.map((id) => addConsorcio(id)));
-    const successfulIds = results.filter((result) => result);
-
-    if (successfulIds.length > 0) {
-      successfulIds.forEach((resultId) => {
-        setProcessedFacturas((prev) => new Set(prev).add(resultId));
-      });
-
-      fetchFacturas("", searchQuery, selectedAnio).then();
-    }
-  };
-
-  const handleToggleSelect = (id) => {
-    setSelectedIds((prev) => {
-      const newSelectedIds = new Set(prev);
-      if (newSelectedIds.has(id)) {
-        newSelectedIds.delete(id);
-      } else {
-        newSelectedIds.add(id);
-      }
-      return newSelectedIds;
-    });
-  };
-
-  const handleAddSelectedConsorcios = () => {
-    const idsArray = Array.from(selectedIds);
-    if (idsArray.length > 0) {
-      handleAddConsorcio(idsArray.join(","));
-      setSelectedIds(new Set());
-      setIsSelecting(false);
-    } else {
-      toast.info("No se han seleccionado facturas.");
-    }
-  };
-  const handleSelectAllConsorcios = () => {
-    if (selectedIds.size === facturas.length) {
-      setSelectedIds(new Set());
-    } else {
-      const allIds = facturas.map((factura) => factura.id);
-      setSelectedIds(new Set(allIds));
-    }
-  };
-
   const handleDownload = () => {
-    const filtro = searchQuery;
-    const ciudad = "";
-    const anio = selectedAnio || null;
-    const codigoUnico = selectedCUFE || null;
-
-    handleDownloadExcel({ filtro, ciudad, anio, codigoUnico });
+    handleDownloadExcel("", searchQuery, selectedAnio);
   };
 
-  const resetAllSelectsExcept = (excludedSetters) => {
-    const allSetters = [
-      setSelectedAnio,
-      setSelectedCUFE,
-      setSelectedNombreComercialVendedor,
-      setSelectedNitEmisor,
-      setSelectedDepartamentoEmisor,
-      setSelectedMunicipioEmisor,
-      setSelectedDireccionEmisor,
-      setSelectedCorreoEmisor,
-      setSelectedTelefonoEmisor,
-      setSelectedNombreAdquirente,
-      setSelectedNumeroDocumentoAdquiriente,
-      setSelectedDepartamentoAdquiriente,
-      setSelectedMunicipioAdquiriente,
-      setSelectedDireccionAdquiriente,
-      setSelectedCorreoAdquiriente,
-      setSelectedTelefonoAdquiriente,
-    ];
-
-    allSetters.forEach((setter) => {
-      if (!excludedSetters.includes(setter)) {
-        setter("");
-      }
-    });
-  };
   const customStyles = {
-    control: (base) => ({
-      ...base,
-      minHeight: "34px",
-      fontSize: "14px",
+    control: (provided, state) => ({
+      ...provided,
+      border: state.isFocused ? "2px solid #7f22f2" : "2px solid #efb810",
+      borderRadius: "0.375rem",
+      padding: "0.5rem",
+      boxShadow: state.isFocused ? "0 0 0 1px #7f22f2" : "",
+      "&:hover": {
+        borderColor: "#7f22f2",
+      },
     }),
-    option: (styles, { isFocused, isSelected }) => ({
-      ...styles,
-      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
-      color: "#333",
-      fontWeight: isSelected ? "bold" : "normal",
-      cursor: "pointer",
-    }),
-    menu: (base) => ({
-      ...base,
+    menu: (provided) => ({
+      ...provided,
       zIndex: 9999,
+      position: "absolute",
+      marginTop: "4px",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? "#7f22f2"
+        : state.isFocused
+        ? "#efb810"
+        : null,
+      color: state.isSelected ? "#fff" : "#333",
     }),
   };
-  const cufeOptions = facturas.map((factura) => ({
-    value: factura.codigoUnico,
-    label: factura.codigoUnico,
-  }));
-  console.log(facturas);
+  useEffect(() => {
+    console.log("NITs Emisores cargados: ", nitsEmisores);
+  }, [nitsEmisores]);
 
   return (
     <div>
@@ -456,23 +193,6 @@ const FacturaCompleta = () => {
             <span className="hidden md:inline">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
-        </div>
-
-        <div className="relative xl:right-0   ">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              fetchFacturas(e.target.value, selectedAnio, selectedCUFE);
-            }}
-            className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-            placeholder="Search"
-            required
-          />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-            <RiSearchLine className="h-8 w-8 p-1 xl:mb-0 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
-          </div>
         </div>
       </div>
 
@@ -561,297 +281,520 @@ const FacturaCompleta = () => {
                   <option value="2030">2030</option>
                 </select>
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                CUFE
-                <Select
-                  value={
-                    selectedCUFE
-                      ? cufeOptions.find(
-                          (option) => option.value === selectedCUFE
-                        )
-                      : null
-                  }
-                  onChange={handleselectCufe}
-                  options={cufeOptions}
-                  placeholder="Todos"
-                  isClearable
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
-              </th>
-
+              <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Comercial vendedor
-                <select
-                  id="nombreComercialVendedor"
-                  value={selectedNombreComercialVendedor}
-                  onChange={handleNombreComercialVendedorChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.nombreComercialEmisor)
-                    )
-                  ).map((nombreComercialEmisor, index) => (
-                    <option key={index} value={nombreComercialEmisor}>
-                      {nombreComercialEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={nombresComerciales.map((nombre) => ({
+                    value: nombre,
+                    label: nombre,
+                  }))}
+                  value={selectedNombresComerciales.map((nombre) => ({
+                    value: nombre,
+                    label: nombre,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedNombresComerciales(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedValues,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNumerosDocumentoAdquirientes,
+                      selectedNombresAdquirientes,
+                      selectedNitsEmisores,
+                      selectedTelefonosEmisores,
+                      selectedCorreosEmisores,
+                      selectedDireccionesEmisores,
+                      selectedMunicipiosEmisores,
+                      selectedDepartamentosEmisores
+                    );
+                  }}
+                  placeholder="Selecciona nombres comerciales"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
-                <select
-                  id="nitemisor"
-                  value={selectedNitEmisor}
-                  onChange={handleNitEmisorChange}
-                  className="p-2 border rounded-md ml-2  bg-white text-black"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(facturas.map((factura) => factura.nitEmisor))
-                  ).map((nitEmisor, index) => (
-                    <option key={index} value={nitEmisor}>
-                      {nitEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+  options={nitsEmisores.map((nit) => ({
+    value: nit,
+    label: nit,
+  }))}
+  value={selectedNitsEmisores.map((nit) => ({
+    value: nit,
+    label: nit,
+  }))}
+  onChange={(selectedOptions) => {
+    const selectedValues = selectedOptions.map(
+      (option) => option.value
+    );
+    setSelectedNitsEmisores(selectedValues);
+    console.log("NITs seleccionados:", selectedValues);
+    fetchFacturas(
+      searchQuery,
+      selectedAnio,
+      "",
+      selectedNombresComerciales,
+      selectedTelefonosAdquirientes,
+      selectedCorreosAdquirientes,
+      selectedDireccionesAdquirientes,
+      selectedMunicipiosAdquirientes,
+      selectedDepartamentosAdquirientes,
+      selectedNumerosDocumentoAdquirientes,
+      selectedNombresAdquirientes,
+      selectedValues 
+    );
+  }}
+  placeholder="Selecciona NITs de emisores"
+  isMulti
+  styles={customStyles}
+  closeMenuOnSelect={false}
+/>
+
+
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento vendedor
-                <select
-                  id="departamentoEmisor"
-                  value={selectedDepartamentoEmisor}
-                  onChange={handleDepartamentoEmisorChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.departamentoEmisor)
-                    )
-                  ).map((departamentoEmisor, index) => (
-                    <option key={index} value={departamentoEmisor}>
-                      {departamentoEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={departamentosEmisores.map((departamento) => ({
+                    value: departamento,
+                    label: departamento,
+                  }))}
+                  value={selectedDepartamentosEmisores.map((departamento) => ({
+                    value: departamento,
+                    label: departamento,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedDepartamentosEmisores(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNombresAdquirientes,
+                      selectedNitsEmisores,
+                      selectedTelefonosEmisores,
+                      selectedCorreosEmisores,
+                      selectedDireccionesEmisores,
+                      selectedMunicipiosEmisores,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona departamentos de emisores"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio vendedor
-                <select
-                  id="municipioEmisor"
-                  value={selectedMunicipioEmisor}
-                  onChange={handleMunicipioEmisorChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(facturas.map((factura) => factura.municipioEmisor))
-                  ).map((municipioEmisor, index) => (
-                    <option key={index} value={municipioEmisor}>
-                      {municipioEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={municipiosEmisores.map((municipio) => ({
+                    value: municipio,
+                    label: municipio,
+                  }))}
+                  value={selectedMunicipiosEmisores.map((municipio) => ({
+                    value: municipio,
+                    label: municipio,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedMunicipiosEmisores(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNombresAdquirientes,
+                      selectedNitsEmisores,
+                      selectedTelefonosEmisores,
+                      selectedCorreosEmisores,
+                      selectedDireccionesEmisores,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona municipios de emisores"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección vendedor
-                <select
-                  id="direccionEmisor"
-                  value={selectedDireccionEmisor}
-                  onChange={handleDireccionEmisorChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(facturas.map((factura) => factura.direccionEmisor))
-                  ).map((direccionEmisor, index) => (
-                    <option key={index} value={direccionEmisor}>
-                      {direccionEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={direccionesEmisores.map((direccion) => ({
+                    value: direccion,
+                    label: direccion,
+                  }))}
+                  value={selectedDireccionesEmisores.map((direccion) => ({
+                    value: direccion,
+                    label: direccion,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedDireccionesEmisores(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNombresAdquirientes,
+                      selectedNitsEmisores,
+                      selectedTelefonosEmisores,
+                      selectedCorreosEmisores,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona direcciones de emisores"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo vendedor
-                <select
-                  id="correoEmisor"
-                  value={selectedCorreoEmisor}
-                  onChange={handleCorreoEmisorChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(facturas.map((factura) => factura.correoEmisor))
-                  ).map((correoEmisor, index) => (
-                    <option key={index} value={correoEmisor}>
-                      {correoEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={correosEmisores.map((correo) => ({
+                    value: correo,
+                    label: correo,
+                  }))}
+                  value={selectedCorreosEmisores.map((correo) => ({
+                    value: correo,
+                    label: correo,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedCorreosEmisores(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNumerosDocumentoAdquirientes,
+                      selectedNombresAdquirientes,
+                      selectedNitsEmisores,
+                      selectedTelefonosEmisores,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona correos de emisores"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Vendedor
-                <select
-                  id="telefonoEmisor"
-                  value={selectedTelefonoEmisor}
-                  onChange={handleTelefonoEmisorChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(facturas.map((factura) => factura.telefonoEmisor))
-                  ).map((telefonoEmisor, index) => (
-                    <option key={index} value={telefonoEmisor}>
-                      {telefonoEmisor}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={telefonosEmisores.map((telefono) => ({
+                    value: telefono,
+                    label: telefono,
+                  }))}
+                  value={selectedTelefonosEmisores.map((telefono) => ({
+                    value: telefono,
+                    label: telefono,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedTelefonosEmisores(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNumerosDocumentoAdquirientes,
+                      selectedNombresAdquirientes,
+                      selectedNitsEmisores,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona teléfonos de emisores"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre adquiriente
-                <select
-                  id="nombreAdquiriente"
-                  value={selectedNombreAdquiriente}
-                  onChange={handleNombreAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.nombreAdquiriente)
-                    )
-                  ).map((nombreAdquiriente, index) => (
-                    <option key={index} value={nombreAdquiriente}>
-                      {nombreAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={nombresAdquirientes.map((nombre) => ({
+                    value: nombre,
+                    label: nombre,
+                  }))}
+                  value={selectedNombresAdquirientes.map((nombre) => ({
+                    value: nombre,
+                    label: nombre,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedNombresAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedNumerosDocumentoAdquirientes,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona nombres de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT comprador
-                <select
-                  id="nitAdquiriente"
-                  value={selectedNumeroDocumentoAdquiriente}
-                  onChange={handleNumeroDocumentoAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map(
-                        (factura) => factura.numeroDocumentoAdquiriente
-                      )
-                    )
-                  ).map((numeroDocumentoAdquiriente, index) => (
-                    <option key={index} value={numeroDocumentoAdquiriente}>
-                      {numeroDocumentoAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={numerosDocumentoAdquirientes.map((documento) => ({
+                    value: documento,
+                    label: documento,
+                  }))}
+                  value={selectedNumerosDocumentoAdquirientes.map(
+                    (documento) => ({
+                      value: documento,
+                      label: documento,
+                    })
+                  )}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedNumerosDocumentoAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedDepartamentosAdquirientes,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona números de documento de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento comprador
-                <select
-                  id="departamentoAdquiriente"
-                  value={selectedDepartamentoAdquiriente}
-                  onChange={handleDepartamentoAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.departamentoAdquiriente)
-                    )
-                  ).map((departamentoAdquiriente, index) => (
-                    <option key={index} value={departamentoAdquiriente}>
-                      {departamentoAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={departamentosAdquirientes.map((departamento) => ({
+                    value: departamento,
+                    label: departamento,
+                  }))}
+                  value={selectedDepartamentosAdquirientes.map(
+                    (departamento) => ({
+                      value: departamento,
+                      label: departamento,
+                    })
+                  )}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedDepartamentosAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedMunicipiosAdquirientes,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona departamentos de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio comprador
-                <select
-                  id="municipioAdquiriente"
-                  value={selectedMunicipioAdquiriente}
-                  onChange={handleMunicipioAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.municipioAdquiriente)
-                    )
-                  ).map((municipioAdquiriente, index) => (
-                    <option key={index} value={municipioAdquiriente}>
-                      {municipioAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={municipiosAdquirientes.map((municipio) => ({
+                    value: municipio,
+                    label: municipio,
+                  }))}
+                  value={selectedMunicipiosAdquirientes.map((municipio) => ({
+                    value: municipio,
+                    label: municipio,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedMunicipiosAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedDireccionesAdquirientes,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona municipios de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
-                <select
-                  id="direccionAdquiriente"
-                  value={selectedDireccionAdquiriente}
-                  onChange={handleDireccionAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.direccionAdquiriente)
-                    )
-                  ).map((direccionAdquiriente, index) => (
-                    <option key={index} value={direccionAdquiriente}>
-                      {direccionAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={direccionesAdquirientes.map((direccion) => ({
+                    value: direccion,
+                    label: direccion,
+                  }))}
+                  value={selectedDireccionesAdquirientes.map((direccion) => ({
+                    value: direccion,
+                    label: direccion,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedDireccionesAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedCorreosAdquirientes,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona direcciones de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo comprador
-                <select
-                  id="correoAdquiriente"
-                  value={selectedCorreoAdquiriente}
-                  onChange={handleCorreoAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.correoAdquiriente)
-                    )
-                  ).map((correoAdquiriente, index) => (
-                    <option key={index} value={correoAdquiriente}>
-                      {correoAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={correosAdquirientes.map((correo) => ({
+                    value: correo,
+                    label: correo,
+                  }))}
+                  value={selectedCorreosAdquirientes.map((correo) => ({
+                    value: correo,
+                    label: correo,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedCorreosAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedTelefonosAdquirientes,
+                      selectedValues
+                    );
+                  }}
+                  placeholder="Selecciona correos de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
-                <select
-                  id="telefonoAdquiriente"
-                  value={selectedTelefonoAdquiriente}
-                  onChange={handleTelefonoAdquirienteChange}
-                  className="p-1 rounded border border-gray-300 text-black mt-2"
-                >
-                  <option value="">Todos</option>
-                  {Array.from(
-                    new Set(
-                      facturas.map((factura) => factura.telefonoAdquiriente)
-                    )
-                  ).map((telefonoAdquiriente, index) => (
-                    <option key={index} value={telefonoAdquiriente}>
-                      {telefonoAdquiriente}
-                    </option>
-                  ))}
-                </select>
+                <Select
+                  options={telefonosAdquirientes.map((telefono) => ({
+                    value: telefono,
+                    label: telefono,
+                  }))}
+                  value={selectedTelefonosAdquirientes.map((telefono) => ({
+                    value: telefono,
+                    label: telefono,
+                  }))}
+                  onChange={(selectedOptions) => {
+                    const selectedValues = selectedOptions.map(
+                      (option) => option.value
+                    );
+                    setSelectedTelefonosAdquirientes(selectedValues);
+                    fetchFacturas(
+                      searchQuery,
+                      selectedAnio,
+                      "",
+                      selectedNombresComerciales,
+                      selectedValues 
+                    );
+                  }}
+                  placeholder="Selecciona teléfonos de adquirientes"
+                  isMulti
+                  styles={customStyles}
+                  closeMenuOnSelect={false}
+                />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Total acumulado
@@ -984,7 +927,6 @@ const FacturaCompleta = () => {
               ))
             )}
           </tbody>
-
           <tfoot>
             <tr>
               <th className="px-4 py-2 bg-secundary text-white" colSpan="17">

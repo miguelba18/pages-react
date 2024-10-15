@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import useListContribuyente from "../../../hook/Contribuyente/useListContribuyente";
 import {
-  RiSearchLine,
   RiDownloadLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
 import HighlightedText from "../../../../utils/HighlightedText";
 import useDownloadContribuyente from "../../../hook/Contribuyente/useDownloadContribuyente";
-import Select from "react-select";
+import Select, { components } from "react-select";
 
 const Contribuyente = () => {
   const {
@@ -27,21 +26,33 @@ const Contribuyente = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const { handleDownloadExcel } = useDownloadContribuyente();
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState("");
-  const [selectedNit, setSelectedNit] = useState("");
-  const [selectedDepartamento, setSelectedDepartamento] = useState("");
-  const [selectedMunicipio, setSelectedMunicipio] = useState("");
-  const [selectedDireccion, setSelectedDireccion] = useState("");
-  const [selectedCorreo, setSelectedCorreo] = useState("");
-  const [selectedTelefono, setSelectedTelefono] = useState("");
+  const [selectedNit, setSelectedNit] = useState([]);
+  const [selectedDepartamento, setSelectedDepartamento] = useState([]);
+  const [selectedMunicipio, setSelectedMunicipio] = useState([]);
+  const [selectedDireccion, setSelectedDireccion] = useState([]);
+  const [selectedCorreo, setSelectedCorreo] = useState([]);
+  const [selectedTelefono, setSelectedTelefono] = useState([]);
   const [isFacturaSelected, setIsFacturaSelected] = useState(false);
-  const [selectedNombreContribuyente, setSelectedNombreContribuyente] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedNombreContribuyente, setSelectedNombreContribuyente] =
+    useState([]);
 
-  
+  const Option = (props) => {
+    return (
+      <components.Option {...props}>
+        <input
+          type="checkbox"
+          checked={props.isSelected}
+          onChange={() => null}
+        />{" "}
+        <label>{props.label}</label>
+      </components.Option>
+    );
+  };
 
   useEffect(() => {
-    fetchContribuyentes(searchQuery);
+    fetchContribuyentes("");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -49,79 +60,102 @@ const Contribuyente = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = contribuyentes.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleSelectContribuyente = (selectedOption) => {
-    if (selectedOption) {
-      const contribuyenteSeleccionado = contribuyentes.find(
-        (contribuyente) => contribuyente.id === selectedOption.value
-      );
-      
-     
-      setSelectedId(contribuyenteSeleccionado.id);
-      setSelectedNombreContribuyente(contribuyenteSeleccionado.nombreContribuyente);
-    
-      setSelectedNit("");
-      setSelectedDepartamento("");
-      setSelectedMunicipio("");
-      setSelectedDireccion("");
-      setSelectedCorreo("");
-      setSelectedTelefono("");
-    } else {
+ 
+  const handleSelectContribuyente = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedIdsArray = selectedOptions.map((option) => option.value);
+      setSelectedIds(selectedIdsArray); 
   
-      setSelectedId("");
-      setSelectedNombreContribuyente("");
-      setSelectedNit("");
-      setSelectedDepartamento("");
-      setSelectedMunicipio("");
-      setSelectedDireccion("");
-      setSelectedCorreo("");
-      setSelectedTelefono("");
+      if (selectedIdsArray.length > 0) {
+        fetchFacturaById(selectedIdsArray).then(() => {
+          setIsFacturaSelected(true); 
+        });
+      }
+    } else {
+      setSelectedIds([]); 
+      setIsFacturaSelected(false); 
     }
   };
   
   
-  const handleSelectNit = (selectedOption) => {
-    setSelectedNit(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedNit]);
+
+  const handleSelectNit = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedNitsArray = selectedOptions.map((option) => option.value);
+      setSelectedNit(selectedNitsArray);
+    } else {
+      setSelectedNit([]);
+    }
   };
 
-  const handleSelectDepartamento = (selectedOption) => {
-    setSelectedDepartamento(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedDepartamento]);
+  const handleSelectDepartamento = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedDepartamentosArray = selectedOptions.map(
+        (option) => option.value
+      );
+      setSelectedDepartamento(selectedDepartamentosArray);
+    } else {
+      setSelectedDepartamento([]);
+    }
   };
 
-  const handleSelectMunicipio = (selectedOption) => {
-    setSelectedMunicipio(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedMunicipio]);
+  const handleSelectMunicipio = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedMunicipiosArray = selectedOptions.map(
+        (option) => option.value
+      );
+      setSelectedMunicipio(selectedMunicipiosArray); 
+    } else {
+      setSelectedMunicipio([]); 
+    }
   };
 
-  const handleSelectDireccion = (selectedOption) => {
-    setSelectedDireccion(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedDireccion]);
+  const handleSelectDireccion = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedDireccionesArray = selectedOptions.map(
+        (option) => option.value
+      );
+      setSelectedDireccion(selectedDireccionesArray);
+    } else {
+      setSelectedDireccion([]); 
+    }
   };
 
-  const handleSelectCorreo = (selectedOption) => {
-    setSelectedCorreo(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedCorreo]);
+  const handleSelectCorreo = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedCorreosArray = selectedOptions.map(
+        (option) => option.value
+      );
+      setSelectedCorreo(selectedCorreosArray); 
+    } else {
+      setSelectedCorreo([]); 
+    }
   };
 
-  const handleSelectTelefono = (selectedOption) => {
-    setSelectedTelefono(selectedOption ? selectedOption.value : "");
-    resetAllSelectsExcept([setSelectedTelefono]);
+  const handleSelectTelefono = (selectedOptions) => {
+    if (selectedOptions && selectedOptions.length > 0) {
+      const selectedTelefonosArray = selectedOptions.map(
+        (option) => option.value
+      );
+      setSelectedTelefono(selectedTelefonosArray); 
+    } else {
+      setSelectedTelefono([]); 
+    }
   };
 
   useEffect(() => {
-    if (selectedNit) {
+    if (selectedNit.length > 0) {
       fetchFacturaByNit(selectedNit).then(() => {
         setIsFacturaSelected(true);
       });
     } else {
       setIsFacturaSelected(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, [selectedNit]);
 
   useEffect(() => {
-    if (selectedDepartamento) {
+    if (selectedDepartamento.length > 0) {
       fetchFacturaByDepartamento(selectedDepartamento).then(() => {
         setIsFacturaSelected(true);
       });
@@ -132,7 +166,7 @@ const Contribuyente = () => {
   }, [selectedDepartamento]);
 
   useEffect(() => {
-    if (selectedMunicipio) {
+    if (selectedMunicipio.length > 0) {
       fetchFacturaByMunicipio(selectedMunicipio).then(() => {
         setIsFacturaSelected(true);
       });
@@ -144,7 +178,7 @@ const Contribuyente = () => {
   }, [selectedMunicipio]);
 
   useEffect(() => {
-    if (selectedDireccion) {
+    if (selectedDireccion.length > 0) {
       fetchFacturaByDireccion(selectedDireccion).then(() => {
         setIsFacturaSelected(true);
       });
@@ -155,7 +189,7 @@ const Contribuyente = () => {
   }, [selectedDireccion]);
 
   useEffect(() => {
-    if (selectedCorreo) {
+    if (selectedCorreo.length > 0) {
       fetchFacturaByCorreo(selectedCorreo).then(() => {
         setIsFacturaSelected(true);
       });
@@ -166,7 +200,7 @@ const Contribuyente = () => {
   }, [selectedCorreo]);
 
   useEffect(() => {
-    if (selectedTelefono) {
+    if (selectedTelefono.length > 0) {
       fetchFacturaByTelefono(selectedTelefono).then(() => {
         setIsFacturaSelected(true);
       });
@@ -177,47 +211,31 @@ const Contribuyente = () => {
   }, [selectedTelefono]);
 
   useEffect(() => {
-    if (selectedId) {
-      fetchFacturaById(selectedId).then(() => {
-        if (factura && factura.length > 1) {
-          const facturaFiltrada = factura.filter(
-            (item) => item.id === parseInt(selectedId)
-          );
-          setFactura(facturaFiltrada);
-        }
-      });
+    if (selectedIds.length > 0) {
+      const facturasFiltradas = contribuyentes.filter((contribuyente) =>
+        selectedIds.includes(contribuyente.id)
+      );
+      setFactura(facturasFiltradas);
       setIsFacturaSelected(true);
     } else {
       setIsFacturaSelected(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedId, setFactura]);
-
+  }, [selectedIds, contribuyentes]);
+  
   const handleDownload = () => {
-    
     const filters = {
-      nombre: selectedNombreContribuyente || undefined, 
-      nit: selectedNit || undefined,
-      departamento: selectedDepartamento || undefined,
-      municipio: selectedMunicipio || undefined,
-      direccion: selectedDireccion || undefined,
-      correo: selectedCorreo || undefined,
-      telefono: selectedTelefono || undefined,
-      filtro: searchQuery || undefined,
+      id: selectedIds || undefined,
+      nit: selectedNit.length > 0 ? selectedNit : undefined,
+      departamento: selectedDepartamento.length > 0 ? selectedDepartamento : undefined,
+      municipio: selectedMunicipio.length > 0 ? selectedMunicipio : undefined,
+      direccion: selectedDireccion.length > 0 ? selectedDireccion : undefined,
+      correo: selectedCorreo.length > 0 ? selectedCorreo : undefined,
+      telefono: selectedTelefono.length > 0 ? selectedTelefono : undefined,
     };
   
- 
-    const activeFilters = Object.keys(filters).filter(
-      key => filters[key] !== undefined && filters[key] !== ""
-    );
-  
-    const filterToSend = activeFilters.includes("nombre") && activeFilters.length > 1 
-      ? activeFilters.filter(key => key !== "nombre")[0]
-      : activeFilters[0];
-  
-    const finalFilters = filterToSend ? { [filterToSend]: filters[filterToSend] } : {};
-    handleDownloadExcel(finalFilters);
+    handleDownloadExcel(filters);
   };
+
   const customStyles = {
     control: (base) => ({
       ...base,
@@ -265,38 +283,6 @@ const Contribuyente = () => {
     label: contribuyente.telefonoContribuyente,
   }));
 
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    
-    
-    fetchContribuyentes(query);
-  
-    
-    resetAllSelectsExcept([setSearchQuery]);
-  };
-  
-  const resetAllSelectsExcept = (excludedSetters) => {
-    const allSetters = [
-      setSelectedNit,
-      setSelectedId,
-      setSelectedDepartamento,
-      setSelectedCorreo,
-      setSelectedTelefono,
-      setSelectedMunicipio,
-      setSelectedDireccion,
-    ];
-  
- 
-    allSetters.forEach((setter) => {
-      if (!excludedSetters.includes(setter)) {
-        setter("");  
-      }
-    });
-  };
-    console.log(contribuyentes)
-
-  
-
   const tableRows = () => {
     if (isFacturaSelected && factura) {
       return factura.map((facturaItem, index) => (
@@ -311,13 +297,12 @@ const Contribuyente = () => {
           <td className="border px-4 py-2 text-center">{index + 1}</td>
 
           <td className="border px-4 text-center">
-            
             {facturaItem.nombreContribuyente}
           </td>
           <td className="border px-4 py-2 text-center">
             <HighlightedText
               text={facturaItem.nitContribuyente}
-              highlight={searchQuery}
+              highlight={""}
             />
           </td>
           <td className="border px-4 py-2 text-center">
@@ -351,16 +336,15 @@ const Contribuyente = () => {
             {indexOfFirstItem + index + 1}
           </td>
           <td className="border px-4 text-center">
-          <HighlightedText
+            <HighlightedText
               text={contribuyente.nombreContribuyente}
-              highlight={searchQuery}
+              highlight={""}
             />
-          
           </td>
           <td className="border px-4 py-2 text-center">
             <HighlightedText
               text={contribuyente.nitContribuyente}
-              highlight={searchQuery}
+              highlight={""}
             />
           </td>
           <td className="border px-4 py-2 text-center">
@@ -382,9 +366,6 @@ const Contribuyente = () => {
       ));
     }
   };
-  
-
-  
 
   return (
     <div>
@@ -398,20 +379,6 @@ const Contribuyente = () => {
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
         </div>
-        <div className="relative xl:right-0">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-            placeholder="Search"
-            required
-            
-          />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-            <RiSearchLine className="h-8 w-8 p-1 rounded-md shadow-2xl text-secundary font-semibold" />
-          </div>
-        </div>
       </div>
       <h1 className="text-3xl font-bold mb-4 mt-4 xl:mt-0">
         Lista de Contribuyentes
@@ -420,7 +387,7 @@ const Contribuyente = () => {
         <button
           onClick={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+          className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
         >
           <RiArrowLeftSLine />
         </button>
@@ -429,9 +396,7 @@ const Contribuyente = () => {
         )}`}</span>
         <button
           onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={
-            currentPage === Math.ceil(contribuyentes.length / itemsPerPage)
-          }
+          disabled={currentPage === Math.ceil(contribuyentes.length / itemsPerPage)}
           className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
         >
           <RiArrowRightSLine />
@@ -443,16 +408,14 @@ const Contribuyente = () => {
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
 
-              <th  className="px-4 py-2 bg-secundary text-white">
+              <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Contribuyente <br />
-                <div hidden={searchQuery}>
                 <Select
-              
-                  value={
-                    contribuyenteOptions.find(
-                      (option) => option.value === selectedId
-                    ) || null
-                  }
+                  isMulti
+                  components={{ Option }}
+                  value={contribuyenteOptions.filter((option) =>
+                    selectedIds.includes(option.value)
+                  )}
                   onChange={handleSelectContribuyente}
                   options={contribuyenteOptions}
                   placeholder="Todos"
@@ -460,18 +423,16 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                  
                 />
-                </div>
               </th>
+
               <th className="px-4 py-2 bg-secundary text-white">
                 Nit Contribuyente <br />
-                <div hidden={searchQuery}>
                 <Select
-                  value={
-                    nitOptions.find((option) => option.value === selectedNit) ||
-                    null
-                  }
+                  isMulti
+                  value={nitOptions.filter((option) =>
+                    selectedNit.includes(option.value)
+                  )}
                   onChange={handleSelectNit}
                   options={nitOptions}
                   placeholder="Todos"
@@ -479,18 +440,16 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                /></div>
+                />
               </th>
 
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento Contribuyente
-                <div hidden={searchQuery}>
                 <Select
-                  value={
-                    departamentoOptions.find(
-                      (option) => option.value === selectedDepartamento
-                    ) || null
-                  }
+                  isMulti
+                  value={departamentoOptions.filter((option) =>
+                    selectedDepartamento.includes(option.value)
+                  )}
                   onChange={handleSelectDepartamento}
                   options={departamentoOptions}
                   placeholder="Todos"
@@ -498,17 +457,16 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                /></div>
+                />
               </th>
+
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio Contribuyente
-                <div hidden={searchQuery}>
                 <Select
-                  value={
-                    municipioOptions.find(
-                      (option) => option.value === selectedMunicipio
-                    ) || null
-                  }
+                  isMulti
+                  value={municipioOptions.filter((option) =>
+                    selectedMunicipio.includes(option.value)
+                  )}
                   onChange={handleSelectMunicipio}
                   options={municipioOptions}
                   placeholder="Todos"
@@ -516,17 +474,16 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                /></div>
+                />
               </th>
+
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección Contribuyente
-                <div hidden={searchQuery}>
                 <Select
-                  value={
-                    direccionOptions.find(
-                      (option) => option.value === selectedDireccion
-                    ) || null
-                  }
+                  isMulti
+                  value={direccionOptions.filter((option) =>
+                    selectedDireccion.includes(option.value)
+                  )}
                   onChange={handleSelectDireccion}
                   options={direccionOptions}
                   placeholder="Todos"
@@ -534,17 +491,16 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                /></div>
+                />
               </th>
+
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo Contribuyente
-                <div hidden={searchQuery}>
                 <Select
-                  value={
-                    correoOptions.find(
-                      (option) => option.value === selectedCorreo
-                    ) || null
-                  }
+                  isMulti
+                  value={correoOptions.filter((option) =>
+                    selectedCorreo.includes(option.value)
+                  )}
                   onChange={handleSelectCorreo}
                   options={correoOptions}
                   placeholder="Todos"
@@ -552,16 +508,16 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                /></div>
+                />
               </th>
+
               <th className="px-4 py-2 bg-secundary text-white">
-                Teléfono Contribuyente<div hidden={searchQuery}>
+                Teléfono Contribuyente
                 <Select
-                  value={
-                    telefonoOptions.find(
-                      (option) => option.value === selectedTelefono
-                    ) || null
-                  }
+                  isMulti
+                  value={telefonoOptions.filter((option) =>
+                    selectedTelefono.includes(option.value)
+                  )}
                   onChange={handleSelectTelefono}
                   options={telefonoOptions}
                   placeholder="Todos"
@@ -569,7 +525,7 @@ const Contribuyente = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                /></div>
+                />
               </th>
             </tr>
           </thead>
