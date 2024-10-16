@@ -1,4 +1,4 @@
-import Dashboard from "./views/admin/layouts/Dashboard/Dashboard";
+
 import LayoutAdmin from "./layouts/LayoutAdmin";
 import Perfil from "./views/admin/layouts/perfil/Perfil";
 import CalendarioAdmin from "./views/admin/Admin-Panel/calendarios/CalendarioAdmin";
@@ -66,7 +66,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Dashboard />} />
+          <Route index element={<Perfil />} />
           <Route path="perfil" element={<Perfil />} />
           <Route path="contribuyente" element={<Contribuyente />} />
           <Route path="documentosoporte" element={<DocumentoSoporte />} />

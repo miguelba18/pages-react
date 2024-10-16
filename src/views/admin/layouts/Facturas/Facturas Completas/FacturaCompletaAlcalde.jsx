@@ -257,10 +257,9 @@ const FacturaCompleta = () => {
       setSelectedDepartamentosEmisores,
     ];
   
-    // Resetea todos los selects menos el que fue excluido
     allSetters.forEach((setter) => {
       if (setter !== excludedSetter) {
-        setter([]); // Resetea el select
+        setter([]); 
       }
     });
   };

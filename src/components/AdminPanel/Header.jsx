@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuthToken from "../../views/hook/Token/useAuthToken";
-import { Menu, MenuItem, MenuButton } from "@szhsin/react-menu";
+import { Menu, MenuItem, MenuButton, SubMenu } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import {
@@ -10,20 +10,41 @@ import {
   RiCalendarTodoFill,
   RiUser6Fill,
   RiMailUnreadFill,
+  RiAppsFill,
+  RiAddCircleFill,
+  RiFileList3Fill,
+  RiAdminFill,
+  RiBillFill,
+  RiShakeHandsFill,
+  RiBankFill,
+  RiMoneyDollarCircleFill,
+  RiTeamFill,
+  RiMailSendFill,
+  RiArticleFill,
+  RiFolderOpenFill,
+  RiGroupFill,
 } from "react-icons/ri";
+import { MdManageAccounts } from "react-icons/md";
+import { IoFileTrayFull } from "react-icons/io5";
 
 import useListNotificacion from "../../views/hook/Notificaciones/useListNotificacion";
-
 import useDeleteNotificacionReminder from "../../views/hook/Notificaciones/Recordatorio/useDeleteNotificacionReminder";
 import useDeleteNotificacion from "../../views/hook/Notificaciones/Inquietud/useDeleteNotificacion";
 import useDeleteNotificacionProfile from "../../views/hook/Notificaciones/Perfil/useDeleteNotificacionProfile";
 import useDeleteNotificacionEmail from "../../views/hook/Notificaciones/Enviar correo/useDeleteNotificacionEmail";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const { handleNotificationClick } = useDeleteNotificacion();
   const { handleNotificationClickReminder } = useDeleteNotificacionReminder();
   const { handleNotificationClickProfile } = useDeleteNotificacionProfile();
   const { handleNotificationClickEmail } = useDeleteNotificacionEmail();
+  const [userRoleId, setUserRoleId] = useState(null);
+  const { token } = useAuthToken();
+  const navigate = useNavigate();
+
+  useState(false);
+
   const {
     userName,
     email,
@@ -40,115 +61,784 @@ const Header = () => {
     profileNotifications.length +
     emailNotifications.length;
 
-
   const { removeToken } = useAuthToken();
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const roleId = decodedToken.role;
+
+        setUserRoleId(roleId);
+      } catch (error) {
+        console.error("Error al decodificar el token:", error);
+        window.localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } else {
+      navigate("/login");
+    }
+  }, [navigate, token]);
 
   return (
     <header className="xl:h-[10vh] border-b border-tertiary-100 md:p-3 px-2  ">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <Link
-            to="/"
-            className="cursor-pointer bg-white relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#F5F5F5] hover:text-[#06B6D4] h-9  px-3"
-          >
-            <svg
-              className="lucide lucide-rocket text-cyan-500 dark:text-cyan-400"
-              stroke="#06B6D4"
-              fill="none"
-              viewBox="0 0 24 24"
-              height="22"
-              width="22"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
-              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
-              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
-              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
-            </svg>
-            <p hidden className="md:inline">Dashboard</p>
-          </Link>
-          <a
-            href="https://www.dian.gov.co/impuestos/factura-electronica/documentacion/Paginas/estatuto-tributario.aspx"
-            target="BLANK"
-            className="cursor-pointer bg-white relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#F5F5F5] hover:text-[#60A5FA] h-9 px-3"
-          >
-            <svg
-              className="lucide lucide-newspaper text-blue-400 dark:text-blue-600"
-              stroke="#60A5FA"
-              fill="none"
-              viewBox="0 0 24 24"
-              height="22"
-              width="22"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
-              <path d="M18 14h-8"></path>
-              <path d="M15 18h-5"></path>
-              <path d="M10 6h8v4h-8V6Z"></path>
-            </svg>
-            <p hidden className="md:inline">Articulos</p>
-          </a>
-          <a
-            href="https://www.dian.gov.co/Paginas/AgendaEventos.aspx"
-            target="BLANK"
-            className="cursor-pointer bg-white relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#F5F5F5] hover:text-[#FACC14] h-9  px-3"
-          >
-            <svg
-              className="lucide lucide-sticky-note text-yellow-400 dark:text-yellow-600"
-              stroke="#FACC14"
-              fill="none"
-              viewBox="0 0 24 24"
-              height="22"
-              width="22"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"></path>
-              <path d="M15 3v6h6"></path>
-            </svg>
-            <p hidden className="md:inline">Eventos</p>
-          </a>
-          <a
-            href="https://www.dian.gov.co/Calendarios/Calendario_Tributario_2024.pdf"
-            target="BLANK"
-            className="cursor-pointer bg-white relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#F5F5F5] hover:text-[#FB923C] h-9  px-3"
-          >
-            <svg
-              className="lucide lucide-star text-orange-400 dark:text-orange-600"
-              stroke="#FB923C"
-              fill="#FB923C"
-              viewBox="0 0 24 24"
-              height="22"
-              width="22"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-            </svg>
-            <p hidden className="md:inline">Renta</p>
-          </a>
-          <Link
-            to="/home"
-            className="cursor-pointer bg-white relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-[#F5F5F5] hover:text-green-500 h-9  px-3"
-          >
-            <svg
-              className="lucide lucide-home text-green-500 mt-1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <rect x="3" y="3" width="18" height="14" rx="2" ry="2" />
-              <line x1="3" y1="7" x2="21" y2="7" />
-              <line x1="7" y1="11" x2="7.01" y2="11" />
-              <line x1="11" y1="11" x2="11.01" y2="11" />
-              <line x1="15" y1="11" x2="15.01" y2="11" />
-            </svg>
-            <p hidden className="md:inline">Landing Page</p>
-          </Link>
-          
-          
+      <div className="flex justify-between items-center ">
+        <div className=" rounded-md bg-primary p-2 flex justify-center items-center ">
+          <RiAppsFill className="text-white  h-6 w-6 mr-2" />
+          <h1 className=" text-2xl font-normal   ">
+            {userRoleId === "ADMIN" && (
+              <span className="text-white">
+                SIM ADMIN<span className=" ">.</span>
+              </span>
+            )}
+            {userRoleId === "Alcalde" && (
+              <span className="text-white">
+                SIM Alcalde
+                <span className=" text-secundary">.</span>
+              </span>
+            )}
+            {userRoleId === "Secretario" && (
+              <span className="text-white">
+                SIM Secretario
+                <span className=" text-secundary">.</span>
+              </span>
+            )}
+            {userRoleId === "Personal" && (
+              <span className="text-white">
+                SIM Personal
+                <span className=" text-secundary">.</span>
+              </span>
+            )}
+          </h1>
         </div>
+
+        <div className="flex items-center gap-2"></div>
+
+        <nav className="">
+          <ul className="list-none flex items-center">
+            {userRoleId === "ADMIN" && (
+              <>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiAdminFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Administrador y Alcaldes
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/registroadmin"
+                      className="flex items-center  gap-4 px-4 py-2  "
+                    >
+                      <RiAddCircleFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/registroadmin" ? " " : ""
+                        }`}
+                      />
+                      Agregar Admin
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/alcalde"
+                      className="flex items-center  gap-4 px-4 py-2  "
+                    >
+                      <RiAddCircleFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/alcalde" ? " " : ""
+                        }`}
+                      />
+                      Agregar Alcalde
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/tablaadminalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                    >
+                      <RiFileList3Fill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/tablaadminalcalde" ? "" : ""
+                        }`}
+                      />
+                      Ver Admin y Alcaldes
+                    </Link>
+                  </MenuItem>
+                </Menu>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiAdminFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Revisar
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/calendarioadmin"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiCalendarTodoFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/calendarioadmin" ? "" : ""
+                        }`}
+                      />
+                      Calendario
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/inquietud"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiQuestionAnswerFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/inquietud" ? "" : ""
+                        }`}
+                      />
+                      Inquietudes
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/enviarcorreos"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiMailSendFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/enviarcorreos" ? "" : ""
+                        }`}
+                      />
+                      Enviar Correos
+                    </Link>
+                  </MenuItem>
+                </Menu>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiBillFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Facturas
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <SubMenu
+                    label={
+                      <div className="flex items-center gap-2">
+                        <RiGroupFill className="text-xl mr-2 text-secundary" />
+                        Vinculantes
+                      </div>
+                    }
+                    className=""
+                  >
+                    <MenuItem className="">
+                      <Link
+                        to="/agrupadasadquiriente"
+                        className="flex items-center  gap-4 px-4 py-2  "
+                      >
+                        <RiShakeHandsFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/agrupadasadquiriente"
+                              ? " "
+                              : ""
+                          }`}
+                        />
+                        Comprador ubicado en el Municipio
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/agrupadasemisor"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2"
+                      >
+                        <RiBankFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/agrupadasemisor" ? "" : ""
+                          }`}
+                        />
+                        Vendedor Ubicado en el municipio
+                      </Link>
+                    </MenuItem>
+                  </SubMenu>
+                  <SubMenu
+                    label={
+                      <div className="flex items-center gap-2">
+                        <RiTeamFill className="text-xl mr-2 text-secundary" />
+                        No Vinculantes
+                      </div>
+                    }
+                    className=""
+                  >
+                    <MenuItem>
+                      <Link
+                        to="/consorcios"
+                        className="flex items-center  gap-4 px-4 py-2  "
+                      >
+                        <IoFileTrayFull
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/consorcios" ? " " : ""
+                          }`}
+                        />
+                        Todos los no Vinculantes
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/consorcioclientemunicipio"
+                        className="flex items-center  gap-4 px-4 py-2  "
+                      >
+                        <RiShakeHandsFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/consorcioclientemunicipio"
+                              ? " "
+                              : ""
+                          }`}
+                        />
+                        No Vinculante Cliente
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/consorciovendedormunicipio"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                      >
+                        <RiBankFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/consorciovendedormunicipio"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        No Vinculante Vendedor
+                      </Link>
+                    </MenuItem>
+                  </SubMenu>
+                  <SubMenu
+                    label={
+                      <div className="flex items-center gap-2">
+                        <RiBillFill className="text-xl mr-2 text-secundary" />
+                        Documento Electronico
+                      </div>
+                    }
+                    className=""
+                  >
+                    <MenuItem className="">
+                      <Link
+                        to="/administrarfacturas"
+                        className="flex items-center  gap-4 px-4 py-2  "
+                      >
+                        <MdManageAccounts
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/administrarfacturas"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Administrar Documentos electronicos
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/facturaelectronica"
+                        className="flex items-center  gap-4 px-4 py-2 "
+                      >
+                        <RiAddCircleFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/facturaelectronica"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Agregar Facturas
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/facturacompletatodas"
+                        className="flex items-center  gap-4 px-4 py-2 "
+                      >
+                        <IoFileTrayFull
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/facturacompletatodas"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Todos los documentos electronicos
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/facturacompleta"
+                        className="flex items-center  gap-4 px-4 py-2 "
+                      >
+                        <IoFileTrayFull
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/facturacompleta" ? "" : ""
+                          }`}
+                        />
+                        Documento Electronico Municipio
+                      </Link>
+                    </MenuItem>
+                  </SubMenu>
+                </Menu>
+              </>
+            )}
+
+            {userRoleId === "Alcalde" && (
+              <>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiAdminFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Secretarios y Personal
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/secretario"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <RiAddCircleFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/secretario" ? "" : ""
+                        }`}
+                      />
+                      Agregar Secretario
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/personal"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <RiAddCircleFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/personal" ? "" : ""
+                        }`}
+                      />
+                      Agregar Personal
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/tabla"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                    >
+                      <RiFileList3Fill
+                        className={`text-xl  text-secundary ${
+                          location.pathname === "/tabla" ? "" : ""
+                        }`}
+                      />
+                      Ver Secretarios y Personal
+                    </Link>
+                  </MenuItem>
+                </Menu>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiAdminFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Revisar
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/enviarcorreoalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiMailSendFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/enviarcorreoalcalde" ? "" : ""
+                        }`}
+                      />
+                      Enviar Correos
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/calendarioalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2"
+                    >
+                      <RiCalendarTodoFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/calendarioalcalde" ? "" : ""
+                        }`}
+                      />
+                      Calendario
+                    </Link>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+
+            {userRoleId === "Secretario" && (
+              <>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiCalendarTodoFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Calendarios
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/calendarioalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <RiCalendarTodoFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/calendarioalcalde" ? "" : ""
+                        }`}
+                      />
+                      Calendario
+                    </Link>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+
+            {userRoleId === "Personal" && (
+              <>
+                <Menu
+                  menuButton={
+                    <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                      <div className="flex items-center ">
+                        <RiCalendarTodoFill className="text-xl mr-2 text-secundary" />
+                        <span className="text-sm font-semibold hidden xl:inline">
+                          Calendarios
+                        </span>
+                      </div>
+                      <RiArrowDownSLine className="h-6 w-6" />
+                    </MenuButton>
+                  }
+                  transition
+                  menuClassName="bg-tertiary-100 text-black p-4"
+                >
+                  <MenuItem className="p-0 ">
+                    <Link
+                      to="/calendarioalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <RiCalendarTodoFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/calendarioalcalde" ? "" : ""
+                        }`}
+                      />
+                      Calendario
+                    </Link>
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+
+            <div hidden={userRoleId === "ADMIN"}>
+              <Menu
+                menuButton={
+                  <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                    <div className="flex items-center ">
+                      <RiBillFill className="text-xl mr-2 text-secundary" />
+                      <span className="text-sm font-semibold hidden xl:inline">
+                        Facturas
+                      </span>
+                    </div>
+                    <RiArrowDownSLine className="h-6 w-6" />
+                  </MenuButton>
+                }
+                transition
+                menuClassName="bg-tertiary-100 text-black p-4"
+              >
+                <SubMenu
+                  label={
+                    <div className="flex items-center gap-2">
+                      <RiGroupFill className="text-xl mr-2 text-secundary" />
+                      Vinculantes
+                    </div>
+                  }
+                  className=""
+                >
+                  <MenuItem className="">
+                    <Link
+                      to="/agrupadasadquirientealcalde"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <RiShakeHandsFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/agrupadasadquirientealcalde"
+                            ? " "
+                            : ""
+                        }`}
+                      />
+                      Comprador ubicado en el Municipio
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="">
+                    <Link
+                      to="/agrupadasemisoralcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                    >
+                      <RiBankFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/agrupadasemisoralcalde"
+                            ? ""
+                            : ""
+                        }`}
+                      />
+                      Vendedor Ubicado en el municipio
+                    </Link>
+                  </MenuItem>
+                </SubMenu>
+                <SubMenu
+                  label={
+                    <div className="flex items-center gap-2">
+                      <RiTeamFill className="text-xl mr-2 text-secundary" />
+                      No Vinculantes
+                    </div>
+                  }
+                  className=""
+                >
+                  <MenuItem>
+                    <Link
+                      to="/consorciosalcalde"
+                      className="flex items-center  gap-4 px-4 py-2  "
+                    >
+                      <IoFileTrayFull
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/consorciosalcalde" ? " " : ""
+                        }`}
+                      />
+                      Todos los no Vinculantes
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="">
+                    <Link
+                      to="/clientealcalde"
+                      className="flex items-center  gap-4 px-4 py-2  "
+                    >
+                      <RiShakeHandsFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/clientealcalde" ? "" : ""
+                        }`}
+                      />
+                      No Vinculante Cliente
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="">
+                    <Link
+                      to="/vendedoralcalde"
+                      className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                    >
+                      <RiBankFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/vendedoralcalde" ? "" : ""
+                        }`}
+                      />
+                      No Vinculante Vendedor
+                    </Link>
+                  </MenuItem>
+                </SubMenu>
+                <SubMenu
+                  label={
+                    <div className="flex items-center gap-2">
+                      <RiBillFill className="text-xl mr-2 text-secundary" />
+                      Documento Electronico
+                    </div>
+                  }
+                  className=""
+                >
+                  <MenuItem className="">
+                    <Link
+                      to="/facturaelectronica"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <RiAddCircleFill
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/facturaelectronica" ? "" : ""
+                        }`}
+                      />
+                      Agregar Facturas
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="">
+                    <Link
+                      to="/facturacompletatodas"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <IoFileTrayFull
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/facturacompletatodas"
+                            ? ""
+                            : ""
+                        }`}
+                      />
+                      Todos los documentos electronicos
+                    </Link>
+                  </MenuItem>
+                  <MenuItem className="">
+                    <Link
+                      to="/facturacompletaalcalde"
+                      className="flex items-center  gap-4 px-4 py-2 "
+                    >
+                      <IoFileTrayFull
+                        className={`text-xl text-secundary ${
+                          location.pathname === "/facturacompletaalcalde"
+                            ? ""
+                            : ""
+                        }`}
+                      />
+                      Documento Electronico Municipio
+                    </Link>
+                  </MenuItem>
+                </SubMenu>
+              </Menu>
+            </div>
+
+            <Menu
+              menuButton={
+                <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                  <div className="flex items-center ">
+                    <RiMoneyDollarCircleFill className="text-xl mr-2 text-secundary" />
+                    <span className="text-sm font-semibold hidden xl:inline">
+                      Contribuyentes
+                    </span>
+                  </div>
+                  <RiArrowDownSLine className="h-6 w-6" />
+                </MenuButton>
+              }
+              transition
+              menuClassName="bg-tertiary-100 text-black p-4"
+            >
+              <MenuItem className="p-0 ">
+                <Link
+                  to="/contribuyente"
+                  className="flex items-center gap-4 px-4 py-2 "
+                >
+                  <RiMoneyDollarCircleFill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/contribuyente" ? "" : ""
+                    }`}
+                  />
+                  Contribuyente
+                </Link>
+              </MenuItem>
+            </Menu>
+            <Menu
+              menuButton={
+                <MenuButton className="flex items-center gap-x-4 hover:bg-tertiary-100 py-2 xl:px-4 rounded-lg transition-colors">
+                  <div className="flex items-center ">
+                    <RiArticleFill className="text-xl mr-2 text-secundary" />
+                    <span className="text-sm font-semibold hidden xl:inline">
+                      Documento Soporte
+                    </span>
+                  </div>
+                  <RiArrowDownSLine className="h-6 w-6" />
+                </MenuButton>
+              }
+              transition
+              menuClassName="bg-tertiary-100 text-black p-4"
+            >
+              <MenuItem className="p-0 ">
+                <Link
+                  to="/documentosoporte"
+                  className="flex items-center  gap-4 px-4 py-2  "
+                >
+                  <RiFolderOpenFill
+                    className={`text-xl text-secundary ${
+                      location.pathname === "/documentosoporte" ? " " : ""
+                    }`}
+                  />
+                  Documentos
+                </Link>
+              </MenuItem>
+              <MenuItem className="p-0 ">
+                <div
+                  hidden={
+                    userRoleId === "Secretario" ||
+                    userRoleId === "Alcalde" ||
+                    userRoleId === "Personal"
+                  }
+                >
+                  <Link
+                    to="/documentocomprador"
+                    className="flex items-center  gap-4 px-4 py-2 "
+                  >
+                    <RiShakeHandsFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentocomprador" ? " " : ""
+                      }`}
+                    />
+                    Documento Comprador
+                  </Link>
+                </div>
+              </MenuItem>
+              <MenuItem className="p-0 ">
+                <div
+                  hidden={
+                    userRoleId === "Secretario" ||
+                    userRoleId === "Alcalde" ||
+                    userRoleId === "Personal"
+                  }
+                >
+                  <Link
+                    to="/documentovendedor"
+                    className="flex items-center  gap-4 px-4 py-2  "
+                  >
+                    <RiBankFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentovendedor" ? " " : ""
+                      }`}
+                    />
+                    Documento Vendedor
+                  </Link>
+                </div>
+              </MenuItem>
+            </Menu>
+          </ul>
+        </nav>
 
         <nav className="flex items-center xl:gap-x-2">
           <Menu
@@ -258,16 +948,14 @@ const Header = () => {
                   className="w-10 h-10 rounded-full object-cover"
                   alt="Avatar"
                 />
-                <span className="text-sm font-semibold hidden xl:inline">
-                  {userName}
-                </span>
+
                 <RiArrowDownSLine className="h-6 w-6" />
               </MenuButton>
             }
             transition
             menuClassName="bg-tertiary-100 text-black p-4"
           >
-            <MenuItem className="p-0 hover:bg-transparent">
+            <MenuItem className="p-0 ">
               <Link
                 to="/perfil"
                 className="flex items-center gap-x-4 rounded-lg transition-colors py-2 px-6 hover:bg-secundary/70 hover:text-white"
@@ -285,27 +973,52 @@ const Header = () => {
             </MenuItem>
             <hr className="border-gray-300 my-4" />
             <MenuItem className="p-0 hover:bg-transparent">
-            <button
-            onClick={removeToken}
-            className="cursor-pointer bg-tertiary-300 relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-white w-full hover:text-red-500 h-9  px-3"
-          >
-            <svg
-            className="lucide lucide-logout text-red-500 mt-1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M7 16l-4-4 4-4" />
-              <path d="M3 12h11" />
-              <path d="M20 19V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v14" />
-            </svg>
-            Cerrar Sesión
-          </button>
+              <Link
+                to="/home"
+                className="cursor-pointer bg-tertiary-300 relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-white w-full hover:text-green-500 h-9  px-3"
+              >
+                <svg
+                  className="lucide lucide-home text-green-500 mt-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <rect x="3" y="3" width="18" height="14" rx="2" ry="2" />
+                  <line x1="3" y1="7" x2="21" y2="7" />
+                  <line x1="7" y1="11" x2="7.01" y2="11" />
+                  <line x1="11" y1="11" x2="11.01" y2="11" />
+                  <line x1="15" y1="11" x2="15.01" y2="11" />
+                </svg>
+                <p hidden className="md:inline">
+                  Landing Page
+                </p>
+              </Link>
+            </MenuItem>
+            <MenuItem className="p-0 hover:bg-transparent">
+              <button
+                onClick={removeToken}
+                className="cursor-pointer bg-tertiary-300 relative inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-white w-full hover:text-red-500 h-9  px-3"
+              >
+                <svg
+                  className="lucide lucide-logout text-red-500 mt-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 16l-4-4 4-4" />
+                  <path d="M3 12h11" />
+                  <path d="M20 19V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v14" />
+                </svg>
+                Cerrar Sesión
+              </button>
             </MenuItem>
           </Menu>
         </nav>

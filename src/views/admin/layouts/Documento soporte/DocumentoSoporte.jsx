@@ -95,7 +95,7 @@ const DocumentoSoporte = () => {
           </h1>
           
         
-        <div className="w-1/2 xl:flex mt-8 xl:mt-0 xl:p-4 justify-center">
+        <div className="xl:w-1/2 xl:flex mt-8 xl:mt-0 xl:p-4 justify-center">
           <div className="bg-tertiary-100 h-full xl:w-full p-10  rounded-xl shadow-2xl shadow-secundary">
             <h2 className="text-lg text-center font-semibold mb-2">
               Guarda tu documento soporte en la base de datos
