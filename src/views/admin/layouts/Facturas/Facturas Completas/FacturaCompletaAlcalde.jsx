@@ -188,10 +188,29 @@ const FacturaCompleta = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = facturas.slice(indexOfFirstItem, indexOfLastItem);
-
   const handleDownload = () => {
-    handleDownloadExcel("", searchQuery, selectedAnio);
+    handleDownloadExcel({
+      filtro: "",
+      ciudad: "", 
+      anio: selectedAnio, 
+      codigoUnico: "", 
+      nombreComercialEmisor: selectedNombresComerciales, 
+      telefonoAdquiriente: selectedTelefonosAdquirientes,
+      correoAdquiriente: selectedCorreosAdquirientes, 
+      direccionAdquiriente: selectedDireccionesAdquirientes, 
+      municipioAdquiriente: selectedMunicipiosAdquirientes, 
+      departamentoAdquiriente: selectedDepartamentosAdquirientes, 
+      numeroDocumentoAdquiriente: selectedNumerosDocumentoAdquirientes, 
+      nombreAdquiriente: selectedNombresAdquirientes, 
+      nitEmisor: selectedNitsEmisores, 
+      telefonoEmisor: selectedTelefonosEmisores, 
+      correoEmisor: selectedCorreosEmisores,
+      direccionEmisor: selectedDireccionesEmisores, 
+      municipioEmisor: selectedMunicipiosEmisores,
+      departamentoEmisor: selectedDepartamentosEmisores 
+    });
   };
+  
 
   const customStyles = {
     control: (base) => ({

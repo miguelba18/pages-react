@@ -4,7 +4,7 @@ import useAuthToken from "../../../Token/useAuthToken";
 const useDescargarFacturas = () => {
   const { token } = useAuthToken();
 
-  const handleDownloadExcel = async ({ filtro, ciudad, anio, codigoUnico  }) => {
+  const handleDownloadExcel = async ({ filtro, ciudad, anio, codigoUnico, telefonoAdquiriente, correoAdquiriente, direccionAdquiriente, municipioAdquiriente, departamentoAdquiriente, numeroDocumentoAdquiriente, nombreAdquiriente, nitEmisor, nombreComercialEmisor, telefonoEmisor, correoEmisor, direccionEmisor, municipioEmisor, departamentoEmisor }) => {
     if (!token) {
       toast.error("No se encontró el token de autorización en el localStorage.");
       return;
@@ -13,18 +13,26 @@ const useDescargarFacturas = () => {
     let url = "http://localhost:8080/factura/descargar-excel-todas";
   
     const params = new URLSearchParams();
-    if (ciudad) {
-      params.append("ciudad", ciudad);
-    }
-    if (filtro) {
-      params.append("filtro", filtro);
-    }
-    if (anio) {
-      params.append("anio", anio);
-    }
-    if (codigoUnico) {  
-      params.append("codigoUnico", codigoUnico);
-    }
+    
+    // Asegúrate de agregar los parámetros que son opcionales
+    if (ciudad) params.append("ciudad", ciudad);
+    if (filtro) params.append("filtro", filtro);
+    if (anio) params.append("anio", anio);
+    if (codigoUnico) params.append("codigoUnico", codigoUnico);
+    if (telefonoAdquiriente) params.append("telefonoAdquiriente", telefonoAdquiriente);
+    if (correoAdquiriente) params.append("correoAdquiriente", correoAdquiriente);
+    if (direccionAdquiriente) params.append("direccionAdquiriente", direccionAdquiriente);
+    if (municipioAdquiriente) params.append("municipioAdquiriente", municipioAdquiriente);
+    if (departamentoAdquiriente) params.append("departamentoAdquiriente", departamentoAdquiriente);
+    if (numeroDocumentoAdquiriente) params.append("numeroDocumentoAdquiriente", numeroDocumentoAdquiriente);
+    if (nombreAdquiriente) params.append("nombreAdquiriente", nombreAdquiriente);
+    if (nitEmisor) params.append("nitEmisor", nitEmisor);
+    if (nombreComercialEmisor) params.append("nombreComercialEmisor", nombreComercialEmisor);
+    if (telefonoEmisor) params.append("telefonoEmisor", telefonoEmisor);
+    if (correoEmisor) params.append("correoEmisor", correoEmisor);
+    if (direccionEmisor) params.append("direccionEmisor", direccionEmisor);
+    if (municipioEmisor) params.append("municipioEmisor", municipioEmisor);
+    if (departamentoEmisor) params.append("departamentoEmisor", departamentoEmisor);
   
     if (params.toString()) {
       url += `?${params.toString()}`;
@@ -79,7 +87,6 @@ const useDescargarFacturas = () => {
     }
   };
   
-
   return { handleDownloadExcel };
 };
 
