@@ -13,6 +13,7 @@ import AgrupadasAdquiriente from "./views/admin/layouts/Facturas/Agrupadas/Agrup
 import AgrupadasEmisor from "./views/admin/layouts/Facturas/Agrupadas/AgrupadasEmisor";
 import FacturaCompleta from "./views/admin/layouts/Facturas/Facturas Completas/FacturaCompleta";
 import FacturaCompletaAlcalde from "./views/admin/layouts/Facturas/Facturas Completas/FacturaCompletaAlcalde";
+import FacturaTodasAlcalde from "./views/admin/layouts/Facturas/Facturas Completas/FacturaTodasAlcalde";
 
 import AgrupadasEmisorAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasEmisorAlcalde";
 import AgrupadasAdquirienteAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAdquirienteAlcalde"
@@ -132,6 +133,15 @@ function App() {
               </RestrictedRouteSecretarioPersonal>
             }
           />
+          <Route
+            path="facturatodasalcalde"
+            element={
+              <RestrictedRouteSecretarioPersonal>
+                <FacturaTodasAlcalde />
+              </RestrictedRouteSecretarioPersonal>
+            }
+          />
+
           <Route
             path="agrupadasadquirientealcalde"
             element={

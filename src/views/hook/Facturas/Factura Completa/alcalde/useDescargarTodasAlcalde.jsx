@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import useAuthToken from "../../../Token/useAuthToken";
 
-const useDescargarFacturas = () => {
+const useDescargarTodasAlcalde = () => {
   const { token } = useAuthToken();
 
   const handleDownloadExcel = async ({ filtro, ciudad, anio, codigoUnico, telefonoAdquiriente, correoAdquiriente, direccionAdquiriente, municipioAdquiriente, departamentoAdquiriente, numeroDocumentoAdquiriente, nombreAdquiriente, nitEmisor, nombreComercialEmisor, telefonoEmisor, correoEmisor, direccionEmisor, municipioEmisor, departamentoEmisor }) => {
@@ -10,7 +10,7 @@ const useDescargarFacturas = () => {
       return;
     }
   
-    let url = "http://localhost:8080/factura/descargar-excel-todas";
+    let url = "http://localhost:8080/factura/descargar-excel-todas-completas";
   
     const params = new URLSearchParams();
     
@@ -53,7 +53,7 @@ const useDescargarFacturas = () => {
       const blob = await response.blob();
       const contentDisposition = response.headers.get("Content-Disposition");
       const fileNameMatch = contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
-      const fileName = fileNameMatch ? fileNameMatch[1] : "datos_todas_las_facturas.xlsx";
+      const fileName = fileNameMatch ? fileNameMatch[1] : "datos_todas_las_facturas_completas.xlsx";
   
       if (window.showSaveFilePicker) {
         const handle = await window.showSaveFilePicker({
@@ -89,4 +89,4 @@ const useDescargarFacturas = () => {
   return { handleDownloadExcel };
 };
 
-export default useDescargarFacturas;
+export default useDescargarTodasAlcalde;

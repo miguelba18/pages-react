@@ -89,6 +89,9 @@ const ConsorcioClienteMunicipio = () => {
       </div>
       {selectedCiudad && (
         <>
+        <h1 className="font-bold text-3xl text-secundary">
+          Facturas No Vinculante Clientes
+        </h1>
           <div className="flex  justify-between">
             <div className="flex justify-center mt-4">
               <button

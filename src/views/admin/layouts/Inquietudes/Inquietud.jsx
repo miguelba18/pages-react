@@ -55,7 +55,9 @@ const Inquietud = () => {
 
   return (
     <div className="">
-      <h1 className="text-4xl font-normal mb-4">Inquietudes</h1>
+      <h1 className="font-bold text-3xl text-secundary mb-8">
+         Inquietudes  
+        </h1>
       <div className="justify-center ">
         {groupedInquietudes.map((group, index) => (
           <div key={index} className="xl:flex mb-4 ">

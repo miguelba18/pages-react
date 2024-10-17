@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import {
-  RiSearchLine,
   RiDownloadLine,
   RiDeleteBin5Fill,
   RiAddCircleFill,
@@ -29,7 +28,7 @@ const FacturaCompleta = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [facturaToDelete, setFacturaToDelete] = useState(null);
   const [processedFacturas, setProcessedFacturas] = useState(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
@@ -91,12 +90,16 @@ const FacturaCompleta = () => {
     correosEmisores,
     direccionesEmisores,
     municipiosEmisores,
-    departamentosEmisores
+    departamentosEmisores,
   } = useListFacturaCompleta();
 
   useEffect(() => {
     if (selectedCiudad) {
-      fetchFacturas(selectedCiudad, searchQuery, selectedAnio,selectedNombresComerciales,
+      fetchFacturas(
+        selectedCiudad,
+        searchQuery,
+        selectedAnio,
+        selectedNombresComerciales,
         selectedTelefonosAdquirientes,
         selectedCorreosAdquirientes,
         selectedDireccionesAdquirientes,
@@ -109,7 +112,8 @@ const FacturaCompleta = () => {
         selectedCorreosEmisores,
         selectedDireccionesEmisores,
         selectedMunicipiosEmisores,
-        selectedDepartamentosEmisores).then();
+        selectedDepartamentosEmisores
+      ).then();
     } else {
       setFacturas([]);
     }
@@ -121,19 +125,19 @@ const FacturaCompleta = () => {
     processedFacturas,
     setFacturas,
     selectedNombresComerciales,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedNitsEmisores,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
+    selectedTelefonosAdquirientes,
+    selectedCorreosAdquirientes,
+    selectedDireccionesAdquirientes,
+    selectedMunicipiosAdquirientes,
+    selectedDepartamentosAdquirientes,
+    selectedNumerosDocumentoAdquirientes,
+    selectedNombresAdquirientes,
+    selectedNitsEmisores,
+    selectedTelefonosEmisores,
+    selectedCorreosEmisores,
+    selectedDireccionesEmisores,
+    selectedMunicipiosEmisores,
+    selectedDepartamentosEmisores,
   ]);
 
   const customStyles = {
@@ -200,10 +204,10 @@ const FacturaCompleta = () => {
       setSelectedMunicipiosEmisores,
       setSelectedDepartamentosEmisores,
     ];
-  
+
     allSetters.forEach((setter) => {
       if (setter !== excludedSetter) {
-        setter([]); 
+        setter([]);
       }
     });
   };
@@ -217,15 +221,14 @@ const FacturaCompleta = () => {
   const handleSelectNombresComerciales = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNombresComerciales(selectedValues);
-  
-  
+
     resetAllSelectsExcept(setSelectedNombresComerciales);
-  
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
       "",
-      selectedValues,  
+      selectedValues,
       selectedTelefonosAdquirientes,
       selectedCorreosAdquirientes,
       selectedDireccionesAdquirientes,
@@ -241,7 +244,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getNitsEmisoresOptions = (nitsEmisores) => {
     return nitsEmisores.map((nit) => ({
       value: nit,
@@ -251,10 +254,9 @@ const FacturaCompleta = () => {
   const handleSelectNitsEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNitsEmisores(selectedValues);
-  
-    
+
     resetAllSelectsExcept(setSelectedNitsEmisores);
-  
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -267,7 +269,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosAdquirientes,
       selectedNumerosDocumentoAdquirientes,
       selectedNombresAdquirientes,
-      selectedValues, 
+      selectedValues,
       selectedTelefonosEmisores,
       selectedCorreosEmisores,
       selectedDireccionesEmisores,
@@ -275,7 +277,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getTelefonosAdquirientesOptions = (telefonosAdquirientes) => {
     return telefonosAdquirientes.map((telefono) => ({
       value: telefono,
@@ -285,9 +287,9 @@ const FacturaCompleta = () => {
   const handleSelectTelefonosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedTelefonosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedTelefonosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -309,7 +311,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getCorreosAdquirientesOptions = (correosAdquirientes) => {
     return correosAdquirientes.map((correo) => ({
       value: correo,
@@ -319,9 +321,9 @@ const FacturaCompleta = () => {
   const handleSelectCorreosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedCorreosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedCorreosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -342,7 +344,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getDireccionesAdquirientesOptions = (direccionesAdquirientes) => {
     return direccionesAdquirientes.map((direccion) => ({
       value: direccion,
@@ -352,9 +354,9 @@ const FacturaCompleta = () => {
   const handleSelectDireccionesAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDireccionesAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDireccionesAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -374,7 +376,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getMunicipiosAdquirientesOptions = (municipiosAdquirientes) => {
     return municipiosAdquirientes.map((municipio) => ({
       value: municipio,
@@ -384,9 +386,9 @@ const FacturaCompleta = () => {
   const handleSelectMunicipiosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedMunicipiosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedMunicipiosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -406,7 +408,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getDepartamentosAdquirientesOptions = (departamentosAdquirientes) => {
     return departamentosAdquirientes.map((departamento) => ({
       value: departamento,
@@ -416,9 +418,9 @@ const FacturaCompleta = () => {
   const handleSelectDepartamentosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDepartamentosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDepartamentosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -439,7 +441,7 @@ const FacturaCompleta = () => {
       selectedValues
     );
   };
-  
+
   const getNombresAdquirientesOptions = (nombresAdquirientes) => {
     return nombresAdquirientes.map((nombre) => ({
       value: nombre,
@@ -449,9 +451,9 @@ const FacturaCompleta = () => {
   const handleSelectNombresAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNombresAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedNombresAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -472,7 +474,9 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  const getNumerosDocumentoAdquirientesOptions = (numerosDocumentoAdquirientes) => {
+  const getNumerosDocumentoAdquirientesOptions = (
+    numerosDocumentoAdquirientes
+  ) => {
     return numerosDocumentoAdquirientes.map((numero) => ({
       value: numero,
       label: numero,
@@ -481,9 +485,9 @@ const FacturaCompleta = () => {
   const handleSelectNumerosDocumentoAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNumerosDocumentoAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedNumerosDocumentoAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -504,9 +508,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
-  
-  
+
   const getTelefonosEmisoresOptions = (telefonosEmisores) => {
     return telefonosEmisores.map((telefono) => ({
       value: telefono,
@@ -516,9 +518,9 @@ const FacturaCompleta = () => {
   const handleSelectTelefonosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedTelefonosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedTelefonosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -537,7 +539,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getCorreosEmisoresOptions = (correosEmisores) => {
     return correosEmisores.map((correo) => ({
       value: correo,
@@ -547,9 +549,9 @@ const FacturaCompleta = () => {
   const handleSelectCorreosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedCorreosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedCorreosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -569,7 +571,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getDireccionesEmisoresOptions = (direccionesEmisores) => {
     return direccionesEmisores.map((direccion) => ({
       value: direccion,
@@ -579,9 +581,9 @@ const FacturaCompleta = () => {
   const handleSelectDireccionesEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDireccionesEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDireccionesEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -601,7 +603,7 @@ const FacturaCompleta = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getMunicipiosEmisoresOptions = (municipiosEmisores) => {
     return municipiosEmisores.map((municipio) => ({
       value: municipio,
@@ -611,9 +613,9 @@ const FacturaCompleta = () => {
   const handleSelectMunicipiosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedMunicipiosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedMunicipiosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -643,9 +645,9 @@ const FacturaCompleta = () => {
   const handleSelectDepartamentosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDepartamentosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDepartamentosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -741,32 +743,33 @@ const FacturaCompleta = () => {
     setFacturaToDelete(null);
   };
 
-  const handleSearch = (query, anio) => {
-    setSearchQuery(query);
-    fetchFacturas(selectedCiudad, query, anio);
-  };
-
   useEffect(() => {
     if (resetAnio) {
       setResetAnio(false);
     }
   }, [resetAnio]);
-  const handleSearchWithResetAnio = (query) => {
-    setSelectedAnio("");
-    handleSearch(query, "");
-    setResetAnio(true);
-  };
 
   const handleDownload = () => {
-    if (selectedCiudad || searchQuery || selectedAnio) {
-      handleDownloadExcel({
-        ciudad: selectedCiudad || undefined,
-        filtro: searchQuery || undefined,
-        anio: selectedAnio || undefined,
-      });
-    } else {
-      toast.error("Por favor selecciona una ciudad o introduce un filtro.");
-    }
+    handleDownloadExcel({
+      filtro: "",
+      ciudad: selectedCiudad,
+      anio: selectedAnio,
+      codigoUnico: "",
+      nombreComercialEmisor: selectedNombresComerciales,
+      telefonoAdquiriente: selectedTelefonosAdquirientes,
+      correoAdquiriente: selectedCorreosAdquirientes,
+      direccionAdquiriente: selectedDireccionesAdquirientes,
+      municipioAdquiriente: selectedMunicipiosAdquirientes,
+      departamentoAdquiriente: selectedDepartamentosAdquirientes,
+      numeroDocumentoAdquiriente: selectedNumerosDocumentoAdquirientes,
+      nombreAdquiriente: selectedNombresAdquirientes,
+      nitEmisor: selectedNitsEmisores,
+      telefonoEmisor: selectedTelefonosEmisores,
+      correoEmisor: selectedCorreosEmisores,
+      direccionEmisor: selectedDireccionesEmisores,
+      municipioEmisor: selectedMunicipiosEmisores,
+      departamentoEmisor: selectedDepartamentosEmisores,
+    });
   };
 
   const handleAnioChange = (anio) => {
@@ -783,6 +786,7 @@ const FacturaCompleta = () => {
   return (
     <div>
       <div className="xl:flex justify-around">
+      <h1 className="font-bold text-3xl text-secundary">Facturas Completas</h1>
         <div>
           <select
             value={selectedDepartamento}
@@ -833,7 +837,8 @@ const FacturaCompleta = () => {
         </div>
 
         <div className="flex justify-around">
-          <div className="xl:relative mr-4 xl:mt-0">
+        
+          <div hidden={!selectedCiudad} className="xl:relative mr-4 xl:mt-0">
             <button
               onClick={handleDownload}
               className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
@@ -842,26 +847,6 @@ const FacturaCompleta = () => {
               <RiDownloadLine className="mr-0 xl:mr-2" />
             </button>
           </div>
-
-          <div className="relative xl:right-0   ">
-          <input
-              disabled={!selectedCiudad}
-              type="text"
-              value={searchQuery}
-              onChange={(e) =>
-                handleSearchWithResetAnio(e.target.value, facturasDisponibles)
-              }
-              className="rounded-[10px] shadow-xl h-[30px] w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-              placeholder="Search"
-              required
-            />
-            
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-            <RiSearchLine className="h-8 w-8 p-1 xl:mb-3 mb-1 rounded-md shadow-2xl text-secundary font-semibold " />
-          </div>
-            
-          </div>
-
         </div>
       </div>
 
@@ -893,36 +878,45 @@ const FacturaCompleta = () => {
               <p>Total facturas: ${totalSuma}</p>
             </div>
           </div>
-          <div className="flex justify-end mb-2">
-            <button
-              onClick={() => setIsSelecting((prev) => !prev)}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              {isSelecting ? "Cancelar selección" : "Seleccionar consorcios"}
-            </button>
-            {isSelecting && (
-              <>
-                <button
-                  onClick={handleSelectAllConsorcios}
-                  className="ml-2 px-4 py-2 bg-yellow-500 text-white rounded"
-                >
-                  {selectedIds.size === facturas.length
-                    ? "Deseleccionar Todos"
-                    : "Seleccionar Todos"}
-                </button>
 
-                <button
-                  onClick={handleAddSelectedConsorcios}
-                  className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
-                >
-                  Agregar Consorcios
-                </button>
-              </>
-            )}
-          </div>
-
-          <div className="overflow-x-auto mt-4">
+          <div className="overflow-x-auto ">
             <table className="table-auto w-full">
+              <thead>
+                <tr>
+                  <th colSpan={19} className="px-4 py-2 "></th>
+                  <th className="px-4 py-2   text-white">
+                    <div className="flex justify-end mb-2">
+                      <button
+                        onClick={() => setIsSelecting((prev) => !prev)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded"
+                      >
+                        {isSelecting
+                          ? "Cancelar selección"
+                          : "Seleccionar consorcios"}
+                      </button>
+                      {isSelecting && (
+                        <>
+                          <button
+                            onClick={handleSelectAllConsorcios}
+                            className="ml-2 px-4 py-2 bg-yellow-500 text-white rounded"
+                          >
+                            {selectedIds.size === facturas.length
+                              ? "Deseleccionar Todos"
+                              : "Seleccionar Todos"}
+                          </button>
+
+                          <button
+                            onClick={handleAddSelectedConsorcios}
+                            className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
+                          >
+                            Agregar Consorcios
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </th>
+                </tr>
+              </thead>
               <thead>
                 <tr>
                   <th className="px-4 py-2 bg-secundary text-white">#</th>
@@ -958,225 +952,239 @@ const FacturaCompleta = () => {
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre Comercial vendedor
                     <Select
-                  options={getNombresComercialesOptions(nombresComerciales)}
-                  value={getNombresComercialesOptions(
-                    selectedNombresComerciales
-                  )}
-                  onChange={handleSelectNombresComerciales}
-                  placeholder="Selecciona nombre comercial"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getNombresComercialesOptions(nombresComerciales)}
+                      value={getNombresComercialesOptions(
+                        selectedNombresComerciales
+                      )}
+                      onChange={handleSelectNombresComerciales}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     NIT vendedor
                     <Select
-                  options={getNitsEmisoresOptions(nitsEmisores)}
-                  value={getNitsEmisoresOptions(
-                    selectedNitsEmisores
-                  )}
-                  onChange={handleSelectNitsEmisores}
-                  placeholder="Selecciona nit Emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
-                
+                      options={getNitsEmisoresOptions(nitsEmisores)}
+                      value={getNitsEmisoresOptions(selectedNitsEmisores)}
+                      onChange={handleSelectNitsEmisores}
+                      placeholder="Selecciona nit Emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Departamento vendedor
                     <Select
-                  options={getDepartamentosEmisoresOptions(departamentosEmisores)}
-                  value={getDepartamentosEmisoresOptions(
-                    selectedDepartamentosEmisores
-                  )}
-                  onChange={handleSelectDepartamentosEmisores}
-                  placeholder="Selecciona Departamento Emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getDepartamentosEmisoresOptions(
+                        departamentosEmisores
+                      )}
+                      value={getDepartamentosEmisoresOptions(
+                        selectedDepartamentosEmisores
+                      )}
+                      onChange={handleSelectDepartamentosEmisores}
+                      placeholder="Selecciona Departamento Emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Municipio vendedor
                     <Select
-                  options={getMunicipiosEmisoresOptions(municipiosEmisores)}
-                  value={getMunicipiosEmisoresOptions(
-                    selectedMunicipiosEmisores
-                  )}
-                  onChange={handleSelectMunicipiosEmisores}
-                  placeholder="Selecciona Municipio Emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getMunicipiosEmisoresOptions(municipiosEmisores)}
+                      value={getMunicipiosEmisoresOptions(
+                        selectedMunicipiosEmisores
+                      )}
+                      onChange={handleSelectMunicipiosEmisores}
+                      placeholder="Selecciona Municipio Emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Dirección vendedor
                     <Select
-                  options={getDireccionesEmisoresOptions(direccionesEmisores)}
-                  value={getDireccionesEmisoresOptions(
-                    selectedDireccionesEmisores
-                  )}
-                  onChange={handleSelectDireccionesEmisores}
-                  placeholder="Selecciona direccion emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getDireccionesEmisoresOptions(
+                        direccionesEmisores
+                      )}
+                      value={getDireccionesEmisoresOptions(
+                        selectedDireccionesEmisores
+                      )}
+                      onChange={handleSelectDireccionesEmisores}
+                      placeholder="Selecciona direccion emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Correo vendedor
                     <Select
-                  options={getCorreosEmisoresOptions(correosEmisores)}
-                  value={getCorreosEmisoresOptions(
-                    selectedCorreosEmisores
-                  )}
-                  onChange={handleSelectCorreosEmisores}
-                  placeholder="Selecciona Correo Emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getCorreosEmisoresOptions(correosEmisores)}
+                      value={getCorreosEmisoresOptions(selectedCorreosEmisores)}
+                      onChange={handleSelectCorreosEmisores}
+                      placeholder="Selecciona Correo Emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Telefono
                     <Select
-                  options={getTelefonosEmisoresOptions(telefonosEmisores)}
-                  value={getTelefonosEmisoresOptions(
-                    selectedTelefonosEmisores
-                  )}
-                  onChange={handleSelectTelefonosEmisores}
-                  placeholder="Selecciona Telefono Emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getTelefonosEmisoresOptions(telefonosEmisores)}
+                      value={getTelefonosEmisoresOptions(
+                        selectedTelefonosEmisores
+                      )}
+                      onChange={handleSelectTelefonosEmisores}
+                      placeholder="Selecciona Telefono Emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre comprador
                     <Select
-                  options={getNombresAdquirientesOptions(nombresAdquirientes)}
-                  value={getNombresAdquirientesOptions(
-                    selectedNombresAdquirientes
-                  )}
-                  onChange={handleSelectNombresAdquirientes}
-                  placeholder="Selecciona Nombre Comprador"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getNombresAdquirientesOptions(
+                        nombresAdquirientes
+                      )}
+                      value={getNombresAdquirientesOptions(
+                        selectedNombresAdquirientes
+                      )}
+                      onChange={handleSelectNombresAdquirientes}
+                      placeholder="Selecciona Nombre Comprador"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     # Documento comprador
                     <Select
-                  options={getNumerosDocumentoAdquirientesOptions(numerosDocumentoAdquirientes)}
-                  value={getNumerosDocumentoAdquirientesOptions(
-                    selectedNumerosDocumentoAdquirientes
-                  )}
-                  onChange={handleSelectNumerosDocumentoAdquirientes}
-                  placeholder="Selecciona Correo Emisor"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getNumerosDocumentoAdquirientesOptions(
+                        numerosDocumentoAdquirientes
+                      )}
+                      value={getNumerosDocumentoAdquirientesOptions(
+                        selectedNumerosDocumentoAdquirientes
+                      )}
+                      onChange={handleSelectNumerosDocumentoAdquirientes}
+                      placeholder="Selecciona Correo Emisor"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Departamento comprador
                     <Select
-                  options={getDepartamentosAdquirientesOptions(departamentosAdquirientes)}
-                  value={getDepartamentosAdquirientesOptions(
-                    selectedDepartamentosAdquirientes
-                  )}
-                  onChange={handleSelectDepartamentosAdquirientes}
-                  placeholder="Selecciona Departamento Comprador"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getDepartamentosAdquirientesOptions(
+                        departamentosAdquirientes
+                      )}
+                      value={getDepartamentosAdquirientesOptions(
+                        selectedDepartamentosAdquirientes
+                      )}
+                      onChange={handleSelectDepartamentosAdquirientes}
+                      placeholder="Selecciona Departamento Comprador"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Municipio comprador
                     <Select
-                  options={getMunicipiosAdquirientesOptions(municipiosAdquirientes)}
-                  value={getMunicipiosAdquirientesOptions(
-                    selectedMunicipiosAdquirientes
-                  )}
-                  onChange={handleSelectMunicipiosAdquirientes}
-                  placeholder="Selecciona Municipio Comprador"
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getMunicipiosAdquirientesOptions(
+                        municipiosAdquirientes
+                      )}
+                      value={getMunicipiosAdquirientesOptions(
+                        selectedMunicipiosAdquirientes
+                      )}
+                      onChange={handleSelectMunicipiosAdquirientes}
+                      placeholder="Selecciona Municipio Comprador"
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Dirección comprador
                     <Select
-                  options={getDireccionesAdquirientesOptions(direccionesAdquirientes)}
-                  value={getDireccionesAdquirientesOptions(
-                    selectedDireccionesAdquirientes
-                  )}
-                  onChange={handleSelectDireccionesAdquirientes}
-                  placeholder="Selecciona Direccion Comprador"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getDireccionesAdquirientesOptions(
+                        direccionesAdquirientes
+                      )}
+                      value={getDireccionesAdquirientesOptions(
+                        selectedDireccionesAdquirientes
+                      )}
+                      onChange={handleSelectDireccionesAdquirientes}
+                      placeholder="Selecciona Direccion Comprador"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Correo comprador
                     <Select
-                  options={getCorreosAdquirientesOptions(correosAdquirientes)}
-                  value={getCorreosAdquirientesOptions(
-                    selectedCorreosAdquirientes
-                  )}
-                  onChange={handleSelectCorreosAdquirientes}
-                  placeholder="Selecciona Correo Comprador"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                      options={getCorreosAdquirientesOptions(
+                        correosAdquirientes
+                      )}
+                      value={getCorreosAdquirientesOptions(
+                        selectedCorreosAdquirientes
+                      )}
+                      onChange={handleSelectCorreosAdquirientes}
+                      placeholder="Selecciona Correo Comprador"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Teléfono Comprador<Select
-                  options={getTelefonosAdquirientesOptions(telefonosAdquirientes)}
-                  value={getTelefonosAdquirientesOptions(
-                    selectedTelefonosAdquirientes
-                  )}
-                  onChange={handleSelectTelefonosAdquirientes}
-                  placeholder="Selecciona Telefono Comprador"
-                  isMulti
-                  styles={customStyles}
-                  closeMenuOnSelect={false}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                    Teléfono Comprador
+                    <Select
+                      options={getTelefonosAdquirientesOptions(
+                        telefonosAdquirientes
+                      )}
+                      value={getTelefonosAdquirientesOptions(
+                        selectedTelefonosAdquirientes
+                      )}
+                      onChange={handleSelectTelefonosAdquirientes}
+                      placeholder="Selecciona Telefono Comprador"
+                      isMulti
+                      styles={customStyles}
+                      closeMenuOnSelect={false}
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Total acumulado

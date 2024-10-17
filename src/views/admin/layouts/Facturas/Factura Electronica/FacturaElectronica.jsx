@@ -246,9 +246,9 @@ const FacturaElectronica = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-medium text-secondary">
-        Factura Electrónica
-      </h1>
+       <h1 className="font-bold text-3xl text-secundary">
+          Agregar Facturas Electronicas
+        </h1>
 
       <div className="xl:flex mt-8 xl:mt-0 xl:p-8">
         <div className="bg-tertiary-100 h-full xl:w-1/2 p-10 m-0 rounded-xl shadow-2xl">

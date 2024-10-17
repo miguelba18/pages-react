@@ -75,7 +75,10 @@ const DocumentoVendedorAlcalde = () => {
 
   return (
     <div className="">
-      <div className="flex xl:justify-end items-center ">
+      <div className="flex xl:justify-between items-center ">
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Facturas Documento Vendedor
+        </h1>
         <div className="flex  ">
           <div className="xl:relative mr-4">
             <button
@@ -104,9 +107,7 @@ const DocumentoVendedorAlcalde = () => {
           </div>
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas Documento Vendedores
-      </h1>
+      
 
       <div className="flex  justify-between">
         <div className="flex justify-center mt-4">

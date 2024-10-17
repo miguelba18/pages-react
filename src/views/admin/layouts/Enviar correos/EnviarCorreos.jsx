@@ -92,7 +92,9 @@ const EnviarCorreos = () => {
       <div className="flex justify-center">
         <img src="../../../../../../src/assets/img/img2.png" alt="Imagen" />
       </div>
-      <h1 className="mb-2 text-bold text-3xl">Enviar correos </h1>
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Enviar Correos
+        </h1>
 
       <div className="mb-4">
         {!showCheckboxes ? (

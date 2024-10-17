@@ -7,13 +7,13 @@ import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
-import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
-import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
+import useListTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListTodasAlcalde";
+import useDescargarTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useDescargarTodasAlcalde";
 import Select from "react-select";
 import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
 import { toast } from "react-toastify";
 
-const FacturaCompleta = () => {
+const FacturaTodasAlcalde = () => {
   const {
     facturas,
     fetchFacturas,
@@ -32,12 +32,12 @@ const FacturaCompleta = () => {
     direccionesEmisores,
     municipiosEmisores,
     departamentosEmisores,
-  } = useListAlcalde();
+  } = useListTodasAlcalde();
 
   const [searchQuery] = useState("");
   const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
-  const { handleDownloadExcel } = useDescargarFacturas();
+  const { handleDownloadExcel } = useDescargarTodasAlcalde();
   const [setProcessedFacturas] = useState(new Set());
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isSelecting, setIsSelecting] = useState(false);
@@ -752,7 +752,8 @@ const FacturaCompleta = () => {
   return (
     <div>
       <div className="xl:flex justify-between">
-        <h1 className="font-bold text-3xl text-secundary">Facturas Completas</h1>
+      <h1 className="font-bold text-3xl text-secundary">Facturas Completas Todas</h1>
+
         <div className="xl:relative mr-4">
           <button
             onClick={handleDownload}
@@ -1232,4 +1233,4 @@ const FacturaCompleta = () => {
   );
 };
 
-export default FacturaCompleta;
+export default FacturaTodasAlcalde;

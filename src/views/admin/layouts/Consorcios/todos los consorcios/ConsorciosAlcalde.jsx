@@ -122,7 +122,10 @@ const ConsorciosAlcalde = () => {
 
   return (
     <div>
-      <div className="xl:flex xl:justify-end items-center">
+      <div className="xl:flex xl:justify-around items-center">
+      <h1 className="font-bold text-3xl text-secundary">
+          Todas las facturas No Vinculantes
+        </h1>
         <div className="xl:relative mr-4">
           <button
             onClick={handleDownload}
@@ -147,9 +150,7 @@ const ConsorciosAlcalde = () => {
           </div>
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas no Vinculantes
-      </h1>
+      
 
       <div className="flex  justify-between">
             <div className="flex justify-center mt-4">

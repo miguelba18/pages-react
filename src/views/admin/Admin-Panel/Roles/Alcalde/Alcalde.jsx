@@ -29,9 +29,9 @@ const Alcalde = () => {
 
   return (
     <div className="container mx-auto xl:p-4">
-      <h1 className="text-2xl md:text-4xl font-bold mb-4">
-        Ingreso de Alcaldes
-      </h1>
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Agregar Alcalde
+        </h1>
       <div className="flex justify-end">
         <button
           className="flex mb-2 justify-center items-center gap-4 px-4 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] "

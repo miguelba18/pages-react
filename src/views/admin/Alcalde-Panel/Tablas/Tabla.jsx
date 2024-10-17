@@ -73,7 +73,9 @@ const Tabla = () => {
       <div className="flex justify-center">
         <img src="../../../../../../src/assets/img/img2.png" />
       </div>
-      <h1 className="text-2xl font-bold mb-4">Lista de Secretarios y Personal</h1>
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Lista de Secretarios/Personal
+        </h1>
       <table className="table-auto w-full mt-8">
         <thead>
           <tr>

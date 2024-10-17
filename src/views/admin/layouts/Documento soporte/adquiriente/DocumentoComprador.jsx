@@ -94,6 +94,9 @@ const DocumentoComprador = () => {
 
   return (
     <div className="">
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Facturas Documento Comprador
+        </h1>
       <div className="flex xl:justify-between items-center ">
         <div className="flex justify-around  ">
           <div className="ml-4">
@@ -167,9 +170,7 @@ const DocumentoComprador = () => {
           </div>
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas documento compradores
-      </h1>
+      
 
       {selectedCiudad && (
         <>

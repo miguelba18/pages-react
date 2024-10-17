@@ -10,9 +10,9 @@ const AdministrarFacturas = () => {
   return (
     
     <div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Administrar facturas
-      </h1>
+       <h1 className="font-bold text-3xl text-secundary">
+          Administrar Facturas
+        </h1>
 
       <div>
           <div className="mt-4">

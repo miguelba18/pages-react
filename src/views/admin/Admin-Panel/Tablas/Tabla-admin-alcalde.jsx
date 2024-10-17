@@ -72,7 +72,9 @@ const Tabla = () => {
         <img src="../../../../../../src/assets/img/img2.png" alt="Imagen" />
       </div>
       
-      <h1 className="text-2xl font-bold mb-4">Lista de Alcaldes y Admin</h1>
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Lista De Alcaldes
+        </h1>
       <div className="overflow-x-auto">
       <table className="table-auto w-full mt-8 ">
         <thead>

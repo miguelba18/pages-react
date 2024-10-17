@@ -84,7 +84,9 @@ const RegistroAdmin = () => {
 
   return (
     <div className="xl:p-4">
-      <h1 className="text-2xl md:text-4xl font-bold mb-4">Ingreso de admin</h1>
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Agregar Administrador
+        </h1>
       <div className="flex justify-center items-center">
         <div className="md:p-10 xl:w-[50%] w-[100%]">
           <form

@@ -90,9 +90,9 @@ const DocumentoSoporte = () => {
     <div className="">
       <div className=" mb-10">
         
-          <h1 className="text-3xl font-medium text-secondary">
-            Documento Soporte
-          </h1>
+      <h1 className="font-bold text-3xl text-secundary">
+          Agregar Documentos soporte
+        </h1>
           
         
         <div className="xl:w-1/2 xl:flex mt-8 xl:mt-0 xl:p-4 justify-center">

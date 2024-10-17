@@ -110,7 +110,11 @@ const Consorcios = () => {
 
   return (
     <div>
+       <h1 className="font-bold text-3xl text-secundary">
+          Todas las facturas No Vinculantes
+        </h1>
       <div className="xl:flex xl:justify-between items-center">
+     
         <div className="flex justify-around  ">
           <div className="ml-4 mt-3">
             <select
@@ -183,9 +187,7 @@ const Consorcios = () => {
           </div>
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas no Vinculantes
-      </h1>
+     
 
       {selectedCiudad && (
         <>

@@ -105,6 +105,9 @@ const ConsorcioVendedorMunicipio = () => {
   return (
     <div>
       <div className="xl:flex xl:justify-between items-center">
+      <h1 className="font-bold text-3xl text-secundary">
+          Facturas No Vinculante Vendedores
+        </h1>
         <div className="flex justify-end">
           <div className="relative " hidden={!selectedCiudad}>
             <input

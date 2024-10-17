@@ -74,7 +74,11 @@ const DocumentoVendedor = () => {
 
   return (
     <div className="">
+      <h1 className="font-bold text-3xl text-secundary mb-4">
+          Facturas Documento Vendedor
+        </h1>
       <div className="flex xl:justify-between items-center ">
+      
         <div className="flex justify-around  ">
           <div className="ml-4">
             <select
@@ -147,9 +151,7 @@ const DocumentoVendedor = () => {
           </div>
         </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4 mt-4 xl:mt-0">
-        Facturas Documento Vendedores
-      </h1>
+      
       {selectedCiudad && (
         <>
           <div className="flex  justify-between">

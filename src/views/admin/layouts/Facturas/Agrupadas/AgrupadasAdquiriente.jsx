@@ -376,6 +376,8 @@ const AgrupadasAdquiriente = () => {
   return (
     <div>
       <div className="xl:flex justify-around">
+      <h1 className="font-bold text-3xl text-secundary">Facturas Comprador Municipio</h1>
+
         <div>
           <select
             value={selectedDepartamento}

@@ -15,7 +15,9 @@ const Secretario = () => {
   
   return (
     <div className="container mx-auto xl:p-4">
-      <h1 className="text-2xl md:text-4xl font-bold mb-4">Ingreso de Secretarios</h1>
+     <h1 className="font-bold text-3xl text-secundary mb-4">
+          Agregar Secretario
+        </h1>
       <div className="flex justify-end">
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-8 "

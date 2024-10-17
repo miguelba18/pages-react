@@ -30,9 +30,9 @@ function Perfil() {
       {profile ? (
         <>
           <div className=" mb-8  xl:w-1/2 xl:p-10 flex justify-center xl:justify-end">
-            <div className="w-[80%] bg-white shadow-2xl shadow-blue-500 rounded-3xl ">
-              <div className="flex justify-center mt-10 mb-6 ">
-                <p className="text-3xl text-blue-500 text-semibold">
+            <div className="w-[80%] bg-white shadow-2xl shadow-primary rounded-3xl ">
+              <div className="flex justify-center mt-5 mb-6 ">
+                <p className="text-3xl text-primary text-semibold">
                   {profile.nombre} {profile.apellido}
                 </p>
               </div>
@@ -49,7 +49,7 @@ function Perfil() {
               </div>
               <div className="flex justify-center">
                 <button
-                  className="flex justify-center mb-4 xl:mb-0 items-cente px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3]"
+                  className="flex justify-center mb-4 xl:mb-0 items-cente px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#45edc0] to-[#12adbb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#04b390]"
                   onClick={handleEditClick}
                 >
                   Actualizar Perfil
@@ -58,7 +58,7 @@ function Perfil() {
             </div>
           </div>
 
-          <div className="bg-blue-500 p-8 rounded-xl mb-8 xl:w-1/2">
+          <div className="bg-primary p-8 rounded-xl mb-8 xl:w-1/2">
           <h1 className="text-3xl text-white font-semibold mb-4">
             Perfil
           </h1>

@@ -450,7 +450,10 @@ const Contribuyente = () => {
 
   return (
     <div>
-      <div className="flex justify-end items-center px-4 py-6">
+      <div className="flex justify-between items-center px-4 py-6">
+      <h1 className="font-bold text-3xl text-secundary">
+          Facturas Contribuyentes
+        </h1>
         <div className="xl:relative mr-4">
           <button
             onClick={handleDownload}
@@ -461,9 +464,7 @@ const Contribuyente = () => {
           </button>
         </div>
       </div>
-      <h1 className="text-3xl font-bold mb-4 mt-4 xl:mt-0">
-        Lista de Contribuyentes
-      </h1>
+      
       <div className="flex mt-4">
         <button
           onClick={() => setCurrentPage(currentPage - 1)}

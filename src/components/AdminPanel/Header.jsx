@@ -705,7 +705,7 @@ const Header = () => {
                   </MenuItem>
                   <MenuItem className="">
                     <Link
-                      to="/facturacompletatodas"
+                      to="/facturatodasalcalde"
                       className="flex items-center  gap-4 px-4 py-2 "
                     >
                       <IoFileTrayFull
@@ -830,6 +830,46 @@ const Header = () => {
                     <RiBankFill
                       className={`text-xl text-secundary ${
                         location.pathname === "/documentovendedor" ? " " : ""
+                      }`}
+                    />
+                    Documento Vendedor
+                  </Link>
+                </div>
+              </MenuItem>
+
+              <MenuItem className="p-0 ">
+                <div
+                  hidden={
+                    userRoleId === "ADMIN"
+                    
+                  }
+                >
+                  <Link
+                    to="/documentocompradoralcalde"
+                    className="flex items-center  gap-4 px-4 py-2 "
+                  >
+                    <RiShakeHandsFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentocompradoralcalde" ? " " : ""
+                      }`}
+                    />
+                    Documento Comprador
+                  </Link>
+                </div>
+              </MenuItem>
+              <MenuItem className="p-0 ">
+                <div
+                  hidden={
+                    userRoleId === "ADMIN" 
+                  }
+                >
+                  <Link
+                    to="/documentovendedoralcalde"
+                    className="flex items-center  gap-4 px-4 py-2  "
+                  >
+                    <RiBankFill
+                      className={`text-xl text-secundary ${
+                        location.pathname === "/documentovendedoralcalde" ? " " : ""
                       }`}
                     />
                     Documento Vendedor
