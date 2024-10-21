@@ -12,6 +12,9 @@ import useListFacturas from "../../../../hook/Facturas/Adquiriente y emisor/adqu
 import useAuthToken from "../../../../hook/Token/useAuthToken";
 import { toast } from "react-toastify";
 import HighlightedText from "../../../../../utils/HighlightedText";
+import useListSelectsEmisor from "../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useListSelectsEmisor";
+import Select from "react-select";
+
 const AgrupadasAdquiriente = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -23,7 +26,11 @@ const AgrupadasAdquiriente = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAnio, setSelectedAnio] = useState("");
   const [resetAnio, setResetAnio] = useState(false);
-  
+  const { emisores, nitEmisores } = useListSelectsEmisor();
+  const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
+    []
+  );
+  const [selectedNitsEmisores, setSelectedNitsEmisores] = useState([]);
   const {
     departamentos,
     filteredCiudades,
@@ -82,11 +89,11 @@ const AgrupadasAdquiriente = () => {
       const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
       const url = new URL("http://localhost:8080/factura/persona-desagrupar");
       const params = new URLSearchParams();
-  
+
       if (selectedCiudad) {
         params.append("ciudad", selectedCiudad);
       }
-  
+
       facturas.forEach((factura) => {
         if (factura.numeroDocumentoAdquiriente) {
           params.append("filtros", factura.numeroDocumentoAdquiriente);
@@ -95,14 +102,13 @@ const AgrupadasAdquiriente = () => {
           params.append("anios", factura.fechaEmision);
         }
       });
-  
+
       if (tipo) {
         params.append("tipo", tipoString);
       }
-  
+
       url.search = params.toString();
-      
-  
+
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -110,120 +116,109 @@ const AgrupadasAdquiriente = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("Error al desagrupar las facturas");
       }
-  
+
       const data = await response.json();
       return data.facturas;
-      
     } catch (error) {
       console.error("Error en handleDesagrupar:", error);
     }
   };
-  
-  
 
-  const handleDownloadExcelDesagrupadas = useCallback(async (selectedFacturas, tipo = "adquirientes") => {
-    const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
+  const handleDownloadExcelDesagrupadas = useCallback(
+    async (selectedFacturas, tipo = "adquirientes") => {
+      const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
 
-    try {
-      const url = new URL("http://localhost:8080/factura/descargar-excel-persona-desagrupar");
-      const params = new URLSearchParams();
+      try {
+        const url = new URL(
+          "http://localhost:8080/factura/descargar-excel-persona-desagrupar"
+        );
+        const params = new URLSearchParams();
 
-      if (selectedCiudad) {
-        params.append("ciudad", selectedCiudad);
-      }
-
-      selectedFacturas.forEach((id) => {
-        params.append("id", id);
-      });
-
-      if (tipo) {
-        params.append("tipo", tipoString);
-      }
-
-    
-      url.search = params.toString();
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-
-      
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage || "No se pudo descargar el archivo Excel.");
-      }
-
-      const contentDisposition = response.headers.get("Content-Disposition");
-      let fileName = "archivo.xlsx";
-
-      if (contentDisposition) {
-        const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
-        if (matches && matches[1]) {
-          fileName = matches[1];
+        if (selectedCiudad) {
+          params.append("ciudad", selectedCiudad);
         }
-      }
 
-      const blob = await response.blob();
-      if (window.showSaveFilePicker) {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: fileName,
-          types: [
-            {
-              description: "Excel files",
-              accept: {
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                  [".xlsx"],
-              },
-            },
-          ],
+        selectedFacturas.forEach((id) => {
+          params.append("id", id);
         });
-        const writableStream = await handle.createWritable();
-        await writableStream.write(blob);
-        await writableStream.close();
-        toast.success("El excel se ha descargado correctamente.");
-       
 
-      
-    } else {
-       
-      const urlBlob = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = urlBlob;
-      a.download = fileName; 
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(urlBlob);
-      toast.success("El excel se ha descargado correctamente.");
-      
-    }
+        if (tipo) {
+          params.append("tipo", tipoString);
+        }
 
+        url.search = params.toString();
 
-    } catch (error) {
-      console.error("Error al descargar el archivo Excel:", error);
-     
-    }
-  }, [token, selectedCiudad])
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token, selectedCiudad]
+  );
 
   const handleDesagruparYDescargar = async (factura, tipo = "adquirientes") => {
     try {
-      
       const desagrupadas = await handleDesagrupar([factura], tipo);
-  
-     
+
       if (desagrupadas && desagrupadas.length > 0) {
         const facturasASeleccionar = desagrupadas.map((factura) => factura.id);
-  
-      
+
         await handleDownloadExcelDesagrupadas(facturasASeleccionar, tipo);
       } else {
         console.error("No hay facturas desagrupadas para descargar.");
@@ -234,11 +229,9 @@ const AgrupadasAdquiriente = () => {
       toast.error("Hubo un problema al desagrupar o descargar las facturas.");
     }
   };
-  
-  
+
   const toggleDespliegue = async (factura) => {
     try {
-      
       await handleDesagruparYDescargar(factura);
     } catch (error) {
       console.error("Error al desagrupar o descargar:", error);
@@ -246,104 +239,99 @@ const AgrupadasAdquiriente = () => {
     }
   };
 
+  const handleDownloadExcelDesagrupadasRojo = useCallback(
+    async (selectedFacturas, tipo = "adquirientes") => {
+      const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
 
-  const handleDownloadExcelDesagrupadasRojo = useCallback(async (selectedFacturas, tipo = "adquirientes") => {
-    const tipoString = typeof tipo === "string" ? tipo : "adquirientes";
+      try {
+        const url = new URL(
+          "http://localhost:8080/factura/descargar-excel-persona-desagrupar-rojo"
+        );
+        const params = new URLSearchParams();
 
-    try {
-      const url = new URL("http://localhost:8080/factura/descargar-excel-persona-desagrupar-rojo");
-      const params = new URLSearchParams();
-
-      if (selectedCiudad) {
-        params.append("ciudad", selectedCiudad);
-      }
-
-      selectedFacturas.forEach((id) => {
-        params.append("id", id);
-      });
-
-      if (tipo) {
-        params.append("tipo", tipoString);
-      }
-
-    
-      url.search = params.toString();
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage || "No se pudo descargar el archivo Excel.");
-      }
-
-      const contentDisposition = response.headers.get("Content-Disposition");
-      let fileName = "archivo.xlsx";
-
-      if (contentDisposition) {
-        const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
-        if (matches && matches[1]) {
-          fileName = matches[1];
+        if (selectedCiudad) {
+          params.append("ciudad", selectedCiudad);
         }
-      }
 
-      const blob = await response.blob();
-      if (window.showSaveFilePicker) {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: fileName,
-          types: [
-            {
-              description: "Excel files",
-              accept: {
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                  [".xlsx"],
-              },
-            },
-          ],
+        selectedFacturas.forEach((id) => {
+          params.append("id", id);
         });
-        const writableStream = await handle.createWritable();
-        await writableStream.write(blob);
-        await writableStream.close();
-        toast.success("El excel se ha descargado correctamente.");
-       
 
-      
-    } else {
-       
-      const urlBlob = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = urlBlob;
-      a.download = fileName; 
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(urlBlob);
-      toast.success("El excel se ha descargado correctamente.");
-      
-    }
+        if (tipo) {
+          params.append("tipo", tipoString);
+        }
 
+        url.search = params.toString();
 
-    } catch (error) {
-      console.error("Error al descargar el archivo Excel:", error);
- 
-    }
-  }, [token, selectedCiudad])
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token, selectedCiudad]
+  );
 
   const handleDesagruparYDescargarRojo = async (factura) => {
     try {
-      
       const facturasDesagrupadas = await handleDesagrupar([factura]);
-  
-      
+
       if (facturasDesagrupadas && facturasDesagrupadas.length > 0) {
-        
-        const facturasASeleccionar = facturasDesagrupadas.map((factura) => factura.id);
-  
-        
+        const facturasASeleccionar = facturasDesagrupadas.map(
+          (factura) => factura.id
+        );
+
         await handleDownloadExcelDesagrupadasRojo(facturasASeleccionar);
       } else {
         throw new Error("No se encontraron facturas desagrupadas.");
@@ -356,28 +344,126 @@ const AgrupadasAdquiriente = () => {
 
   const toggleDespliegueRojo = async (factura) => {
     try {
-      
       await handleDesagruparYDescargarRojo(factura);
     } catch (error) {
       console.error("Error al desagrupar o descargar:", error);
       toast.error("Hubo un problema al desagrupar o descargar las facturas.");
     }
   };
+  const resetAllSelectsExcept = (excludedSetter) => {
+    const allSetters = [setSelectedNombresComerciales, setSelectedNitsEmisores];
 
+    allSetters.forEach((setter) => {
+      if (setter !== excludedSetter) {
+        setter([]);
+      }
+    });
+  };
+  const opcionesEmisores = emisores.map((emisor) => ({
+    value: emisor,
+    label: emisor,
+  }));
+  const opcionesNitEmisores = nitEmisores.map((nitEmisor) => ({
+    value: nitEmisor,
+    label: nitEmisor,
+  }));
+  const handleSelectNombresComerciales = (selectedOptions) => {
+    resetAllSelectsExcept(setSelectedNombresComerciales); 
   
+    const selectedValues = Array.isArray(selectedOptions)
+      ? selectedOptions.map((option) => option.value)
+      : selectedOptions
+      ? [selectedOptions.value]
+      : [];
+    
+    setSelectedNombresComerciales(selectedValues);  
   
+    const filtro = selectedValues.join(',');
   
-  
-  
+    fetchFacturas(
+      selectedCiudad,  
+      filtro,          
+      selectedAnio,    
+      "adquirientes",      
+      []  
+    );
+  };
 
+  const handleSelectNitsEmisores = (selectedOptions) => {
+    resetAllSelectsExcept(setSelectedNitsEmisores); 
   
+    const selectedValues = Array.isArray(selectedOptions)
+      ? selectedOptions.map((option) => option.value)
+      : selectedOptions
+      ? [selectedOptions.value]
+      : [];
+    
+    setSelectedNitsEmisores(selectedValues);  
   
+    const filtro = selectedValues.join(',');
+  
+    fetchFacturas(
+      selectedCiudad,  
+      filtro,            
+      selectedAnio,    
+      "adquirientes",      
+      []  
+    );
+  };
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "38px",
+      fontSize: "14px",
+      minWidth: "200px",
+      width: "100%",
+      boxSizing: "border-box",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      "&:hover": {
+        borderColor: "#888",
+      },
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: "#e0e0e0",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#000",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#ff0000",
+      ":hover": {
+        backgroundColor: "#f00",
+        color: "#fff",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#999",
+    }),
+  };
 
   return (
     <div>
+      <h1 className="font-bold text-3xl text-secundary mb-6 text-center xl:text-start">
+        Facturas Comprador Municipio
+      </h1>
       <div className="xl:flex justify-around">
-      <h1 className="font-bold text-3xl text-secundary">Facturas Comprador Municipio</h1>
-
         <div>
           <select
             value={selectedDepartamento}
@@ -510,21 +596,41 @@ const AgrupadasAdquiriente = () => {
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre o Razón Social del Vendedor
+                    <Select
+                      options={opcionesEmisores}
+                      placeholder="Selecciona un emisor"
+                      styles={customStyles}
+                      value={selectedNombresComerciales.map((value) => ({ value, label: value }))}
+
+                      onChange={handleSelectNombresComerciales}
+                      isMulti
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Número Documento del Vendedor
+                    Nit del Vendedor
+                    <Select
+                      options={opcionesNitEmisores}
+                      placeholder="Selecciona un emisor"
+                      styles={customStyles}
+                      value={selectedNitsEmisores.map((value) => ({ value, label: value }))}
+
+                      onChange={handleSelectNitsEmisores}
+                      isMulti
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
                     Total acumulado cliente municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    
-
                     Discriminado cliente por municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                  Discriminado cliente por factura municipio
+                    Discriminado cliente por factura municipio
                   </th>
                 </tr>
               </thead>
@@ -550,25 +656,20 @@ const AgrupadasAdquiriente = () => {
                             />
                           </td>
 
-                          <td className="border px-4">${factura.subtotal}</td>
+                          <td className="border px-4 text-center">
+                            ${factura.subtotal}
+                          </td>
 
                           <td className="border px-4 py-2 text-center">
                             <div className="grid justify-center">
-                            <div>
+                              <div>
                                 <button
                                   onClick={() => toggleDespliegue(factura)}
                                   className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                                 
-                                 
-                                
-                            
                                 >
                                   <RiDownloadLine className="h-6 w-6" />
                                 </button>
-
-                                
                               </div>
-                             
                             </div>
                           </td>
 
@@ -578,15 +679,9 @@ const AgrupadasAdquiriente = () => {
                                 <button
                                   onClick={() => toggleDespliegueRojo(factura)}
                                   className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185] "
-                              
-                                    
-                                 
-                           
                                 >
                                   <MdOutlineGroup className="h-6 w-6" />
                                 </button>
-
-                                
                               </div>
                             </div>
                           </td>

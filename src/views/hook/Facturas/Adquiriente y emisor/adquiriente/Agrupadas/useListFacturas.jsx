@@ -24,6 +24,7 @@ const useListFacturas = () => {
               if (tipo) {
                 params.append("tipo", tipoString);
               }
+              
       
               if (params.toString()) {
                 url += `?${params.toString()}`;

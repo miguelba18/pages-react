@@ -9,9 +9,12 @@ import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
-
+import useListSelectsEmisor from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/useListSelectsEmisor";
 import useDescargarFacturas from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/Alcalde/useDescargarFacturas";
 import useAuthToken from "../../../../../hook/Token/useAuthToken";
+import Select from "react-select";
+
+
 const AgrupadasAdquirienteAlcalde = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -22,7 +25,9 @@ const AgrupadasAdquirienteAlcalde = () => {
   const { token } = useAuthToken();
   const [resetAnio, setResetAnio] = useState(false);
   const { handleDownloadExcel } = useDescargarFacturas();
-  
+  const { emisores, nitEmisores } = useListSelectsEmisor();
+  const [selectedNombresComerciales, setSelectedNombresComerciales] = useState([]);
+  const [selectedNitsEmisores, setSelectedNitsEmisores] = useState([]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -346,6 +351,119 @@ const AgrupadasAdquirienteAlcalde = () => {
     }
   };
 
+  const resetAllSelectsExcept = (excludedSetter) => {
+    const allSetters = [
+      setSelectedNombresComerciales,
+      setSelectedNitsEmisores
+      
+    ];
+
+    allSetters.forEach((setter) => {
+      if (setter !== excludedSetter) {
+        setter([]);
+      }
+    });
+  };
+  const opcionesEmisores = emisores.map((emisor) => ({
+    value: emisor,
+    label: emisor,
+  }));
+  const opcionesNitEmisores = nitEmisores.map((nitEmisor) => ({
+    value: nitEmisor,
+    label: nitEmisor,
+  }));
+  const handleSelectNombresComerciales = (selectedOptions) => {
+    resetAllSelectsExcept(setSelectedNombresComerciales); 
+  
+    const selectedValues = Array.isArray(selectedOptions)
+      ? selectedOptions.map((option) => option.value)
+      : selectedOptions
+      ? [selectedOptions.value]
+      : [];
+    
+    setSelectedNombresComerciales(selectedValues);  
+  
+    const filtro = selectedValues.join(',');
+  
+    fetchFacturas(
+      "",  
+      filtro,          
+      selectedAnio,    
+      "adquirientes",      
+      []  
+    );
+  };
+
+  const handleSelectNitsEmisores = (selectedOptions) => {
+    resetAllSelectsExcept(setSelectedNitsEmisores); 
+  
+    const selectedValues = Array.isArray(selectedOptions)
+      ? selectedOptions.map((option) => option.value)
+      : selectedOptions
+      ? [selectedOptions.value]
+      : [];
+    
+    setSelectedNitsEmisores(selectedValues);  
+  
+    const filtro = selectedValues.join(',');
+  
+    fetchFacturas(
+      "",  
+      filtro,            
+      selectedAnio,    
+      "adquirientes",      
+      []  
+    );
+  };
+
+
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "38px",
+      fontSize: "14px",
+      minWidth: "200px",
+      width: "100%",
+      boxSizing: "border-box",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      "&:hover": {
+        borderColor: "#888",
+      },
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: "#e0e0e0",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#000",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#ff0000",
+      ":hover": {
+        backgroundColor: "#f00",
+        color: "#fff",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#999",
+    }),
+  };
+
 
 
   return (
@@ -446,9 +564,29 @@ const AgrupadasAdquirienteAlcalde = () => {
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre o Razón Social del Vendedor
+                    <Select
+                      options={opcionesEmisores}
+                      placeholder="Selecciona un emisor"
+                      styles={customStyles}
+                      value={selectedNombresComerciales.map((value) => ({ value, label: value }))}
+                      onChange={handleSelectNombresComerciales}
+                      isMulti
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Número Documento del Vendedor
+                    Nit del Vendedor
+                    <Select
+                      options={opcionesNitEmisores}
+                      placeholder="Selecciona un Nit"
+                      value={selectedNitsEmisores.map((value) => ({ value, label: value }))}
+                      styles={customStyles}
+                      onChange={handleSelectNitsEmisores}
+                      isMulti
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">

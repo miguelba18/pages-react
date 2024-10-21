@@ -82,40 +82,42 @@ const Header = () => {
 
   return (
     <header className="xl:h-[10vh] border-b border-tertiary-100 md:p-3 px-2  ">
-      <div className="flex justify-between items-center ">
-        <div className=" rounded-md bg-primary p-2 flex justify-center items-center ">
-          <RiAppsFill className="text-white  h-6 w-6 mr-2" />
-          <h1 className=" text-2xl font-normal   ">
-            {userRoleId === "ADMIN" && (
-              <span className="text-white">
-                SIM ADMIN<span className=" ">.</span>
-              </span>
-            )}
-            {userRoleId === "Alcalde" && (
-              <span className="text-white">
-                SIM Alcalde
-                <span className=" text-secundary">.</span>
-              </span>
-            )}
-            {userRoleId === "Secretario" && (
-              <span className="text-white">
-                SIM Secretario
-                <span className=" text-secundary">.</span>
-              </span>
-            )}
-            {userRoleId === "Personal" && (
-              <span className="text-white">
-                SIM Personal
-                <span className=" text-secundary">.</span>
-              </span>
-            )}
-          </h1>
+      <div className="md:flex justify-between items-center ">
+        <div className="hidden md:inline rounded-md bg-primary p-2   ">
+          <div className="flex justify-center items-center">
+            <RiAppsFill className="text-white  h-6 w-6 mr-2" />
+            <h1 className=" text-2xl font-normal   ">
+              {userRoleId === "ADMIN" && (
+                <span className="text-white">
+                  SIM ADMIN<span className=" ">.</span>
+                </span>
+              )}
+              {userRoleId === "Alcalde" && (
+                <span className="text-white">
+                  SIM Alcalde
+                  <span className=" text-secundary">.</span>
+                </span>
+              )}
+              {userRoleId === "Secretario" && (
+                <span className="text-white">
+                  SIM Secretario
+                  <span className=" text-secundary">.</span>
+                </span>
+              )}
+              {userRoleId === "Personal" && (
+                <span className="text-white">
+                  SIM Personal
+                  <span className=" text-secundary">.</span>
+                </span>
+              )}
+            </h1>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2"></div>
+        <div className="flex items-center justify-center gap-2"></div>
 
         <nav className="">
-          <ul className="list-none flex items-center">
+          <ul className="list-none flex justify-center md:justify-start items-center">
             {userRoleId === "ADMIN" && (
               <>
                 <Menu
@@ -838,19 +840,16 @@ const Header = () => {
               </MenuItem>
 
               <MenuItem className="p-0 ">
-                <div
-                  hidden={
-                    userRoleId === "ADMIN"
-                    
-                  }
-                >
+                <div hidden={userRoleId === "ADMIN"}>
                   <Link
                     to="/documentocompradoralcalde"
                     className="flex items-center  gap-4 px-4 py-2 "
                   >
                     <RiShakeHandsFill
                       className={`text-xl text-secundary ${
-                        location.pathname === "/documentocompradoralcalde" ? " " : ""
+                        location.pathname === "/documentocompradoralcalde"
+                          ? " "
+                          : ""
                       }`}
                     />
                     Documento Comprador
@@ -858,18 +857,16 @@ const Header = () => {
                 </div>
               </MenuItem>
               <MenuItem className="p-0 ">
-                <div
-                  hidden={
-                    userRoleId === "ADMIN" 
-                  }
-                >
+                <div hidden={userRoleId === "ADMIN"}>
                   <Link
                     to="/documentovendedoralcalde"
                     className="flex items-center  gap-4 px-4 py-2  "
                   >
                     <RiBankFill
                       className={`text-xl text-secundary ${
-                        location.pathname === "/documentovendedoralcalde" ? " " : ""
+                        location.pathname === "/documentovendedoralcalde"
+                          ? " "
+                          : ""
                       }`}
                     />
                     Documento Vendedor
@@ -880,7 +877,7 @@ const Header = () => {
           </ul>
         </nav>
 
-        <nav className="flex items-center xl:gap-x-2">
+        <nav className="flex items-center justify-between xl:gap-x-2">
           <Menu
             menuButton={
               <MenuButton className="relative hover:bg-tertiary-100 p-4 rounded-lg transition-colors">
@@ -989,7 +986,7 @@ const Header = () => {
                   alt="Avatar"
                 />
 
-                <RiArrowDownSLine className="h-6 w-6" />
+              
               </MenuButton>
             }
             transition
