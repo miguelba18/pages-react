@@ -18,8 +18,8 @@ const SecuDatos = () => {
 
       <div className="md:col-span-4 flex ml-[15%] xl:ml-0     pb-8 xl:p-0 ">
         <img
-          src="/src/assets/img/roundsecurity.png"
-          className="h-[100%] w-[80%] object-cover >  "
+          src="/src/assets/img/dian.png"
+          className="h-[100%] w-[100%] object-cover >  "
         />
       </div>
     </section>

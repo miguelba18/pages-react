@@ -24,6 +24,8 @@ import FacturaCompletaTodas from "./views/admin/layouts/Facturas/Facturas Comple
 
 import ConsorcioClienteMunicipio from "./views/admin/layouts/Consorcios/adquiriente/ConsorcioClienteMunicipio";
 import ConsorcioVendedorMunicipio from "./views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio";
+import OtrosContribuyentes from "./views/admin/layouts/Contribuyente/OtrosContribuyentes";
+import UnionesConsorcios from "./views/admin/layouts/Consorcios/Uniones temporales/UnionesConsorcios";
 import EnviarCorreos from "./views/admin/layouts/Enviar correos/EnviarCorreos";
 import EnviarCorreoAlcalde from "./views/admin/layouts/Enviar correos/Alcalde/EnviarCorreoAlcalde";
 import DocumentoSoporte from "./views/admin/layouts/Documento soporte/DocumentoSoporte";
@@ -72,9 +74,11 @@ function App() {
           <Route path="contribuyente" element={<Contribuyente />} />
           <Route path="documentosoporte" element={<DocumentoSoporte />} />
           <Route
-            path="facturacompletatodas"
-            element={<FacturaCompletaTodas />}
+            path="otroscontribuyentes"
+            element={<OtrosContribuyentes />}
           />
+          <Route path="unionesconsorcios" element={<UnionesConsorcios />} />
+          
 
           <Route
             path="documentocompradoralcalde"
@@ -197,6 +201,10 @@ function App() {
           />
 
           {/* Rutas que solo puede ver el ADMIN */}
+          <Route
+            path="facturacompletatodas"
+            element={<RestrictedRouteAdmin><FacturaCompletaTodas /></RestrictedRouteAdmin>}
+          />
           <Route
             path="documentocomprador"
             element={

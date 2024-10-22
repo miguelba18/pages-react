@@ -165,16 +165,22 @@ const Contacto = () => {
       </div>
 
       <div className="bg-secundary rounded-[8px] xl:w-[30%] text-white xl:-ml-[5%] shadow-2xl mt-8 xl:mt-0 p-10 xl:p-0">
-        <h1 className="text-4xl font-bold py-5 xl:py-20 text-center">
+        <h1 className="text-4xl font-bold py-5 xl:pt-10 text-center">
           Contacto
         </h1>
+        <div className="p-8">
+        <img
+          src="/src/assets/img/dian.png"
+          className="h-[50%] w-[100%] object-cover >  "
+        />
+        </div>
         <div className="xl:px-20">
           <h3 className="text-2xl text-center font-semibold mb-2">
             Envíanos un correo aquí
           </h3>
           <EmailLink email="simsas@gmail.com" />
 
-          <h3 className="text-2xl text-center font-semibold mt-20">
+          <h3 className="text-2xl text-center font-semibold mt-10">
             Escríbenos
           </h3>
           <a href="https://wa.link/n3ef7p" target="BLANK">
@@ -184,7 +190,7 @@ const Contacto = () => {
             </p>
           </a>
 
-          <h3 className="text-2xl text-center font-semibold mt-20">
+          <h3 className="text-2xl text-center font-semibold mt-10">
             Visita nuestra pagina e informate
           </h3>
           <a href="https://www.dian.gov.co/" target="BLANK">

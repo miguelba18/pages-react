@@ -2,16 +2,12 @@ import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import {
   RiDownloadLine,
-  RiAddCircleFill,
-  RiCheckboxCircleFill,
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
 import useListTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListTodasAlcalde";
 import useDescargarTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useDescargarTodasAlcalde";
 import Select from "react-select";
-import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
-import { toast } from "react-toastify";
 
 const FacturaTodasAlcalde = () => {
   const {
@@ -35,12 +31,8 @@ const FacturaTodasAlcalde = () => {
   } = useListTodasAlcalde();
 
   const [searchQuery] = useState("");
-  const { addConsorcio } = useAddConsorcio();
   const [selectedAnio, setSelectedAnio] = useState("");
   const { handleDownloadExcel } = useDescargarTodasAlcalde();
-  const [setProcessedFacturas] = useState(new Set());
-  const [selectedIds, setSelectedIds] = useState(new Set());
-  const [isSelecting, setIsSelecting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
     []
@@ -75,50 +67,6 @@ const FacturaTodasAlcalde = () => {
   );
   const [selectedDepartamentosEmisores, setSelectedDepartamentosEmisores] =
     useState([]);
-
-  const handleToggleSelect = (id) => {
-    setSelectedIds((prev) => {
-      const newSelectedIds = new Set(prev);
-      if (newSelectedIds.has(id)) {
-        newSelectedIds.delete(id);
-      } else {
-        newSelectedIds.add(id);
-      }
-      return newSelectedIds;
-    });
-  };
-  const handleAddConsorcio = async (ids) => {
-    const idsArray = ids.split(",");
-    const results = await Promise.all(idsArray.map((id) => addConsorcio(id)));
-    const successfulIds = results.filter((result) => result);
-
-    if (successfulIds.length > 0) {
-      successfulIds.forEach((resultId) => {
-        setProcessedFacturas((prev) => new Set(prev).add(resultId));
-      });
-
-      fetchFacturas("", searchQuery, selectedAnio).then();
-    }
-  };
-
-  const handleAddSelectedConsorcios = () => {
-    const idsArray = Array.from(selectedIds);
-    if (idsArray.length > 0) {
-      handleAddConsorcio(idsArray.join(","));
-      setSelectedIds(new Set());
-      setIsSelecting(false);
-    } else {
-      toast.info("No se han seleccionado facturas.");
-    }
-  };
-  const handleSelectAllConsorcios = () => {
-    if (selectedIds.size === facturas.length) {
-      setSelectedIds(new Set());
-    } else {
-      const allIds = facturas.map((factura) => factura.id);
-      setSelectedIds(new Set(allIds));
-    }
-  };
 
   const itemsPerPage = 100;
 
@@ -191,26 +139,25 @@ const FacturaTodasAlcalde = () => {
   const handleDownload = () => {
     handleDownloadExcel({
       filtro: "",
-      ciudad: "", 
-      anio: selectedAnio, 
-      codigoUnico: "", 
-      nombreComercialEmisor: selectedNombresComerciales, 
+      ciudad: "",
+      anio: selectedAnio,
+      codigoUnico: "",
+      nombreComercialEmisor: selectedNombresComerciales,
       telefonoAdquiriente: selectedTelefonosAdquirientes,
-      correoAdquiriente: selectedCorreosAdquirientes, 
-      direccionAdquiriente: selectedDireccionesAdquirientes, 
-      municipioAdquiriente: selectedMunicipiosAdquirientes, 
-      departamentoAdquiriente: selectedDepartamentosAdquirientes, 
-      numeroDocumentoAdquiriente: selectedNumerosDocumentoAdquirientes, 
-      nombreAdquiriente: selectedNombresAdquirientes, 
-      nitEmisor: selectedNitsEmisores, 
-      telefonoEmisor: selectedTelefonosEmisores, 
+      correoAdquiriente: selectedCorreosAdquirientes,
+      direccionAdquiriente: selectedDireccionesAdquirientes,
+      municipioAdquiriente: selectedMunicipiosAdquirientes,
+      departamentoAdquiriente: selectedDepartamentosAdquirientes,
+      numeroDocumentoAdquiriente: selectedNumerosDocumentoAdquirientes,
+      nombreAdquiriente: selectedNombresAdquirientes,
+      nitEmisor: selectedNitsEmisores,
+      telefonoEmisor: selectedTelefonosEmisores,
       correoEmisor: selectedCorreosEmisores,
-      direccionEmisor: selectedDireccionesEmisores, 
+      direccionEmisor: selectedDireccionesEmisores,
       municipioEmisor: selectedMunicipiosEmisores,
-      departamentoEmisor: selectedDepartamentosEmisores 
+      departamentoEmisor: selectedDepartamentosEmisores,
     });
   };
-  
 
   const customStyles = {
     control: (base) => ({
@@ -275,14 +222,14 @@ const FacturaTodasAlcalde = () => {
       setSelectedMunicipiosEmisores,
       setSelectedDepartamentosEmisores,
     ];
-  
+
     allSetters.forEach((setter) => {
       if (setter !== excludedSetter) {
-        setter([]); 
+        setter([]);
       }
     });
   };
-  
+
   const getNombresComercialesOptions = (nombresComerciales) => {
     return nombresComerciales.map((nombre) => ({
       value: nombre,
@@ -292,15 +239,14 @@ const FacturaTodasAlcalde = () => {
   const handleSelectNombresComerciales = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNombresComerciales(selectedValues);
-  
-  
+
     resetAllSelectsExcept(setSelectedNombresComerciales);
-  
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
       "",
-      selectedValues,  
+      selectedValues,
       selectedTelefonosAdquirientes,
       selectedCorreosAdquirientes,
       selectedDireccionesAdquirientes,
@@ -316,7 +262,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getNitsEmisoresOptions = (nitsEmisores) => {
     return nitsEmisores.map((nit) => ({
       value: nit,
@@ -326,10 +272,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectNitsEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNitsEmisores(selectedValues);
-  
-    
+
     resetAllSelectsExcept(setSelectedNitsEmisores);
-  
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -342,7 +287,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosAdquirientes,
       selectedNumerosDocumentoAdquirientes,
       selectedNombresAdquirientes,
-      selectedValues, 
+      selectedValues,
       selectedTelefonosEmisores,
       selectedCorreosEmisores,
       selectedDireccionesEmisores,
@@ -350,7 +295,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getTelefonosAdquirientesOptions = (telefonosAdquirientes) => {
     return telefonosAdquirientes.map((telefono) => ({
       value: telefono,
@@ -360,9 +305,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectTelefonosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedTelefonosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedTelefonosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -384,7 +329,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getCorreosAdquirientesOptions = (correosAdquirientes) => {
     return correosAdquirientes.map((correo) => ({
       value: correo,
@@ -394,9 +339,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectCorreosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedCorreosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedCorreosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -417,7 +362,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getDireccionesAdquirientesOptions = (direccionesAdquirientes) => {
     return direccionesAdquirientes.map((direccion) => ({
       value: direccion,
@@ -427,9 +372,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectDireccionesAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDireccionesAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDireccionesAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -449,7 +394,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getMunicipiosAdquirientesOptions = (municipiosAdquirientes) => {
     return municipiosAdquirientes.map((municipio) => ({
       value: municipio,
@@ -459,9 +404,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectMunicipiosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedMunicipiosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedMunicipiosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -481,7 +426,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getDepartamentosAdquirientesOptions = (departamentosAdquirientes) => {
     return departamentosAdquirientes.map((departamento) => ({
       value: departamento,
@@ -491,9 +436,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectDepartamentosAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDepartamentosAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDepartamentosAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -514,7 +459,7 @@ const FacturaTodasAlcalde = () => {
       selectedValues
     );
   };
-  
+
   const getNombresAdquirientesOptions = (nombresAdquirientes) => {
     return nombresAdquirientes.map((nombre) => ({
       value: nombre,
@@ -524,9 +469,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectNombresAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNombresAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedNombresAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -547,7 +492,9 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  const getNumerosDocumentoAdquirientesOptions = (numerosDocumentoAdquirientes) => {
+  const getNumerosDocumentoAdquirientesOptions = (
+    numerosDocumentoAdquirientes
+  ) => {
     return numerosDocumentoAdquirientes.map((numero) => ({
       value: numero,
       label: numero,
@@ -556,9 +503,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectNumerosDocumentoAdquirientes = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedNumerosDocumentoAdquirientes(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedNumerosDocumentoAdquirientes);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -579,9 +526,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
-  
-  
+
   const getTelefonosEmisoresOptions = (telefonosEmisores) => {
     return telefonosEmisores.map((telefono) => ({
       value: telefono,
@@ -591,9 +536,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectTelefonosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedTelefonosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedTelefonosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -612,7 +557,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getCorreosEmisoresOptions = (correosEmisores) => {
     return correosEmisores.map((correo) => ({
       value: correo,
@@ -622,9 +567,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectCorreosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedCorreosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedCorreosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -644,7 +589,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getDireccionesEmisoresOptions = (direccionesEmisores) => {
     return direccionesEmisores.map((direccion) => ({
       value: direccion,
@@ -654,9 +599,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectDireccionesEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDireccionesEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDireccionesEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -676,7 +621,7 @@ const FacturaTodasAlcalde = () => {
       selectedDepartamentosEmisores
     );
   };
-  
+
   const getMunicipiosEmisoresOptions = (municipiosEmisores) => {
     return municipiosEmisores.map((municipio) => ({
       value: municipio,
@@ -686,9 +631,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectMunicipiosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedMunicipiosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedMunicipiosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -718,9 +663,9 @@ const FacturaTodasAlcalde = () => {
   const handleSelectDepartamentosEmisores = (selectedOptions) => {
     const selectedValues = selectedOptions.map((option) => option.value);
     setSelectedDepartamentosEmisores(selectedValues);
-    
+
     resetAllSelectsExcept(setSelectedDepartamentosEmisores);
-    
+
     fetchFacturas(
       searchQuery,
       selectedAnio,
@@ -742,17 +687,12 @@ const FacturaTodasAlcalde = () => {
     );
   };
 
-
-
-
-  
-
-  
-
   return (
     <div>
       <div className="xl:flex justify-between">
-      <h1 className="font-bold text-3xl text-secundary">Facturas Completas Todas</h1>
+        <h1 className="font-bold text-3xl text-secundary">
+          Facturas Completas Todas
+        </h1>
 
         <div className="xl:relative mr-4">
           <button
@@ -766,70 +706,61 @@ const FacturaTodasAlcalde = () => {
       </div>
 
       <div className="flex  justify-between">
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => setCurrentPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
-          >
-            <RiArrowLeftSLine />
-          </button>
-          <span className="mt-2">{`Página ${currentPage} de ${Math.ceil(
-            facturas.length / itemsPerPage
-          )}`}</span>
-          <button
-            onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage === Math.ceil(facturas.length / itemsPerPage)}
-            className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
-          >
-            <RiArrowRightSLine />
-          </button>
+        <div className="flex">
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+            >
+              <RiArrowLeftSLine />
+            </button>
+            <span className="mt-2">{`Página ${currentPage} de ${Math.ceil(
+              facturas.length / itemsPerPage
+            )}`}</span>
+            <button
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={
+                currentPage === Math.ceil(facturas.length / itemsPerPage)
+              }
+              className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+            >
+              <RiArrowRightSLine />
+            </button>
+          </div>
         </div>
         <div className="items-center  mt-2  flex justify-end font-bold">
           <p>Total facturas: ${totalSuma}</p>
         </div>
       </div>
 
-      
-
       <div className="overflow-x-auto">
-        <table className="table-auto w-full mt-6">
-        <thead>
-                <tr>
-                  <th colSpan={18} className="px-4 py-2 "></th>
-                  <th className="px-4 py-2   text-white">
-                    <div className="flex justify-end mb-2">
-                      <button
-                        onClick={() => setIsSelecting((prev) => !prev)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded"
-                      >
-                        {isSelecting
-                          ? "Cancelar selección"
-                          : "Seleccionar consorcios"}
-                      </button>
-                      {isSelecting && (
-                        <>
-                          <button
-                            onClick={handleSelectAllConsorcios}
-                            className="ml-2 px-4 py-2 bg-yellow-500 text-white rounded"
-                          >
-                            {selectedIds.size === facturas.length
-                              ? "Deseleccionar Todos"
-                              : "Seleccionar Todos"}
-                          </button>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
 
-                          <button
-                            onClick={handleAddSelectedConsorcios}
-                            className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
-                          >
-                            Agregar Consorcios
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </th>
-                </tr>
-              </thead>
+                <th className="px-4 py-2 bg-secundary text-white">
+                  Consorcio o Union temporal
+                </th>
+                <th className="px-4 py-2 bg-secundary text-white">Otro tipo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="px-4 py-2 text-center border">
+                  Agrupar Contribuyente No Vinculante
+                </td>
+                <td className="px-4 py-2 text-center border">Nit</td>
+                <td className="px-4 py-2 text-center border">X</td>
+                <td className="px-4 py-2 text-center border">X</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <table className="table-auto w-full mt-6">
           <thead>
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
@@ -872,7 +803,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona nombre comercial"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -881,23 +811,21 @@ const FacturaTodasAlcalde = () => {
                 NIT vendedor
                 <Select
                   options={getNitsEmisoresOptions(nitsEmisores)}
-                  value={getNitsEmisoresOptions(
-                    selectedNitsEmisores
-                  )}
+                  value={getNitsEmisoresOptions(selectedNitsEmisores)}
                   onChange={handleSelectNitsEmisores}
                   placeholder="Selecciona nit Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
-                
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento vendedor
                 <Select
-                  options={getDepartamentosEmisoresOptions(departamentosEmisores)}
+                  options={getDepartamentosEmisoresOptions(
+                    departamentosEmisores
+                  )}
                   value={getDepartamentosEmisoresOptions(
                     selectedDepartamentosEmisores
                   )}
@@ -905,11 +833,9 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Departamento Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
-                
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio vendedor
@@ -922,7 +848,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Municipio Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -938,7 +863,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona direccion emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -947,14 +871,11 @@ const FacturaTodasAlcalde = () => {
                 Correo vendedor
                 <Select
                   options={getCorreosEmisoresOptions(correosEmisores)}
-                  value={getCorreosEmisoresOptions(
-                    selectedCorreosEmisores
-                  )}
+                  value={getCorreosEmisoresOptions(selectedCorreosEmisores)}
                   onChange={handleSelectCorreosEmisores}
                   placeholder="Selecciona Correo Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -963,18 +884,14 @@ const FacturaTodasAlcalde = () => {
                 Telefono Vendedor
                 <Select
                   options={getTelefonosEmisoresOptions(telefonosEmisores)}
-                  value={getTelefonosEmisoresOptions(
-                    selectedTelefonosEmisores
-                  )}
+                  value={getTelefonosEmisoresOptions(selectedTelefonosEmisores)}
                   onChange={handleSelectTelefonosEmisores}
                   placeholder="Selecciona Telefono Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
-                
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre adquiriente
@@ -987,7 +904,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Nombre Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -995,7 +911,9 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 # Documento comprador
                 <Select
-                  options={getNumerosDocumentoAdquirientesOptions(numerosDocumentoAdquirientes)}
+                  options={getNumerosDocumentoAdquirientesOptions(
+                    numerosDocumentoAdquirientes
+                  )}
                   value={getNumerosDocumentoAdquirientesOptions(
                     selectedNumerosDocumentoAdquirientes
                   )}
@@ -1003,7 +921,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Correo Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1011,7 +928,9 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento comprador
                 <Select
-                  options={getDepartamentosAdquirientesOptions(departamentosAdquirientes)}
+                  options={getDepartamentosAdquirientesOptions(
+                    departamentosAdquirientes
+                  )}
                   value={getDepartamentosAdquirientesOptions(
                     selectedDepartamentosAdquirientes
                   )}
@@ -1019,7 +938,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Departamento Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1027,14 +945,15 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio comprador
                 <Select
-                  options={getMunicipiosAdquirientesOptions(municipiosAdquirientes)}
+                  options={getMunicipiosAdquirientesOptions(
+                    municipiosAdquirientes
+                  )}
                   value={getMunicipiosAdquirientesOptions(
                     selectedMunicipiosAdquirientes
                   )}
                   onChange={handleSelectMunicipiosAdquirientes}
                   placeholder="Selecciona Municipio Comprador"
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1042,7 +961,9 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
                 <Select
-                  options={getDireccionesAdquirientesOptions(direccionesAdquirientes)}
+                  options={getDireccionesAdquirientesOptions(
+                    direccionesAdquirientes
+                  )}
                   value={getDireccionesAdquirientesOptions(
                     selectedDireccionesAdquirientes
                   )}
@@ -1050,7 +971,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Direccion Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1066,7 +986,6 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Correo Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1074,7 +993,9 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
                 <Select
-                  options={getTelefonosAdquirientesOptions(telefonosAdquirientes)}
+                  options={getTelefonosAdquirientesOptions(
+                    telefonosAdquirientes
+                  )}
                   value={getTelefonosAdquirientesOptions(
                     selectedTelefonosAdquirientes
                   )}
@@ -1082,16 +1003,12 @@ const FacturaTodasAlcalde = () => {
                   placeholder="Selecciona Telefono Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Total acumulado
-              </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Agregar No vinculante
               </th>
             </tr>
           </thead>
@@ -1172,48 +1089,6 @@ const FacturaTodasAlcalde = () => {
                   <td className="border px-4 py-2 text-center">
                     ${factura.subtotal}
                   </td>
-                  <td className="border px-4 text-center">
-                    <div className="flex justify-center">
-                      <button
-                        onClick={() => {
-                          if (isSelecting) {
-                            handleToggleSelect(factura.id);
-                          } else {
-                            handleAddConsorcio(factura.id);
-                          }
-                        }}
-                        disabled={factura.estado === 1 || !isSelecting}
-                        className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
-                          factura.estado === 1
-                            ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] cursor-not-allowed"
-                            : isSelecting
-                            ? selectedIds.has(factura.id)
-                              ? "bg-gradient-to-r from-[#ffcc00] to-[#ff9900]"
-                              : "bg-gradient-to-r from-[#718afb] to-[#1215be] hover:scale-105"
-                            : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl"
-                        }`}
-                        aria-label={
-                          factura.estado === 1
-                            ? "Factura procesada"
-                            : isSelecting
-                            ? "Seleccionar factura"
-                            : "Agregar factura"
-                        }
-                      >
-                        {factura.estado === 1 ? (
-                          <RiCheckboxCircleFill />
-                        ) : isSelecting ? (
-                          selectedIds.has(factura.id) ? (
-                            <RiCheckboxCircleFill />
-                          ) : (
-                            <RiAddCircleFill />
-                          )
-                        ) : (
-                          <RiAddCircleFill />
-                        )}
-                      </button>
-                    </div>
-                  </td>
                 </tr>
               ))
             )}
@@ -1224,7 +1099,6 @@ const FacturaTodasAlcalde = () => {
                 Total
               </th>
               <th className="border px-4 py-2">${totalSuma}</th>
-              <th className="px-4 py-2 bg-secundary text-white"></th>
             </tr>
           </tfoot>
         </table>

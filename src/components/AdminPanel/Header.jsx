@@ -335,6 +335,36 @@ const Header = () => {
                         No Vinculante Vendedor
                       </Link>
                     </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="unionesconsorcios"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                      >
+                        <RiBankFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/unionesconsorcios"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Uniones Temporales y Consorcios
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/otroscontribuyentes"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                      >
+                        <RiBankFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/otroscontribuyentes"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Otros Contribuyentes
+                      </Link>
+                    </MenuItem>
                   </SubMenu>
                   <SubMenu
                     label={
@@ -682,6 +712,36 @@ const Header = () => {
                       No Vinculante Vendedor
                     </Link>
                   </MenuItem>
+                  <MenuItem className="">
+                      <Link
+                        to="unionesconsorcios"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                      >
+                        <RiBankFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/unionesconsorcios"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Uniones Temporales y Consorcios
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
+                      <Link
+                        to="/otroscontribuyentes"
+                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                      >
+                        <RiBankFill
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/otroscontribuyentes"
+                              ? ""
+                              : ""
+                          }`}
+                        />
+                        Otros Contribuyentes
+                      </Link>
+                    </MenuItem>
                 </SubMenu>
                 <SubMenu
                   label={

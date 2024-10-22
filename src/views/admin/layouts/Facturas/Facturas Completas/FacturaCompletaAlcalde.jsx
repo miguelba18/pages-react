@@ -2,16 +2,13 @@ import { useState, useEffect } from "react";
 import HighlightedText from "../../../../../utils/HighlightedText";
 import {
   RiDownloadLine,
-  RiAddCircleFill,
-  RiCheckboxCircleFill,
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
 import useListAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListAlcalde";
 import useDescargarFacturas from "../../../../hook/Facturas/Factura Completa/admin/useDescargarFacturas";
 import Select from "react-select";
-import useAddConsorcio from "../../../../hook/Facturas/Factura Completa/admin/useAddConsorcio";
-import { toast } from "react-toastify";
+
 
 const FacturaCompleta = () => {
   const {
@@ -35,12 +32,10 @@ const FacturaCompleta = () => {
   } = useListAlcalde();
 
   const [searchQuery] = useState("");
-  const { addConsorcio } = useAddConsorcio();
+  
   const [selectedAnio, setSelectedAnio] = useState("");
   const { handleDownloadExcel } = useDescargarFacturas();
-  const [setProcessedFacturas] = useState(new Set());
-  const [selectedIds, setSelectedIds] = useState(new Set());
-  const [isSelecting, setIsSelecting] = useState(false);
+ 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
     []
@@ -76,49 +71,10 @@ const FacturaCompleta = () => {
   const [selectedDepartamentosEmisores, setSelectedDepartamentosEmisores] =
     useState([]);
 
-  const handleToggleSelect = (id) => {
-    setSelectedIds((prev) => {
-      const newSelectedIds = new Set(prev);
-      if (newSelectedIds.has(id)) {
-        newSelectedIds.delete(id);
-      } else {
-        newSelectedIds.add(id);
-      }
-      return newSelectedIds;
-    });
-  };
-  const handleAddConsorcio = async (ids) => {
-    const idsArray = ids.split(",");
-    const results = await Promise.all(idsArray.map((id) => addConsorcio(id)));
-    const successfulIds = results.filter((result) => result);
+  
+  
 
-    if (successfulIds.length > 0) {
-      successfulIds.forEach((resultId) => {
-        setProcessedFacturas((prev) => new Set(prev).add(resultId));
-      });
-
-      fetchFacturas("", searchQuery, selectedAnio).then();
-    }
-  };
-
-  const handleAddSelectedConsorcios = () => {
-    const idsArray = Array.from(selectedIds);
-    if (idsArray.length > 0) {
-      handleAddConsorcio(idsArray.join(","));
-      setSelectedIds(new Set());
-      setIsSelecting(false);
-    } else {
-      toast.info("No se han seleccionado facturas.");
-    }
-  };
-  const handleSelectAllConsorcios = () => {
-    if (selectedIds.size === facturas.length) {
-      setSelectedIds(new Set());
-    } else {
-      const allIds = facturas.map((factura) => factura.id);
-      setSelectedIds(new Set(allIds));
-    }
-  };
+ 
 
   const itemsPerPage = 100;
 
@@ -793,42 +749,7 @@ const FacturaCompleta = () => {
 
       <div className="overflow-x-auto">
         <table className="table-auto w-full mt-6">
-        <thead>
-                <tr>
-                  <th colSpan={18} className="px-4 py-2 "></th>
-                  <th className="px-4 py-2   text-white">
-                    <div className="flex justify-end mb-2">
-                      <button
-                        onClick={() => setIsSelecting((prev) => !prev)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded"
-                      >
-                        {isSelecting
-                          ? "Cancelar selección"
-                          : "Seleccionar consorcios"}
-                      </button>
-                      {isSelecting && (
-                        <>
-                          <button
-                            onClick={handleSelectAllConsorcios}
-                            className="ml-2 px-4 py-2 bg-yellow-500 text-white rounded"
-                          >
-                            {selectedIds.size === facturas.length
-                              ? "Deseleccionar Todos"
-                              : "Seleccionar Todos"}
-                          </button>
-
-                          <button
-                            onClick={handleAddSelectedConsorcios}
-                            className="ml-2 px-4 py-2 bg-green-500 text-white rounded"
-                          >
-                            Agregar Consorcios
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </th>
-                </tr>
-              </thead>
+        
           <thead>
             <tr>
               <th className="px-4 py-2 bg-secundary text-white">#</th>
@@ -871,7 +792,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona nombre comercial"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+           
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -887,7 +808,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona nit Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -904,7 +825,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Departamento Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -921,7 +842,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Municipio Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -937,7 +858,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona direccion emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -953,7 +874,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Correo Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -969,7 +890,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Telefono Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -986,7 +907,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Nombre Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1002,7 +923,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Correo Emisor"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1018,7 +939,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Departamento Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1033,7 +954,7 @@ const FacturaCompleta = () => {
                   onChange={handleSelectMunicipiosAdquirientes}
                   placeholder="Selecciona Municipio Comprador"
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1049,7 +970,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Direccion Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1065,7 +986,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Correo Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1081,7 +1002,7 @@ const FacturaCompleta = () => {
                   placeholder="Selecciona Telefono Comprador"
                   isMulti
                   styles={customStyles}
-                  closeMenuOnSelect={false}
+                  
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
@@ -1089,9 +1010,7 @@ const FacturaCompleta = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Total acumulado
               </th>
-              <th className="px-4 py-2 bg-secundary text-white">
-                Agregar No vinculante
-              </th>
+              
             </tr>
           </thead>
           <tbody>
@@ -1171,48 +1090,7 @@ const FacturaCompleta = () => {
                   <td className="border px-4 py-2 text-center">
                     ${factura.subtotal}
                   </td>
-                  <td className="border px-4 text-center">
-                    <div className="flex justify-center">
-                      <button
-                        onClick={() => {
-                          if (isSelecting) {
-                            handleToggleSelect(factura.id);
-                          } else {
-                            handleAddConsorcio(factura.id);
-                          }
-                        }}
-                        disabled={factura.estado === 1 || !isSelecting}
-                        className={`flex justify-center items-center gap-2 w-8 h-8 rounded-md shadow-2xl text-white font-semibold ${
-                          factura.estado === 1
-                            ? "bg-gradient-to-r from-[#81fb71] via-[#2de11d] to-[#2cbe12] cursor-not-allowed"
-                            : isSelecting
-                            ? selectedIds.has(factura.id)
-                              ? "bg-gradient-to-r from-[#ffcc00] to-[#ff9900]"
-                              : "bg-gradient-to-r from-[#718afb] to-[#1215be] hover:scale-105"
-                            : "bg-gradient-to-r from-[#718afb] via-[#1d27e1] to-[#1215be] hover:shadow-xl"
-                        }`}
-                        aria-label={
-                          factura.estado === 1
-                            ? "Factura procesada"
-                            : isSelecting
-                            ? "Seleccionar factura"
-                            : "Agregar factura"
-                        }
-                      >
-                        {factura.estado === 1 ? (
-                          <RiCheckboxCircleFill />
-                        ) : isSelecting ? (
-                          selectedIds.has(factura.id) ? (
-                            <RiCheckboxCircleFill />
-                          ) : (
-                            <RiAddCircleFill />
-                          )
-                        ) : (
-                          <RiAddCircleFill />
-                        )}
-                      </button>
-                    </div>
-                  </td>
+                  
                 </tr>
               ))
             )}
@@ -1223,7 +1101,7 @@ const FacturaCompleta = () => {
                 Total
               </th>
               <th className="border px-4 py-2">${totalSuma}</th>
-              <th className="px-4 py-2 bg-secundary text-white"></th>
+              
             </tr>
           </tfoot>
         </table>
