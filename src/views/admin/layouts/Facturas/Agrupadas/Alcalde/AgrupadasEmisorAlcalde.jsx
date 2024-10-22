@@ -362,7 +362,7 @@ const AgrupadasEmisorAlcalde = () => {
       "",  
       filtro,          
       selectedAnio,    
-      "adquirientes",      
+      "emisores",      
       []  
     );
   };
@@ -384,7 +384,7 @@ const AgrupadasEmisorAlcalde = () => {
       "",  
       filtro,            
       selectedAnio,    
-      "adquirientes",      
+      "emisores",      
       []  
     );
   };

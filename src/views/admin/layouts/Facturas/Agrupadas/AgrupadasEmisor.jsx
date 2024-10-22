@@ -394,7 +394,7 @@ const AgrupadasEmisor = () => {
       selectedCiudad,  
       filtro,          
       selectedAnio,    
-      "adquirientes",      
+      "emisores",      
       []  
     );
   };
@@ -416,7 +416,7 @@ const AgrupadasEmisor = () => {
       selectedCiudad,  
       filtro,            
       selectedAnio,    
-      "adquirientes",      
+      "emisores",      
       []  
     );
   };
