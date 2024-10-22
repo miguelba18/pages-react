@@ -32,7 +32,7 @@ function Perfil() {
           <div className=" mb-8  xl:w-1/2 xl:p-10 flex justify-center xl:justify-end">
             <div className="w-[80%] bg-white shadow-2xl shadow-primary rounded-3xl ">
               <div className="flex justify-center mt-5 mb-6 ">
-                <p className="text-3xl text-primary text-semibold">
+                <p className="text-3xl text-primary font-bold">
                   {profile.nombre} {profile.apellido}
                 </p>
               </div>
@@ -49,7 +49,7 @@ function Perfil() {
               </div>
               <div className="flex justify-center">
                 <button
-                  className="flex justify-center mb-4 xl:mb-0 items-cente px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#45edc0] to-[#12adbb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#04b390]"
+                  className="flex justify-center mb-4 items-cente px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#45edc0] to-[#12adbb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#04b390]"
                   onClick={handleEditClick}
                 >
                   Actualizar Perfil
@@ -67,7 +67,7 @@ function Perfil() {
               <div className=" mb-8 flex">
                 <div className="w-full mr-2">
                   <div className="md:w-1/4">
-                    <p className="text-white">Nombre</p>
+                    <p className="text-white font-bold">Nombre</p>
                   </div>
                   <div className="  md:gap-4 gap-1">
                     <div className="w-full ">
@@ -80,7 +80,7 @@ function Perfil() {
 
                 <div className="w-full ">
                   <div className="md:w-1/4">
-                    <p className="text-white">Apellido</p>
+                    <p className="text-white font-bold">Apellido</p>
                   </div>
                   <div className="w-full">
                     <h2 className="w-full outline-none rounded-lg py-2 px-4 bg-tertiary-900">
@@ -93,7 +93,7 @@ function Perfil() {
               <div className=" mb-8 flex">
                 <div className="w-full mr-2">
                   <div className="md:w-1/4">
-                    <p className="text-white">Departamento</p>
+                    <p className="text-white font-bold">Departamento</p>
                   </div>
                   <div className="  md:gap-4 gap-1">
                     <div className="w-full ">
@@ -106,7 +106,7 @@ function Perfil() {
 
                 <div className="w-full ">
                   <div className="md:w-1/4">
-                    <p className="text-white">Ciudad</p>
+                    <p className="text-white font-bold">Ciudad</p>
                   </div>
                   <div className="w-full">
                     <h2 className="w-full outline-none rounded-lg py-2 px-4 bg-tertiary-900">
@@ -119,7 +119,7 @@ function Perfil() {
               <div className=" mb-8 flex">
                 <div className="w-full mr-2">
                   <div className="md:w-1/4">
-                    <p className="text-white">Cedula</p>
+                    <p className="text-white font-bold">Cedula</p>
                   </div>
                   <div className="  md:gap-4 gap-1">
                     <div className="w-full ">
@@ -132,7 +132,7 @@ function Perfil() {
 
                 <div className="w-full ">
                   <div className="md:w-1/4">
-                    <p className="text-white">Telefono</p>
+                    <p className="text-white font-bold">Telefono</p>
                   </div>
                   <div className="w-full">
                     <h2 className="w-full outline-none rounded-lg py-2 px-4 bg-tertiary-900">
@@ -144,7 +144,7 @@ function Perfil() {
 
               <div className=" mb-8">
                 <div className="w-1/4">
-                  <p className="text-white">Rol</p>
+                  <p className="text-white font-bold">Rol</p>
                 </div>
                 <div className="flex-1">
                   <h2 className="w-full outline-none rounded-lg py-2 px-4 bg-tertiary-900">

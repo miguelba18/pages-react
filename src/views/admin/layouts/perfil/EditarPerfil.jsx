@@ -131,7 +131,8 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 disabled
               />
             </div>
-            <div className="pb-2">
+            <div className="flex pb-2">
+            <div className="mr-4">
               <label
                 htmlFor="telefono"
                 className="font-semibold text-sm text-gray-700 block pb-1"
@@ -149,7 +150,7 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
               />
             </div>
 
-            <div className="pb-2">
+            <div className="">
               <label
                 htmlFor="cedula"
                 className="font-semibold text-sm text-gray-700 block pb-1"
@@ -165,6 +166,7 @@ function EditProfileModal({ perfil, isOpen, onClose, onSave }) {
                 onChange={handleInputChange}
                 disabled={!isAdmin}
               />
+            </div>
             </div>
             <div className="pb-2">
               <label

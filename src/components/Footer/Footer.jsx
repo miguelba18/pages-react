@@ -14,7 +14,7 @@ const Footer = () => {
 
   return (
     <div id="Politicas" className="bg-cover bg-primary/90 text-white relative">
-      <div className="text-center flex items-center justify-between ">
+      <div className="text-center xl:flex items-center justify-between ">
         <div className="">
           <h1 id="Footer" className="text-6xl text-white font-bold p-10 leading-[72px]">
             Conoce a SIM SAS hoy
@@ -149,31 +149,31 @@ const Footer = () => {
           <p className="text-2xl ">para todo el pais colombiano</p>
 
           <div className="flex justify-center mt-10 space-x-6">
-          <RiAppleFill className="h-20 w-20 text-cuartary-100"/>
-          <RiAndroidFill className="h-20 w-20 text-cuartary-100"/>
-          <RiWindowsFill className="h-20 w-20 text-cuartary-100"/>
+          <RiAppleFill className="h-20 w-20 text-white-100"/>
+          <RiAndroidFill className="h-20 w-20 text-white-100"/>
+          <RiWindowsFill className="h-20 w-20 text-white-100"/>
             
           </div>
         </div>
 
         <div className="flex  flex-col items-center justify-center p-10">
           <p className="text-2xl mb-2 ">Contactanos </p>
-          <a href="mailto:info@simsasllc.com" className="flex justify-center text-cuartary-100 w-full items-center text-md mb-4 transform transition-transform duration-500 hover:scale-110 hover:rounded-xl hover:bg-white hover:text-blue-600 ">
+          <a href="mailto:info@simsasllc.com" className="flex justify-center text-white-100 w-full items-center text-md mb-4 transform transition-transform duration-500 hover:scale-110 hover:rounded-xl hover:bg-white hover:text-blue-600 ">
           <RiMailFill className="mr-2"/>info@simsasllc.com 
           </a>
           <p className="text-2xl ">Siguenos en todas las redes</p>
           <p className="text-2xl ">y enterate de todo</p>
 
           <div className="flex justify-center space-x-6 mt-8">
-          <RiWhatsappFill className="h-8 w-8 text-cuartary-100" />
-          <RiInstagramFill className="h-8 w-8 text-cuartary-100"/>
-          <RiFacebookCircleFill className="h-8 w-8 text-cuartary-100"/>
+          <RiWhatsappFill className="h-8 w-8 text-white-100" />
+          <RiInstagramFill className="h-8 w-8 text-white-100"/>
+          <RiFacebookCircleFill className="h-8 w-8 text-white-100"/>
           </div>
         </div>
       </div>
 
       <div className="flex flex-col items-center justify-center p-10">
-        <p className="flex text-cuartary-100">
+        <p className="flex text-white-100">
           <RiCopyrightLine className="mt-1 mr-1" />
           2024 SIM SAS LLC.
         </p>

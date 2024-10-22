@@ -1,4 +1,4 @@
-import { RiMailFill, RiWhatsappFill } from "react-icons/ri";
+import { RiMailFill, RiWhatsappFill,RiPagesFill } from "react-icons/ri";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -83,7 +83,7 @@ const Contacto = () => {
   };
 
   return (
-    <div className="xl:flex p-6 xl:p-10 bg-gray-50">
+    <div className="xl:flex p-6  bg-gray-50">
       <div className="border-2 w-[90%] xl:w-[60%] xl:h-[60%] rounded-[8px] bg-white ml-[7%] p-10 xl:px-[100px] shadow-2xl ">
         <h1
           id="Form"
@@ -92,7 +92,7 @@ const Contacto = () => {
           Formulario
         </h1>
         <form onSubmit={handleSubmit} className="xl:p-8">
-          <div className="md:flex md:justify-between ">
+          <div className="md:flex  ">
             <div className="xl:mt-0 mt-4">
               <label className="text-lg">
                 Nombre*
@@ -183,6 +183,17 @@ const Contacto = () => {
               +57 3115374029
             </p>
           </a>
+
+          <h3 className="text-2xl text-center font-semibold mt-20">
+            Visita nuestra pagina e informate
+          </h3>
+          <a href="https://www.dian.gov.co/" target="BLANK">
+            <p className="flex justify-center text-md mb-4 transform transition-transform duration-500 hover:scale-110 hover:rounded-xl hover:bg-white hover:text-blue-600">
+              <RiPagesFill className="mt-1 mr-6" />
+              Dian
+            </p>
+          </a>
+          
         </div>
       </div>
     </div>
