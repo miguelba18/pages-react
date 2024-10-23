@@ -801,7 +801,7 @@ const FacturaTodasAlcalde = () => {
                       onClick={() => {
                         if (!nitFiltro.trim()) {
                           toast.info(
-                            "Por favor, ingrese un NIT antes de agregar un consorcio."
+                            "Por favor, ingrese un NIT antes de agregar otro tipo."
                           );
                           return;
                         }
