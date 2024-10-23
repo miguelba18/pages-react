@@ -2,23 +2,23 @@ import { useState, useCallback } from "react";
 import useAuthToken from "../Token/useAuthToken";
 import { toast } from "react-toastify";
 
-const useAgregarConsorcio = () => {
-  const { token } = useAuthToken(); // Si necesitas un token de autenticación
+const useAgregarConsorcios = () => {
+  const { token } = useAuthToken();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
 
   const agregarConsorcio = useCallback(async (nitFiltro) => {
     setIsLoading(true);
-    setError(null); // Limpiar errores anteriores
-    setSuccessMessage(""); // Limpiar mensajes anteriores
+    setError(null); 
+    setSuccessMessage(""); 
 
     try {
       const response = await fetch(`http://localhost:8080/consorcio/agregarPorFiltro?filtro=${nitFiltro}`, {
-        method: "POST",  // Asegurándome que sea POST, cámbialo si es otro método
+        method: "POST", 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,  // Token si es necesario
+          Authorization: `Bearer ${token}`, 
         },
       });
 
@@ -33,7 +33,7 @@ const useAgregarConsorcio = () => {
       console.error("Error al agregar consorcio:", error);
       setError("Hubo un error al agregar el consorcio");
     } finally {
-      setIsLoading(false); // Terminó la solicitud
+      setIsLoading(false);
     }
   }, [token]);
 
@@ -45,4 +45,4 @@ const useAgregarConsorcio = () => {
   };
 };
 
-export default useAgregarConsorcio;
+export default useAgregarConsorcios;

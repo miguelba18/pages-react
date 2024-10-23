@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import useSelectCityDepaUtils from "../../../../../utils/useSelectCityDepaUtils";
 import useAuthToken from "../../../../hook/Token/useAuthToken";
-import { RiEditBoxFill,RiArrowLeftSLine,RiArrowRightSLine } from "react-icons/ri";
+import {
+  RiEditBoxFill,
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+} from "react-icons/ri";
 import Modal from "../../../../modal/Modal";
 import { toast } from "react-toastify";
 import useListAdministrar from "../../../../hook/Facturas/Adquiriente y emisor/Emisor/Administrar/useListAdministrar";
@@ -102,7 +106,6 @@ const AdministrarEmisor = () => {
     <div>
       <div className="mb-4 mt-4 xl:flex justify-around">
         <div>
-          
           <select
             value={selectedDepartamento}
             onChange={(e) => {
@@ -124,7 +127,6 @@ const AdministrarEmisor = () => {
           </select>
         </div>
         <div>
-          
           <select
             value={selectedCiudad}
             onChange={(e) => {
@@ -151,15 +153,16 @@ const AdministrarEmisor = () => {
       {facturas.length > 0 && selectedCiudad && (
         <>
           <div className="flex  justify-between">
+          <div className="flex">
             <div className="flex justify-center mt-4">
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+                className="p-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
               >
                 <RiArrowLeftSLine />
               </button>
-              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+              <span className="mt-2 text-sm">{`Página ${currentPage} de ${Math.ceil(
                 facturas.length / itemsPerPage
               )}`}</span>
               <button
@@ -167,17 +170,17 @@ const AdministrarEmisor = () => {
                 disabled={
                   currentPage === Math.ceil(facturas.length / itemsPerPage)
                 }
-                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+                className="p-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
               >
                 <RiArrowRightSLine />
               </button>
             </div>
-            <div className="items-center  flex justify-end font-bold">
-              <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
-            </div>
           </div>
+          <div className="items-center  mt-2  flex justify-end font-bold">
+          <p>Total facturas: ${totalSubtotal.toLocaleString("de-DE")}</p>
+          </div>
+        </div>
           <div>
-   
             <div className="overflow-x-auto">
               <table className="table-auto w-full mt-6">
                 <thead>
@@ -207,22 +210,30 @@ const AdministrarEmisor = () => {
                     <th className="px-4 py-2 bg-secundary text-white">
                       Subtotal
                     </th>
-                    
                   </tr>
                 </thead>
                 <tbody>
                   {currentItems.map((factura, index) => (
-                    <tr key={factura.id} className={
-                      index % 2 === 0
-                        ? "bg-gray-100 whitespace-nowrap"
-                        : "bg-white whitespace-nowrap"
-                    }>
-                      <td className="border px-4 py-2x text-center">{indexOfFirstItem+index + 1}</td>
+                    <tr
+                      key={factura.id}
+                      className={
+                        index % 2 === 0
+                          ? "bg-gray-100 whitespace-nowrap"
+                          : "bg-white whitespace-nowrap"
+                      }
+                    >
+                      <td className="border px-4 py-2x text-center">
+                        {indexOfFirstItem + index + 1}
+                      </td>
                       <td className="border px-4 text-center">
                         {factura.nombreComercialEmisor}
                       </td>
-                      <td className="border px-4 py-2 text-center">{factura.nitEmisor}</td>
-                      <td className="border px-4 py-2 text-center">{factura.paisEmisor}</td>
+                      <td className="border px-4 py-2 text-center">
+                        {factura.nitEmisor}
+                      </td>
+                      <td className="border px-4 py-2 text-center">
+                        {factura.paisEmisor}
+                      </td>
                       <td className="border px-4 py-2 text-center">
                         {factura.departamentoEmisor}
                       </td>
@@ -235,25 +246,29 @@ const AdministrarEmisor = () => {
                       <td className="border px-4 py-2 text-center">
                         {factura.correoEmisor}
                       </td>
-                      <td className="border px-4 py-2 flex justify-between text-center">${factura.subtotal}
-                  <div className="flex justify-center">
-                      <button
-                        onClick={() => handleEdit(factura)}
-                        className="text-blue-500"
-                      >
-                        <RiEditBoxFill className="h-6 w-6" />
-                      </button>
-                    </div>
-                  </td>
-                  
+                      <td className="border px-4 py-2 flex justify-between text-center">
+                        ${factura.subtotal}
+                        <div className="flex justify-center">
+                          <button
+                            onClick={() => handleEdit(factura)}
+                            className="text-blue-500"
+                          >
+                            <RiEditBoxFill className="h-6 w-6" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tr>
+                  <th className="px-4 py-2 bg-secundary text-white" colSpan={8}>
+                    Total
+                  </th>
+                  <th className="border px-4 py-2">
+                    ${totalSubtotal.toLocaleString("de-DE")}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-            <tr>
-              <th className="px-4 py-2 bg-secundary text-white" colSpan={8}>Total</th>
-              <th className="border px-4 py-2" >${totalSubtotal.toLocaleString("de-DE")}</th>
-            </tr>
-          </table>
+              </table>
             </div>
 
             {selectedFactura && (

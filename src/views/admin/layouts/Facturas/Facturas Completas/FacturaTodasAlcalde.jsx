@@ -10,7 +10,8 @@ import useListTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alca
 import useDescargarTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useDescargarTodasAlcalde";
 import Select from "react-select";
 import useAgregarConsorcios from "../../../../hook/Consorcios/useAgregarConsorcios";
-
+import { toast } from "react-toastify";
+import useAgregarOtroTipo from "../../../../hook/Consorcios/useAgregarOtroTipo";
 
 const FacturaTodasAlcalde = () => {
   const {
@@ -40,7 +41,8 @@ const FacturaTodasAlcalde = () => {
   const [nitFiltro, setNitFiltro] = useState("");
   const [isSearchingByNit, setIsSearchingByNit] = useState(false);
   const { agregarConsorcio, isLoading } = useAgregarConsorcios();
-  const [showAgregarConsorcio, setShowAgregarConsorcio] = useState(false);
+  const { agregarOtroTipo, isCargando } = useAgregarOtroTipo();
+
 
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
     []
@@ -141,33 +143,24 @@ const FacturaTodasAlcalde = () => {
     selectedMunicipiosEmisores,
     selectedDepartamentosEmisores,
     fetchFacturas,
-    isSearchingByNit  // Dependemos de este estado también
+    isSearchingByNit,
   ]);
-
-  
 
   useEffect(() => {
     if (!isSearchingByNit) {
-      // Llamada inicial a la API general cuando se monta el componente (sin filtro NIT)
       fetchFacturas();
     }
   }, [isSearchingByNit, fetchFacturas]);
 
-  // Función de búsqueda por NIT
   const handleSearch = () => {
     if (nitFiltro) {
-      // Si el campo de NIT tiene valor, llamar a la API con filtro NIT
       fetchFacturas(null, null, null, nitFiltro);
       setIsSearchingByNit(true);
-      setShowAgregarConsorcio(true); // Indicar que estamos buscando por NIT
     } else {
-      // Si el campo de NIT está vacío, volver a la API general sin filtro
       fetchFacturas();
-      setIsSearchingByNit(false)
-      setShowAgregarConsorcio(false) // Resetear a la búsqueda general
+      setIsSearchingByNit(false);
     }
   };
-
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -723,11 +716,10 @@ const FacturaTodasAlcalde = () => {
     );
   };
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
-  };  
-  
+  };
 
   return (
     <div>
@@ -744,35 +736,6 @@ const FacturaTodasAlcalde = () => {
             <span className="hidden md:inline">Descargar facturas</span>
             <RiDownloadLine className="mr-0 xl:mr-2" />
           </button>
-        </div>
-      </div>
-
-      <div className="flex  justify-between">
-        <div className="flex">
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={() => setCurrentPage(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
-            >
-              <RiArrowLeftSLine />
-            </button>
-            <span className="mt-2">{`Página ${currentPage} de ${Math.ceil(
-              facturas.length / itemsPerPage
-            )}`}</span>
-            <button
-              onClick={() => setCurrentPage(currentPage + 1)}
-              disabled={
-                currentPage === Math.ceil(facturas.length / itemsPerPage)
-              }
-              className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
-            >
-              <RiArrowRightSLine />
-            </button>
-          </div>
-        </div>
-        <div className="items-center  mt-2  flex justify-end font-bold">
-          <p>Total facturas: ${totalSuma}</p>
         </div>
       </div>
 
@@ -806,23 +769,80 @@ const FacturaTodasAlcalde = () => {
                       onKeyDown={handleKeyDown}
                     />
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
-                      <button onClick={handleSearch} className="bg-secundary rounded-md">
-                      <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-white  font-semibold " />
+                      <button
+                        onClick={handleSearch}
+                        className="flex justify-center items-center gap-2 xl:gap-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#7196fb] via-[#1d8fe1] to-[#125abe] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-[#125fbe] hover:to-[#71c6fb]"
+                      >
+                        <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-white  font-semibold " />
                       </button>
                     </div>
                   </div>
                 </td>
                 <td className="px-4 py-2 text-center border">
-                {showAgregarConsorcio && (
-        <button onClick={() => agregarConsorcio(nitFiltro)} className="bg-green-500 rounded-md text-white p-2">
-          {isLoading ? "Agregando..." : "Agregar Consorcio"}
-        </button>
-      )}
+                  <div className="grid justify-center">
+                    <button
+                      onClick={() => {
+                        if (!nitFiltro.trim()) {
+                          toast.info(
+                            "Por favor, ingrese un NIT antes de agregar un consorcio."
+                          );
+                          return;
+                        }
+                        agregarConsorcio(nitFiltro);
+                      }}
+                      className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
+                    >
+                      {isLoading ? "Agregando..." : "Agregar Consorcio"}
+                    </button>
+                  </div>
                 </td>
-                <td className="px-4 py-2 text-center border">X</td>
+                <td className="px-4 py-2 text-center border"><div className="grid justify-center">
+                    <button
+                      onClick={() => {
+                        if (!nitFiltro.trim()) {
+                          toast.info(
+                            "Por favor, ingrese un NIT antes de agregar un consorcio."
+                          );
+                          return;
+                        }
+                        agregarOtroTipo(nitFiltro);
+                      }}
+                      className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fbf671] via-[#dae11d] to-[#bea712] hover:shadow-xl hover:shadow-yellow-500 hover:scale-105 duration-300 hover:from-[#bead12] hover:to-[#fbf271]" 
+                    >
+                      {isCargando ? "Agregando..." : "Agregar Otro Tipo"}
+                    </button>
+                  </div></td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <div className="flex  justify-between">
+          <div className="flex">
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="p-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowLeftSLine />
+              </button>
+              <span className="mt-2 text-sm">{`Página ${currentPage} de ${Math.ceil(
+                facturas.length / itemsPerPage
+              )}`}</span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={
+                  currentPage === Math.ceil(facturas.length / itemsPerPage)
+                }
+                className="p-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+              >
+                <RiArrowRightSLine />
+              </button>
+            </div>
+          </div>
+          <div className="items-center  mt-2  flex justify-end font-bold">
+            <p>Total facturas: ${totalSuma}</p>
+          </div>
         </div>
         <table className="table-auto w-full mt-6">
           <thead>
@@ -859,233 +879,247 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Comercial vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                
-                  options={getNombresComercialesOptions(nombresComerciales)}
-                  value={getNombresComercialesOptions(
-                    selectedNombresComerciales
-                  )}
-                  onChange={handleSelectNombresComerciales}
-                  placeholder="Selecciona nombre comercial"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                />
+                  <Select
+                    options={getNombresComercialesOptions(nombresComerciales)}
+                    value={getNombresComercialesOptions(
+                      selectedNombresComerciales
+                    )}
+                    onChange={handleSelectNombresComerciales}
+                    placeholder="Selecciona nombre comercial"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
                 </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getNitsEmisoresOptions(nitsEmisores)}
-                  value={getNitsEmisoresOptions(selectedNitsEmisores)}
-                  onChange={handleSelectNitsEmisores}
-                  placeholder="Selecciona nit Emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getNitsEmisoresOptions(nitsEmisores)}
+                    value={getNitsEmisoresOptions(selectedNitsEmisores)}
+                    onChange={handleSelectNitsEmisores}
+                    placeholder="Selecciona nit Emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getDepartamentosEmisoresOptions(
-                    departamentosEmisores
-                  )}
-                  value={getDepartamentosEmisoresOptions(
-                    selectedDepartamentosEmisores
-                  )}
-                  onChange={handleSelectDepartamentosEmisores}
-                  placeholder="Selecciona Departamento Emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getDepartamentosEmisoresOptions(
+                      departamentosEmisores
+                    )}
+                    value={getDepartamentosEmisoresOptions(
+                      selectedDepartamentosEmisores
+                    )}
+                    onChange={handleSelectDepartamentosEmisores}
+                    placeholder="Selecciona Departamento Emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getMunicipiosEmisoresOptions(municipiosEmisores)}
-                  value={getMunicipiosEmisoresOptions(
-                    selectedMunicipiosEmisores
-                  )}
-                  onChange={handleSelectMunicipiosEmisores}
-                  placeholder="Selecciona Municipio Emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getMunicipiosEmisoresOptions(municipiosEmisores)}
+                    value={getMunicipiosEmisoresOptions(
+                      selectedMunicipiosEmisores
+                    )}
+                    onChange={handleSelectMunicipiosEmisores}
+                    placeholder="Selecciona Municipio Emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getDireccionesEmisoresOptions(direccionesEmisores)}
-                  value={getDireccionesEmisoresOptions(
-                    selectedDireccionesEmisores
-                  )}
-                  onChange={handleSelectDireccionesEmisores}
-                  placeholder="Selecciona direccion emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getDireccionesEmisoresOptions(direccionesEmisores)}
+                    value={getDireccionesEmisoresOptions(
+                      selectedDireccionesEmisores
+                    )}
+                    onChange={handleSelectDireccionesEmisores}
+                    placeholder="Selecciona direccion emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getCorreosEmisoresOptions(correosEmisores)}
-                  value={getCorreosEmisoresOptions(selectedCorreosEmisores)}
-                  onChange={handleSelectCorreosEmisores}
-                  placeholder="Selecciona Correo Emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getCorreosEmisoresOptions(correosEmisores)}
+                    value={getCorreosEmisoresOptions(selectedCorreosEmisores)}
+                    onChange={handleSelectCorreosEmisores}
+                    placeholder="Selecciona Correo Emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Vendedor
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getTelefonosEmisoresOptions(telefonosEmisores)}
-                  value={getTelefonosEmisoresOptions(selectedTelefonosEmisores)}
-                  onChange={handleSelectTelefonosEmisores}
-                  placeholder="Selecciona Telefono Emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getTelefonosEmisoresOptions(telefonosEmisores)}
+                    value={getTelefonosEmisoresOptions(
+                      selectedTelefonosEmisores
+                    )}
+                    onChange={handleSelectTelefonosEmisores}
+                    placeholder="Selecciona Telefono Emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre adquiriente
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getNombresAdquirientesOptions(nombresAdquirientes)}
-                  value={getNombresAdquirientesOptions(
-                    selectedNombresAdquirientes
-                  )}
-                  onChange={handleSelectNombresAdquirientes}
-                  placeholder="Selecciona Nombre Comprador"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getNombresAdquirientesOptions(nombresAdquirientes)}
+                    value={getNombresAdquirientesOptions(
+                      selectedNombresAdquirientes
+                    )}
+                    onChange={handleSelectNombresAdquirientes}
+                    placeholder="Selecciona Nombre Comprador"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 # Documento comprador
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getNumerosDocumentoAdquirientesOptions(
-                    numerosDocumentoAdquirientes
-                  )}
-                  value={getNumerosDocumentoAdquirientesOptions(
-                    selectedNumerosDocumentoAdquirientes
-                  )}
-                  onChange={handleSelectNumerosDocumentoAdquirientes}
-                  placeholder="Selecciona Correo Emisor"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getNumerosDocumentoAdquirientesOptions(
+                      numerosDocumentoAdquirientes
+                    )}
+                    value={getNumerosDocumentoAdquirientesOptions(
+                      selectedNumerosDocumentoAdquirientes
+                    )}
+                    onChange={handleSelectNumerosDocumentoAdquirientes}
+                    placeholder="Selecciona Correo Emisor"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento comprador
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getDepartamentosAdquirientesOptions(
-                    departamentosAdquirientes
-                  )}
-                  value={getDepartamentosAdquirientesOptions(
-                    selectedDepartamentosAdquirientes
-                  )}
-                  onChange={handleSelectDepartamentosAdquirientes}
-                  placeholder="Selecciona Departamento Comprador"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getDepartamentosAdquirientesOptions(
+                      departamentosAdquirientes
+                    )}
+                    value={getDepartamentosAdquirientesOptions(
+                      selectedDepartamentosAdquirientes
+                    )}
+                    onChange={handleSelectDepartamentosAdquirientes}
+                    placeholder="Selecciona Departamento Comprador"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio comprador
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getMunicipiosAdquirientesOptions(
-                    municipiosAdquirientes
-                  )}
-                  value={getMunicipiosAdquirientesOptions(
-                    selectedMunicipiosAdquirientes
-                  )}
-                  onChange={handleSelectMunicipiosAdquirientes}
-                  placeholder="Selecciona Municipio Comprador"
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getMunicipiosAdquirientesOptions(
+                      municipiosAdquirientes
+                    )}
+                    value={getMunicipiosAdquirientesOptions(
+                      selectedMunicipiosAdquirientes
+                    )}
+                    onChange={handleSelectMunicipiosAdquirientes}
+                    placeholder="Selecciona Municipio Comprador"
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getDireccionesAdquirientesOptions(
-                    direccionesAdquirientes
-                  )}
-                  value={getDireccionesAdquirientesOptions(
-                    selectedDireccionesAdquirientes
-                  )}
-                  onChange={handleSelectDireccionesAdquirientes}
-                  placeholder="Selecciona Direccion Comprador"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getDireccionesAdquirientesOptions(
+                      direccionesAdquirientes
+                    )}
+                    value={getDireccionesAdquirientesOptions(
+                      selectedDireccionesAdquirientes
+                    )}
+                    onChange={handleSelectDireccionesAdquirientes}
+                    placeholder="Selecciona Direccion Comprador"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo comprador
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getCorreosAdquirientesOptions(correosAdquirientes)}
-                  value={getCorreosAdquirientesOptions(
-                    selectedCorreosAdquirientes
-                  )}
-                  onChange={handleSelectCorreosAdquirientes}
-                  placeholder="Selecciona Correo Comprador"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getCorreosAdquirientesOptions(correosAdquirientes)}
+                    value={getCorreosAdquirientesOptions(
+                      selectedCorreosAdquirientes
+                    )}
+                    onChange={handleSelectCorreosAdquirientes}
+                    placeholder="Selecciona Correo Comprador"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
                 <div hidden={nitFiltro}>
-                <Select
-                  options={getTelefonosAdquirientesOptions(
-                    telefonosAdquirientes
-                  )}
-                  value={getTelefonosAdquirientesOptions(
-                    selectedTelefonosAdquirientes
-                  )}
-                  onChange={handleSelectTelefonosAdquirientes}
-                  placeholder="Selecciona Telefono Comprador"
-                  isMulti
-                  styles={customStyles}
-                  menuPlacement="auto"
-                  menuPosition="fixed"
-                /></div>
+                  <Select
+                    options={getTelefonosAdquirientesOptions(
+                      telefonosAdquirientes
+                    )}
+                    value={getTelefonosAdquirientesOptions(
+                      selectedTelefonosAdquirientes
+                    )}
+                    onChange={handleSelectTelefonosAdquirientes}
+                    placeholder="Selecciona Telefono Comprador"
+                    isMulti
+                    styles={customStyles}
+                    menuPlacement="auto"
+                    menuPosition="fixed"
+                  />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Total acumulado

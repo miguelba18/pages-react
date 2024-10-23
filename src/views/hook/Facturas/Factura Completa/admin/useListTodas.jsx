@@ -47,7 +47,7 @@ const useListTodas = () => {
     }
   };
 
-  const fetchNombresComerciales = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/nombreComercialEmisor", setNombresComerciales), [token]);
+const fetchNombresComerciales = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/nombreComercialEmisor", setNombresComerciales), [token]);
 const fetchTelefonosAdquirientes = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/telefonoAdquiriente", setTelefonosAdquirientes), [token]);
 const fetchCorreosAdquirientes = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/correoAdquiriente", setCorreosAdquirientes), [token,]);
 const fetchDireccionesAdquirientes = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/direccionAdquiriente", setDireccionesAdquirientes), [token]);
@@ -63,13 +63,18 @@ const fetchMunicipiosEmisores = useCallback(() => fetchData("http://localhost:80
 const fetchDepartamentosEmisores = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/departamentoEmisor", setDepartamentosEmisores), [token]);
 
 const fetchFacturas = useCallback(
-  async (ciudad,query, anio, nombreComercialEmisor = [], telefonoAdquiriente = [], correoAdquiriente = [], direccionAdquiriente = [], municipioAdquiriente = [], departamentoAdquiriente = [], numeroDocumentoAdquiriente = [], nombreAdquiriente = [], nitEmisor = [], telefonoEmisor = [], correoEmisor = [], direccionEmisor = [], municipioEmisor = [], departamentoEmisor = []) => {
+  async (ciudad,query, anio, filtroNit, nombreComercialEmisor = [], telefonoAdquiriente = [], correoAdquiriente = [], direccionAdquiriente = [], municipioAdquiriente = [], departamentoAdquiriente = [], numeroDocumentoAdquiriente = [], nombreAdquiriente = [], nitEmisor = [], telefonoEmisor = [], correoEmisor = [], direccionEmisor = [], municipioEmisor = [], departamentoEmisor = []) => {
     try {
-      let url = `http://localhost:8080/facturatodas/listar`;
-      const params = new URLSearchParams();
-      if (ciudad){
-      params.append("ciudad", ciudad);
-    }
+      let url;
+      if (filtroNit) {
+        url = `http://localhost:8080/facturatodas/buscar/porFiltro?filtro=${filtroNit}`;
+      } else {
+        url = `http://localhost:8080/facturatodas/listar`;
+        const params = new URLSearchParams();
+        if (ciudad) {
+          params.append("ciudad", ciudad);
+        }
+
       if (query) {
         params.append("filtro", query);
       }
@@ -123,6 +128,8 @@ const fetchFacturas = useCallback(
       if (params.toString()) {
         url += `?${params.toString()}`;
       }
+      }
+    
 
       const response = await fetch(url, {
         method: "GET",
@@ -137,7 +144,11 @@ const fetchFacturas = useCallback(
       }
 
       const data = await response.json();
-      setFacturas(data.facturas);
+      if (data.facturas) {
+        setFacturas(data.facturas); 
+      } else {
+        setFacturas(data); 
+      }
       setTotalSuma(data.totalSuma);
     } catch (error) {
       console.error("Error en fetchFacturas:", error);

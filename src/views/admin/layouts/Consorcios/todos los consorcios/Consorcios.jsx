@@ -196,11 +196,11 @@ const Consorcios = () => {
               <button
                 onClick={() => setCurrentPage(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="  p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+                className="  p-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
               >
                 <RiArrowLeftSLine />
               </button>
-              <span className="mt-2 mx-2">{`Página ${currentPage} de ${Math.ceil(
+              <span className="mt-2 mx-2 text-sm">{`Página ${currentPage} de ${Math.ceil(
                 consorcios.length / itemsPerPage
               )}`}</span>
               <button
@@ -208,7 +208,7 @@ const Consorcios = () => {
                 disabled={
                   currentPage === Math.ceil(consorcios.length / itemsPerPage)
                 }
-                className="p-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
+                className="p-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-secundary via-[#457ded] to-[#123abb] hover:shadow-xl hover:shadow-secundary hover:scale-105 duration-300 hover:from-secundary hover:to-[#042cb3] disabled:opacity-50"
               >
                 <RiArrowRightSLine />
               </button>
@@ -219,7 +219,7 @@ const Consorcios = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="table-auto w-full mt-6">
+            <table className="table-auto w-full mt-2">
               <thead>
                 <tr>
                   <th className="px-4 py-2 bg-secundary text-white">#</th>
