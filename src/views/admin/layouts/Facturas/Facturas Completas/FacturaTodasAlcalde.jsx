@@ -4,10 +4,13 @@ import {
   RiDownloadLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
+  RiSearchLine,
 } from "react-icons/ri";
 import useListTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useListTodasAlcalde";
 import useDescargarTodasAlcalde from "../../../../hook/Facturas/Factura Completa/alcalde/useDescargarTodasAlcalde";
 import Select from "react-select";
+import useAgregarConsorcios from "../../../../hook/Consorcios/useAgregarConsorcios";
+
 
 const FacturaTodasAlcalde = () => {
   const {
@@ -34,6 +37,11 @@ const FacturaTodasAlcalde = () => {
   const [selectedAnio, setSelectedAnio] = useState("");
   const { handleDownloadExcel } = useDescargarTodasAlcalde();
   const [currentPage, setCurrentPage] = useState(1);
+  const [nitFiltro, setNitFiltro] = useState("");
+  const [isSearchingByNit, setIsSearchingByNit] = useState(false);
+  const { agregarConsorcio, isLoading } = useAgregarConsorcios();
+  const [showAgregarConsorcio, setShowAgregarConsorcio] = useState(false);
+
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
     []
   );
@@ -94,25 +102,27 @@ const FacturaTodasAlcalde = () => {
   };
 
   useEffect(() => {
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedNitsEmisores,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    if (!isSearchingByNit) {
+      fetchFacturas(
+        searchQuery,
+        selectedAnio,
+        "",
+        selectedNombresComerciales,
+        selectedTelefonosAdquirientes,
+        selectedCorreosAdquirientes,
+        selectedDireccionesAdquirientes,
+        selectedMunicipiosAdquirientes,
+        selectedDepartamentosAdquirientes,
+        selectedNumerosDocumentoAdquirientes,
+        selectedNombresAdquirientes,
+        selectedNitsEmisores,
+        selectedTelefonosEmisores,
+        selectedCorreosEmisores,
+        selectedDireccionesEmisores,
+        selectedMunicipiosEmisores,
+        selectedDepartamentosEmisores
+      );
+    }
   }, [
     searchQuery,
     selectedAnio,
@@ -131,7 +141,33 @@ const FacturaTodasAlcalde = () => {
     selectedMunicipiosEmisores,
     selectedDepartamentosEmisores,
     fetchFacturas,
+    isSearchingByNit  // Dependemos de este estado también
   ]);
+
+  
+
+  useEffect(() => {
+    if (!isSearchingByNit) {
+      // Llamada inicial a la API general cuando se monta el componente (sin filtro NIT)
+      fetchFacturas();
+    }
+  }, [isSearchingByNit, fetchFacturas]);
+
+  // Función de búsqueda por NIT
+  const handleSearch = () => {
+    if (nitFiltro) {
+      // Si el campo de NIT tiene valor, llamar a la API con filtro NIT
+      fetchFacturas(null, null, null, nitFiltro);
+      setIsSearchingByNit(true);
+      setShowAgregarConsorcio(true); // Indicar que estamos buscando por NIT
+    } else {
+      // Si el campo de NIT está vacío, volver a la API general sin filtro
+      fetchFacturas();
+      setIsSearchingByNit(false)
+      setShowAgregarConsorcio(false) // Resetear a la búsqueda general
+    }
+  };
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -686,6 +722,12 @@ const FacturaTodasAlcalde = () => {
       selectedValues
     );
   };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };  
+  
 
   return (
     <div>
@@ -740,7 +782,7 @@ const FacturaTodasAlcalde = () => {
             <thead>
               <tr>
                 <th></th>
-                <th></th>
+                <th className="px-4 py-2 bg-secundary text-white">Nit </th>
 
                 <th className="px-4 py-2 bg-secundary text-white">
                   Consorcio o Union temporal
@@ -753,8 +795,30 @@ const FacturaTodasAlcalde = () => {
                 <td className="px-4 py-2 text-center border">
                   Agrupar Contribuyente No Vinculante
                 </td>
-                <td className="px-4 py-2 text-center border">Nit</td>
-                <td className="px-4 py-2 text-center border">X</td>
+                <td className="px-4 py-2 text-center border">
+                  <div className="relative ">
+                    <input
+                      type="number"
+                      value={nitFiltro}
+                      onChange={(e) => setNitFiltro(e.target.value)}
+                      className="rounded-[10px] shadow-xl  w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
+                      placeholder="Search"
+                      onKeyDown={handleKeyDown}
+                    />
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
+                      <button onClick={handleSearch} className="bg-secundary rounded-md">
+                      <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-white  font-semibold " />
+                      </button>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-2 text-center border">
+                {showAgregarConsorcio && (
+        <button onClick={() => agregarConsorcio(nitFiltro)} className="bg-green-500 rounded-md text-white p-2">
+          {isLoading ? "Agregando..." : "Agregar Consorcio"}
+        </button>
+      )}
+                </td>
                 <td className="px-4 py-2 text-center border">X</td>
               </tr>
             </tbody>
@@ -794,7 +858,9 @@ const FacturaTodasAlcalde = () => {
               <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Comercial vendedor
+                <div hidden={nitFiltro}>
                 <Select
+                
                   options={getNombresComercialesOptions(nombresComerciales)}
                   value={getNombresComercialesOptions(
                     selectedNombresComerciales
@@ -806,9 +872,11 @@ const FacturaTodasAlcalde = () => {
                   menuPlacement="auto"
                   menuPosition="fixed"
                 />
+                </div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 NIT vendedor
+                <div hidden={nitFiltro}>
                 <Select
                   options={getNitsEmisoresOptions(nitsEmisores)}
                   value={getNitsEmisoresOptions(selectedNitsEmisores)}
@@ -818,10 +886,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento vendedor
+                <div hidden={nitFiltro}>
                 <Select
                   options={getDepartamentosEmisoresOptions(
                     departamentosEmisores
@@ -835,10 +904,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio vendedor
+                <div hidden={nitFiltro}>
                 <Select
                   options={getMunicipiosEmisoresOptions(municipiosEmisores)}
                   value={getMunicipiosEmisoresOptions(
@@ -850,10 +920,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección vendedor
+                <div hidden={nitFiltro}>
                 <Select
                   options={getDireccionesEmisoresOptions(direccionesEmisores)}
                   value={getDireccionesEmisoresOptions(
@@ -865,10 +936,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo vendedor
+                <div hidden={nitFiltro}>
                 <Select
                   options={getCorreosEmisoresOptions(correosEmisores)}
                   value={getCorreosEmisoresOptions(selectedCorreosEmisores)}
@@ -878,10 +950,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Vendedor
+                <div hidden={nitFiltro}>
                 <Select
                   options={getTelefonosEmisoresOptions(telefonosEmisores)}
                   value={getTelefonosEmisoresOptions(selectedTelefonosEmisores)}
@@ -891,10 +964,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre adquiriente
+                <div hidden={nitFiltro}>
                 <Select
                   options={getNombresAdquirientesOptions(nombresAdquirientes)}
                   value={getNombresAdquirientesOptions(
@@ -906,10 +980,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 # Documento comprador
+                <div hidden={nitFiltro}>
                 <Select
                   options={getNumerosDocumentoAdquirientesOptions(
                     numerosDocumentoAdquirientes
@@ -923,10 +998,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Departamento comprador
+                <div hidden={nitFiltro}>
                 <Select
                   options={getDepartamentosAdquirientesOptions(
                     departamentosAdquirientes
@@ -940,10 +1016,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Municipio comprador
+                <div hidden={nitFiltro}>
                 <Select
                   options={getMunicipiosAdquirientesOptions(
                     municipiosAdquirientes
@@ -956,10 +1033,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Dirección comprador
+                <div hidden={nitFiltro}>
                 <Select
                   options={getDireccionesAdquirientesOptions(
                     direccionesAdquirientes
@@ -973,10 +1051,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Correo comprador
+                <div hidden={nitFiltro}>
                 <Select
                   options={getCorreosAdquirientesOptions(correosAdquirientes)}
                   value={getCorreosAdquirientesOptions(
@@ -988,10 +1067,11 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Telefono Comprador
+                <div hidden={nitFiltro}>
                 <Select
                   options={getTelefonosAdquirientesOptions(
                     telefonosAdquirientes
@@ -1005,7 +1085,7 @@ const FacturaTodasAlcalde = () => {
                   styles={customStyles}
                   menuPlacement="auto"
                   menuPosition="fixed"
-                />
+                /></div>
               </th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Total acumulado

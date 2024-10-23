@@ -58,10 +58,14 @@ const useListTodasAlcalde = () => {
   const fetchDepartamentosEmisores = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/departamentoEmisor", setDepartamentosEmisores), [token]);
 
   const fetchFacturas = useCallback(
-    async (query, anio, codigoUnico, nombreComercialEmisor = [], telefonoAdquiriente = [], correoAdquiriente = [], direccionAdquiriente = [], municipioAdquiriente = [], departamentoAdquiriente = [], numeroDocumentoAdquiriente = [], nombreAdquiriente = [], nitEmisor = [], telefonoEmisor = [], correoEmisor = [], direccionEmisor = [], municipioEmisor = [], departamentoEmisor = []) => {
+    async (query, anio, codigoUnico, filtroNit, nombreComercialEmisor = [], telefonoAdquiriente = [], correoAdquiriente = [], direccionAdquiriente = [], municipioAdquiriente = [], departamentoAdquiriente = [], numeroDocumentoAdquiriente = [], nombreAdquiriente = [], nitEmisor = [], telefonoEmisor = [], correoEmisor = [], direccionEmisor = [], municipioEmisor = [], departamentoEmisor = []) => {
       try {
-        let url = `http://localhost:8080/facturatodas/listar`;
-        const params = new URLSearchParams();
+        let url;
+        if (filtroNit) {
+          url = `http://localhost:8080/facturatodas/buscar/porFiltro?filtro=${filtroNit}`;
+        } else {
+          url = `http://localhost:8080/facturatodas/listar`;
+          const params = new URLSearchParams();
   
         if (query) {
           params.append("filtro", query);
@@ -118,6 +122,9 @@ const useListTodasAlcalde = () => {
         if (params.toString()) {
           url += `?${params.toString()}`;
         }
+        }
+      
+        
   
         const response = await fetch(url, {
           method: "GET",
@@ -132,7 +139,11 @@ const useListTodasAlcalde = () => {
         }
   
         const data = await response.json();
-        setFacturas(data.facturas);
+        if (data.facturas) {
+          setFacturas(data.facturas); 
+        } else {
+          setFacturas(data); 
+        }
         setTotalSuma(data.totalSuma);
       } catch (error) {
         console.error("Error en fetchFacturas:", error);
