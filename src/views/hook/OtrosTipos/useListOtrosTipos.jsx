@@ -1,13 +1,13 @@
 import useAuthToken from "../Token/useAuthToken";
 import { useState, useCallback } from "react";
-const useListConsorcios = () => {
+const useListOtrosTipos = () => {
   const { token } = useAuthToken();
   const [consorcios, setConsorcios] = useState([]);
 
   const listConsorcios = useCallback(
     async (filtro = "", anio = "") => {
       try {
-        let url = `http://localhost:8080/consorcio`;
+        let url = `http://localhost:8080/otrotipo`;
         const params = new URLSearchParams();
         
           if (filtro) {
@@ -47,4 +47,4 @@ const useListConsorcios = () => {
   };
 };
 
-export default useListConsorcios;
+export default useListOtrosTipos;

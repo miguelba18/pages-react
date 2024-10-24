@@ -1,4 +1,3 @@
-
 import LayoutAdmin from "./layouts/LayoutAdmin";
 import Perfil from "./views/admin/layouts/perfil/Perfil";
 import CalendarioAdmin from "./views/admin/Admin-Panel/calendarios/CalendarioAdmin";
@@ -16,7 +15,7 @@ import FacturaCompletaAlcalde from "./views/admin/layouts/Facturas/Facturas Comp
 import FacturaTodasAlcalde from "./views/admin/layouts/Facturas/Facturas Completas/FacturaTodasAlcalde";
 
 import AgrupadasEmisorAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasEmisorAlcalde";
-import AgrupadasAdquirienteAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAdquirienteAlcalde"
+import AgrupadasAdquirienteAlcalde from "./views/admin/layouts/Facturas/Agrupadas/Alcalde/AgrupadasAdquirienteAlcalde";
 
 import Consorcios from "./views/admin/layouts/Consorcios/todos los consorcios/Consorcios";
 import Contribuyente from "./views/admin/layouts/Contribuyente/Contribuyente";
@@ -25,6 +24,8 @@ import FacturaCompletaTodas from "./views/admin/layouts/Facturas/Facturas Comple
 import ConsorcioClienteMunicipio from "./views/admin/layouts/Consorcios/adquiriente/ConsorcioClienteMunicipio";
 import ConsorcioVendedorMunicipio from "./views/admin/layouts/Consorcios/emisor/ConsorcioVendedorMunicipio";
 import OtrosContribuyentes from "./views/admin/layouts/Contribuyente/OtrosContribuyentes";
+import OtrosContribuyentesSinVinculo from "./views/admin/layouts/Contribuyente/OtrosContribuyentesSinVinculo";
+import OtrosTipos from "./views/admin/layouts/Consorcios/Uniones temporales/OtrosTipos";
 import UnionesConsorcios from "./views/admin/layouts/Consorcios/Uniones temporales/UnionesConsorcios";
 import EnviarCorreos from "./views/admin/layouts/Enviar correos/EnviarCorreos";
 import EnviarCorreoAlcalde from "./views/admin/layouts/Enviar correos/Alcalde/EnviarCorreoAlcalde";
@@ -54,7 +55,6 @@ import RestrictedRouteAdmin from "./components/AdminPanel/blockroute/RestrictedR
 import RestrictedRouteAlcalde from "./components/AdminPanel/blockroute/RestrictedRouteAlcalde";
 import RestrictedRouteSecretarioPersonal from "./components/AdminPanel/blockroute/RestrictedRouteSecretarioPersonal";
 import "./styles/style.css";
-import ConsorciosAlcalde from "./views/admin/layouts/Consorcios/todos los consorcios/ConsorciosAlcalde";
 import VendedorAlcalde from "./views/admin/layouts/Consorcios/emisor/VendedorAlcalde";
 import ClienteAlcalde from "./views/admin/layouts/Consorcios/adquiriente/ClienteAlcalde";
 function App() {
@@ -73,12 +73,11 @@ function App() {
           <Route path="perfil" element={<Perfil />} />
           <Route path="contribuyente" element={<Contribuyente />} />
           <Route path="documentosoporte" element={<DocumentoSoporte />} />
-          <Route
-            path="otroscontribuyentes"
-            element={<OtrosContribuyentes />}
-          />
+          <Route path="otroscontribuyentes" element={<OtrosContribuyentes />} />
           <Route path="unionesconsorcios" element={<UnionesConsorcios />} />
-          
+          <Route path="consorcios" element={<Consorcios />} />
+          <Route path="otroscontribuyentessinvinculo" element={<OtrosContribuyentesSinVinculo />} />
+          <Route path="otrostipos" element={<OtrosTipos />} />
 
           <Route
             path="documentocompradoralcalde"
@@ -104,14 +103,7 @@ function App() {
               </RestrictedRouteSecretarioPersonal>
             }
           />
-          <Route
-            path="consorciosalcalde"
-            element={
-              <RestrictedRouteSecretarioPersonal>
-                <ConsorciosAlcalde />
-              </RestrictedRouteSecretarioPersonal>
-            }
-          />
+
           <Route
             path="vendedoralcalde"
             element={
@@ -203,7 +195,11 @@ function App() {
           {/* Rutas que solo puede ver el ADMIN */}
           <Route
             path="facturacompletatodas"
-            element={<RestrictedRouteAdmin><FacturaCompletaTodas /></RestrictedRouteAdmin>}
+            element={
+              <RestrictedRouteAdmin>
+                <FacturaCompletaTodas />
+              </RestrictedRouteAdmin>
+            }
           />
           <Route
             path="documentocomprador"
@@ -302,14 +298,7 @@ function App() {
               </RestrictedRouteAdmin>
             }
           />
-          <Route
-            path="consorcios"
-            element={
-              <RestrictedRouteAdmin>
-                <Consorcios />
-              </RestrictedRouteAdmin>
-            }
-          />
+
           <Route
             path="consorcioclientemunicipio"
             element={

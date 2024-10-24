@@ -1,31 +1,26 @@
+
+
 import { useState, useEffect } from "react";
-import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
+import useListOtrosTipos from "../../../../hook/OtrosTipos/useListOtrosTipos";
 import {
   RiSearchLine,
   RiDownloadLine,
-  RiDeleteBin5Fill,
+ 
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
-import useDescargarConsorcios from "../../../../hook/Consorcios/useDescargarConsorcios";
 import HighlightedText from "../../../../../utils/HighlightedText";
 
-import useDeleteConsorcios from "../../../../hook/Consorcios/useDeleteConsorcios";
-import Modal from "../../../../modal/Modal";
-
-const Consorcios = () => {
+const OtrosTipos = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const [resetAnio, setResetAnio] = useState(false);
-  const { handleDownloadExcel } = useDescargarConsorcios();
   const [facturasDisponibles, setFacturasDisponibles] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [facturaToDelete, setFacturaToDelete] = useState(null);
-  const { deleteConsorcio } = useDeleteConsorcios();
+
   const [selectedAnio, setSelectedAnio] = useState("");
   const [totalSubtotal, setTotalSubtotal] = useState(0);
-  const { consorcios, listConsorcios } = useListConsorcios();
+  const { consorcios, listConsorcios } = useListOtrosTipos();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -44,9 +39,7 @@ const Consorcios = () => {
     listConsorcios();
   }, [listConsorcios]);
 
-  const handleDownload = () => {
-    handleDownloadExcel(searchQuery, selectedAnio);
-  };
+ 
   const handleSearch = (query, anio) => {
     setSearchQuery("");
     setSearchQuery(query);
@@ -72,30 +65,14 @@ const Consorcios = () => {
     }, 0);
     setTotalSubtotal(total);
   }, [consorcios]);
-  const openDeleteModal = (factura) => {
-    setFacturaToDelete(factura);
-    setIsDeleteModalOpen(true);
-  };
+ 
 
-  const confirmDelete = () => {
-    handleDelete();
-  };
-
-  const cancelDelete = () => {
-    setIsDeleteModalOpen(false);
-    setFacturaToDelete(null);
-  };
-  const handleDelete = () => {
-    if (facturaToDelete) {
-      deleteConsorcio(facturaToDelete.id);
-      setIsDeleteModalOpen(false);
-    }
-  };
+  
 
   return (
     <div>
       <h1 className="font-bold text-3xl text-secundary">
-        Todas las facturas No Vinculantes
+        Todas las facturas Otros Tipos
       </h1>
 
         
@@ -104,7 +81,7 @@ const Consorcios = () => {
           {consorcios.length > 0 && (
             <div  className="xl:relative mr-4">
               <button
-                onClick={handleDownload}
+              
                 className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
               >
                 <span className="hidden md:inline">Descargar facturas</span>
@@ -256,9 +233,7 @@ const Consorcios = () => {
                   <th className="px-4 py-2 bg-secundary text-white">
                     Total Acumulado
                   </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Eliminar No vinculante
-                  </th>
+                 
                 </tr>
               </thead>
               <tbody>
@@ -353,16 +328,7 @@ const Consorcios = () => {
                       <td className="border px-4 py-2 text-center">
                         ${consorcio.subtotal}
                       </td>
-                      <td className="border px-4 py-2 text-center">
-                        <div className="flex justify-center items-center">
-                          <button
-                            onClick={() => openDeleteModal(consorcio)}
-                            className="flex justify-center items-center mr-2 gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                          >
-                            <RiDeleteBin5Fill className="" />
-                          </button>
-                        </div>
-                      </td>
+                      
                     </tr>
                   ))
                 ) : (
@@ -387,21 +353,12 @@ const Consorcios = () => {
                     <th className="border px-4 py-2">
                       ${totalSubtotal.toLocaleString("de-DE")}
                     </th>
-                    <th className="px-4 py-2 bg-secundary text-white"></th>
+             
                   </tr>
                 </tfoot>
               )}
             </table>
-            <Modal
-              isOpen={isDeleteModalOpen}
-              onClose={() => setIsDeleteModalOpen(false)}
-              title="Eliminar Factura"
-              confirmText="Confirmar"
-              onConfirm={confirmDelete}
-              onCancel={cancelDelete}
-            >
-              <p>¿Estás seguro de eliminar esta factura?</p>
-            </Modal>
+            
           </div>
         </>
       )}
@@ -409,4 +366,5 @@ const Consorcios = () => {
   );
 };
 
-export default Consorcios;
+export default OtrosTipos;
+

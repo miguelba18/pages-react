@@ -1,24 +1,16 @@
 import useAuthToken from "../Token/useAuthToken";
 import { useState, useCallback } from "react";
-const useListConsorcios = () => {
+const useListContribuyentesSinVinculo = () => {
   const { token } = useAuthToken();
   const [consorcios, setConsorcios] = useState([]);
 
   const listConsorcios = useCallback(
-    async (filtro = "", anio = "") => {
+    async () => {
       try {
-        let url = `http://localhost:8080/consorcio`;
-        const params = new URLSearchParams();
+        let url = `http://localhost:8080/otrotipo/listar2`;
         
-          if (filtro) {
-            params.append("filtro", filtro);
-          }
-          if (anio) {
-            params.append("anio", anio);
-          }
-        if (params.toString()) {
-          url += `?${params.toString()}`;
-        }
+        
+          
        
         const response = await fetch(url, {
           method: "GET",
@@ -47,4 +39,4 @@ const useListConsorcios = () => {
   };
 };
 
-export default useListConsorcios;
+export default useListContribuyentesSinVinculo;

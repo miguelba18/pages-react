@@ -14,6 +14,8 @@ import Modal from "../../../../modal/Modal";
 import Select from "react-select";
 import useAgregarConsorcios from "../../../../hook/Consorcios/useAgregarConsorcios";
 import { toast } from "react-toastify";
+import useAgregarOtroTipo from "../../../../hook/Consorcios/useAgregarOtroTipo";
+
 const FacturaCompletaTodas = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -22,6 +24,7 @@ const FacturaCompletaTodas = () => {
   const { handleDownloadExcel } = useDescargarTodas();
   const [resetAnio, setResetAnio] = useState(false);
   const { deleteFactura } = useDeleteFacturas();
+  const { agregarOtroTipo, isCargando } = useAgregarOtroTipo();
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [facturaToDelete, setFacturaToDelete] = useState(null);
@@ -885,7 +888,24 @@ const FacturaCompletaTodas = () => {
                       </button>
                     </div>
                   </td>
-                  <td className="px-4 py-2 text-center border">X</td>
+                  <td className="px-4 py-2 text-center border">
+                  <div className="grid justify-center">
+                    <button
+                      onClick={() => {
+                        if (!nitFiltro.trim()) {
+                          toast.info(
+                            "Por favor, ingrese un NIT antes de agregar otro tipo."
+                          );
+                          return;
+                        }
+                        agregarOtroTipo(nitFiltro);
+                      }}
+                      className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fbf671] via-[#dae11d] to-[#bea712] hover:shadow-xl hover:shadow-yellow-500 hover:scale-105 duration-300 hover:from-[#bead12] hover:to-[#fbf271]"
+                    >
+                      {isCargando ? "Agregando..." : "Agregar Otro Tipo"}
+                    </button>
+                  </div>
+                  </td>
                 </tr>
               </tbody>
             </table>

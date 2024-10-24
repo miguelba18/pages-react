@@ -43,7 +43,6 @@ const FacturaTodasAlcalde = () => {
   const { agregarConsorcio, isLoading } = useAgregarConsorcios();
   const { agregarOtroTipo, isCargando } = useAgregarOtroTipo();
 
-
   const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
     []
   );
@@ -796,7 +795,8 @@ const FacturaTodasAlcalde = () => {
                     </button>
                   </div>
                 </td>
-                <td className="px-4 py-2 text-center border"><div className="grid justify-center">
+                <td className="px-4 py-2 text-center border">
+                  <div className="grid justify-center">
                     <button
                       onClick={() => {
                         if (!nitFiltro.trim()) {
@@ -807,11 +807,12 @@ const FacturaTodasAlcalde = () => {
                         }
                         agregarOtroTipo(nitFiltro);
                       }}
-                      className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fbf671] via-[#dae11d] to-[#bea712] hover:shadow-xl hover:shadow-yellow-500 hover:scale-105 duration-300 hover:from-[#bead12] hover:to-[#fbf271]" 
+                      className="flex justify-center items-center gap-2 xl:gap-2 px-3 py-2 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fbf671] via-[#dae11d] to-[#bea712] hover:shadow-xl hover:shadow-yellow-500 hover:scale-105 duration-300 hover:from-[#bead12] hover:to-[#fbf271]"
                     >
                       {isCargando ? "Agregando..." : "Agregar Otro Tipo"}
                     </button>
-                  </div></td>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
