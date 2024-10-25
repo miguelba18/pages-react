@@ -1,16 +1,15 @@
+import useAuthToken from "../../../hook/Token/useAuthToken";
 
-
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useListContribuyentesSinVinculo from "../../../hook/Contribuyente/useListContribuyentesSinVinculo";
 import {
   RiSearchLine,
   RiDownloadLine,
- 
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
 import HighlightedText from "../../../../utils/HighlightedText";
+import { toast } from "react-toastify";
 
 const OtrosContribuyentesSinVinculo = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +17,7 @@ const OtrosContribuyentesSinVinculo = () => {
   const [resetAnio, setResetAnio] = useState(false);
   const [facturasDisponibles, setFacturasDisponibles] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { token } = useAuthToken();
   const [selectedAnio, setSelectedAnio] = useState("");
 
   const { consorcios, listConsorcios } = useListContribuyentesSinVinculo();
@@ -28,7 +27,7 @@ const OtrosContribuyentesSinVinculo = () => {
   const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
-    listConsorcios( "", anio)
+    listConsorcios("", anio)
       .then((facturas) => {
         setFacturasDisponibles(facturas.length > 0);
       })
@@ -40,7 +39,6 @@ const OtrosContribuyentesSinVinculo = () => {
     listConsorcios();
   }, [listConsorcios]);
 
- 
   const handleSearch = (query, anio) => {
     setSearchQuery("");
     setSearchQuery(query);
@@ -58,10 +56,279 @@ const OtrosContribuyentesSinVinculo = () => {
     }
   }, [resetAnio]);
 
-  
  
+  const downloadDisVen = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipouno?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
 
-  
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisFacVen = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipo?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisCom = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipounocompra?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisFacCom = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipocompra?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
 
   return (
     <div>
@@ -69,35 +336,29 @@ const OtrosContribuyentesSinVinculo = () => {
         Otros Contribuyentes Sin Vinculo En el Municipio
       </h1>
 
-        
-
-        <div className="flex justify-end">
-          {consorcios.length > 0 && (
-            <div  className="xl:relative mr-4">
-              <button
-              
-                className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
-              >
-                <span className="hidden md:inline">Descargar facturas</span>
-                <RiDownloadLine className="mr-0 xl:mr-2" />
-              </button>
-            </div>
-          )}
-          <div className="relative " >
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleSearchWithResetAnio(e.target.value)}
-              className="rounded-[10px] shadow-xl  w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-              placeholder="Search"
-              required
-            />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-              <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-secundary font-semibold " />
-            </div>
+      <div className="flex justify-end">
+        {consorcios.length > 0 && (
+          <div className="xl:relative mr-4">
+            <button className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
+              <span className="hidden md:inline">Descargar facturas</span>
+              <RiDownloadLine className="mr-0 xl:mr-2" />
+            </button>
+          </div>
+        )}
+        <div className="relative ">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => handleSearchWithResetAnio(e.target.value)}
+            className="rounded-[10px] shadow-xl  w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
+            placeholder="Search"
+            required
+          />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
+            <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-secundary font-semibold " />
           </div>
         </div>
-     
+      </div>
 
       {consorcios.length > 0 && (
         <>
@@ -123,7 +384,6 @@ const OtrosContribuyentesSinVinculo = () => {
                 <RiArrowRightSLine />
               </button>
             </div>
-            
           </div>
 
           <div className="overflow-x-auto">
@@ -131,7 +391,7 @@ const OtrosContribuyentesSinVinculo = () => {
               <thead>
                 <tr>
                   <th className="px-4 py-2 bg-secundary text-white">#</th>
-                  
+
                   <th className="px-4 py-2 bg-secundary text-white">
                     Fecha Emision
                     <br />
@@ -161,14 +421,14 @@ const OtrosContribuyentesSinVinculo = () => {
                       <option value="2030">2030</option>
                     </select>
                   </th>
-                  
+
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre Contribuyente
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     NIT Contribuyente
                   </th>
-                  
+
                   <th className="px-4 py-2 bg-secundary text-white">
                     Total Ventas
                   </th>
@@ -180,14 +440,13 @@ const OtrosContribuyentesSinVinculo = () => {
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Discriminado Factura por Ventas
-                    </th>
+                  </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Discriminado por Compras
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Discriminado Factura por Compras
                   </th>
-                 
                 </tr>
               </thead>
               <tbody>
@@ -205,11 +464,10 @@ const OtrosContribuyentesSinVinculo = () => {
                         {indexOfFirstItem + index + 1}
                       </td>
 
-                      
                       <td className="border px-4 py-2 text-center">
                         {consorcio.fechaEmision}
                       </td>
-                      
+
                       <td className="border px-4 py-2 text-center">
                         {consorcio.nombreComercialEmisor}
                       </td>
@@ -219,66 +477,79 @@ const OtrosContribuyentesSinVinculo = () => {
                           highlight={searchQuery}
                         />
                       </td>
-                
-                      
+
                       <td className="border px-4 py-2 text-center">
                         ${consorcio.subtotalAdquiriente}
                       </td>
-                      
+
                       <td className="border px-4 py-2 text-center">
                         {consorcio.subtotalEmisor}
                       </td>
-                      
+
                       <td className="border px-4 py-2 text-center">
-                      <div className="grid justify-center">
-                              <div>
-                                <button
-                             
-                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                                >
-                                  <RiDownloadLine className="h-6 w-6" />
-                                </button>
-                              </div>
-                            </div>
+                        <div className="grid justify-center">
+                        <button
+                          onClick={() =>
+                            downloadDisVen(
+                              consorcio.fechaEmision,
+                              consorcio.nombreComercialEmisor,
+                              consorcio.nitEmisor
+                            )
+                          }
+                          className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                        >
+                          <RiDownloadLine className="h-6 w-6" />
+                        </button>
+                        </div>
                       </td>
                       <td className="border px-4 py-2 text-center">
                       <div className="grid justify-center">
-                              <div>
-                                <button
-                         
-                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                                >
-                                  <RiDownloadLine className="h-6 w-6" />
-                                </button>
-                              </div>
-                            </div>
+                        <button
+                          onClick={() =>
+                            downloadDisFacVen(
+                              consorcio.fechaEmision,
+                              consorcio.nombreComercialEmisor,
+                              consorcio.nitEmisor
+                            )
+                          }
+                          className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                        >
+                          <RiDownloadLine className="h-6 w-6" />
+                        </button>
+                        </div>
                       </td>
                       <td className="border px-4 py-2 text-center">
-                      <div className="grid justify-center">
-                              <div>
-                                <button
-                            
-                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                                >
-                                  <RiDownloadLine className="h-6 w-6" />
-                                </button>
-                              </div>
-                            </div>
+                        <div className="grid justify-center">
+                        <button
+                          onClick={() =>
+                            downloadDisCom(
+                              consorcio.fechaEmision,
+                              consorcio.nombreComercialEmisor,
+                              consorcio.nitEmisor
+                            )
+                          }
+                          className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                        >
+                          <RiDownloadLine className="h-6 w-6" />
+                        </button>
+                        </div>
                       </td>
                       <td className="border px-4 py-2 text-center">
-                      <div className="grid justify-center">
-                              <div>
-                                <button
-                             
-                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                                >
-                                  <RiDownloadLine className="h-6 w-6" />
-                                </button>
-                              </div>
-                            </div>
+                        <div className="grid justify-center">
+                        <button
+                          onClick={() =>
+                            downloadDisFacCom(
+                              consorcio.fechaEmision,
+                              consorcio.nombreComercialEmisor,
+                              consorcio.nitEmisor
+                            )
+                          }
+                          className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                        >
+                          <RiDownloadLine className="h-6 w-6" />
+                        </button>
+                        </div>
                       </td>
-                      
-                      
                     </tr>
                   ))
                 ) : (
@@ -291,9 +562,7 @@ const OtrosContribuyentesSinVinculo = () => {
                   </tr>
                 )}
               </tbody>
-              
             </table>
-            
           </div>
         </>
       )}
@@ -302,5 +571,3 @@ const OtrosContribuyentesSinVinculo = () => {
 };
 
 export default OtrosContribuyentesSinVinculo;
-
-
