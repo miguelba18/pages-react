@@ -461,7 +461,7 @@ const AgrupadasAdquiriente = () => {
   return (
     <div>
       <h1 className="font-bold text-3xl text-secundary mb-6 text-center xl:text-start">
-        Facturas Comprador Municipio
+      Comprador Ubicado en el Municipio
       </h1>
       <div className="xl:flex justify-around">
         <div>
@@ -626,13 +626,13 @@ const AgrupadasAdquiriente = () => {
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Total acumulado cliente municipio
+                    Total Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Discriminado cliente por municipio
+                  Discriminado por comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Discriminado cliente por factura municipio
+                  Discriminado factura por comprador
                   </th>
                 </tr>
               </thead>

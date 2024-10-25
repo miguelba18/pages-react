@@ -469,7 +469,7 @@ const AgrupadasAdquirienteAlcalde = () => {
   return (
     <div>
       <div className="xl:flex justify-around">
-      <h1 className="font-bold text-3xl text-secundary">Facturas Comprador Municipio</h1>
+      <h1 className="font-bold text-3xl text-secundary">Comprador Ubicado en el Municipio</h1>
 
         
         
@@ -592,15 +592,15 @@ const AgrupadasAdquirienteAlcalde = () => {
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Total acumulado cliente municipio
+                    Total Vendedor
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     
 
-                    Discriminado cliente por municipio
+                  Discriminado por comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                  Discriminado cliente por factura municipio
+                  Discriminado factura por comprador
                   </th>
                 </tr>
               </thead>
@@ -626,7 +626,7 @@ const AgrupadasAdquirienteAlcalde = () => {
                             />
                           </td>
 
-                          <td className="border px-4">${factura.subtotal}</td>
+                          <td className="border px-4 text-center">${factura.subtotal}</td>
 
                           <td className="border px-4 py-2 text-center">
                             <div className="grid justify-center">

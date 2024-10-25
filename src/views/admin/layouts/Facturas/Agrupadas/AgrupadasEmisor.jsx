@@ -471,7 +471,7 @@ const AgrupadasEmisor = () => {
   return (
     <div>
       <h1 className="font-bold text-3xl text-secundary mb-4">
-        Facturas Vendedor Municipio
+      Vendedor Ubicado en el Municipio
       </h1>
 
       <div className="xl:flex justify-around">
@@ -634,10 +634,10 @@ const AgrupadasEmisor = () => {
                     Total acumulado cliente municipio
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Discriminado comprador
+                    Discriminado por comprador
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
-                    Discriminado comprador por factura
+                    Discriminado factura por comprador
                   </th>
                 </tr>
               </thead>

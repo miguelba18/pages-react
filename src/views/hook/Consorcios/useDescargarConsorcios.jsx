@@ -7,9 +7,7 @@ const useDescargarConsorcios = () => {
     const handleDownloadExcel = async (ciudad,filtro,anio) => {
 
       let url = "http://localhost:8080/consorcio/descargar-excel";
-      if (ciudad) {
-        url += `?ciudad=${ciudad}`;
-      }
+      
       if (filtro) {
         url += ciudad ? `&filtro=${filtro}` : `?filtro=${filtro}`;
       }
