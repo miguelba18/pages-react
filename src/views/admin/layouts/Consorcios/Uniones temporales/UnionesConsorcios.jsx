@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useListUnionesConsorcios from "../../../../hook/Consorcios/useListUnionesConsorcios";
 import {
   RiSearchLine,
@@ -6,14 +6,16 @@ import {
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
+import useAuthToken from "../../../../hook/Token/useAuthToken";
 import HighlightedText from "../../../../../utils/HighlightedText";
+import { toast } from "react-toastify";
 const UnionesConsorcios = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
   const [resetAnio, setResetAnio] = useState(false);
   const [facturasDisponibles, setFacturasDisponibles] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { token } = useAuthToken();
   const [selectedAnio, setSelectedAnio] = useState("");
 
   const { consorcios, listConsorcios } = useListUnionesConsorcios();
@@ -51,6 +53,279 @@ const UnionesConsorcios = () => {
       setResetAnio(false);
     }
   }, [resetAnio]);
+
+  const downloadDisVen = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorcio?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisFacVen = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorciouno?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisCom = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorciounocompra?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisFacCom = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorciocompra?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
 
   return (
     <div>
@@ -210,38 +485,66 @@ const UnionesConsorcios = () => {
 
                       <td className="border px-4 py-2 text-center">
                         <div className="grid justify-center">
-                          <div>
-                            <button className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]">
-                              <RiDownloadLine className="h-6 w-6" />
-                            </button>
-                          </div>
+                          <button
+                            onClick={() =>
+                              downloadDisVen(
+                                consorcio.fechaEmision,
+                                consorcio.nombreComercialEmisor,
+                                consorcio.nitEmisor
+                              )
+                            }
+                            className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                          >
+                            <RiDownloadLine className="h-6 w-6" />
+                          </button>
                         </div>
                       </td>
                       <td className="border px-4 py-2 text-center">
                         <div className="grid justify-center">
-                          <div>
-                            <button className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]">
-                              <RiDownloadLine className="h-6 w-6" />
-                            </button>
-                          </div>
+                          <button
+                            onClick={() =>
+                              downloadDisFacVen(
+                                consorcio.fechaEmision,
+                                consorcio.nombreComercialEmisor,
+                                consorcio.nitEmisor
+                              )
+                            }
+                            className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                          >
+                            <RiDownloadLine className="h-6 w-6" />
+                          </button>
                         </div>
                       </td>
                       <td className="border px-4 py-2 text-center">
                         <div className="grid justify-center">
-                          <div>
-                            <button className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]">
-                              <RiDownloadLine className="h-6 w-6" />
-                            </button>
-                          </div>
+                          <button
+                            onClick={() =>
+                              downloadDisCom(
+                                consorcio.fechaEmision,
+                                consorcio.nombreComercialEmisor,
+                                consorcio.nitEmisor
+                              )
+                            }
+                            className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                          >
+                            <RiDownloadLine className="h-6 w-6" />
+                          </button>
                         </div>
                       </td>
                       <td className="border px-4 py-2 text-center">
                         <div className="grid justify-center">
-                          <div>
-                            <button className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]">
-                              <RiDownloadLine className="h-6 w-6" />
-                            </button>
-                          </div>
+                          <button
+                            onClick={() =>
+                              downloadDisFacCom(
+                                consorcio.fechaEmision,
+                                consorcio.nombreComercialEmisor,
+                                consorcio.nitEmisor
+                              )
+                            }
+                            className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                          >
+                            <RiDownloadLine className="h-6 w-6" />
+                          </button>
                         </div>
                       </td>
                     </tr>

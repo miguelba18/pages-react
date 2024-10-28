@@ -1,4 +1,4 @@
-
+import useDescargarOtrosTipos from "../../../../hook/OtrosTipos/useDescargarOtrosTipos";
 
 import { useState, useEffect } from "react";
 import useListOtrosTipos from "../../../../hook/OtrosTipos/useListOtrosTipos";
@@ -17,6 +17,7 @@ const OtrosTipos = () => {
   const [resetAnio, setResetAnio] = useState(false);
   const [facturasDisponibles, setFacturasDisponibles] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const { handleDownloadExcel } = useDescargarOtrosTipos();
 
   const [selectedAnio, setSelectedAnio] = useState("");
   const [totalSubtotal, setTotalSubtotal] = useState(0);
@@ -65,7 +66,12 @@ const OtrosTipos = () => {
     }, 0);
     setTotalSubtotal(total);
   }, [consorcios]);
+
+  const handleDownload = () => {
+    handleDownloadExcel( searchQuery, selectedAnio);
+  };
  
+
 
   
 
@@ -81,6 +87,7 @@ const OtrosTipos = () => {
           {consorcios.length > 0 && (
             <div  className="xl:relative mr-4">
               <button
+              onClick={handleDownload}
               
                 className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
               >
@@ -105,7 +112,7 @@ const OtrosTipos = () => {
         </div>
      
 
-      {consorcios.length > 0 && (
+
         <>
           <div className="flex  justify-between">
             <div className="flex justify-center mt-4">
@@ -361,7 +368,7 @@ const OtrosTipos = () => {
             
           </div>
         </>
-      )}
+      
     </div>
   );
 };

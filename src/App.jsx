@@ -27,13 +27,9 @@ import OtrosContribuyentes from "./views/admin/layouts/Contribuyente/OtrosContri
 import OtrosContribuyentesSinVinculo from "./views/admin/layouts/Contribuyente/OtrosContribuyentesSinVinculo";
 import OtrosTipos from "./views/admin/layouts/Consorcios/Uniones temporales/OtrosTipos";
 import UnionesConsorcios from "./views/admin/layouts/Consorcios/Uniones temporales/UnionesConsorcios";
-import EnviarCorreos from "./views/admin/layouts/Enviar correos/EnviarCorreos";
-import EnviarCorreoAlcalde from "./views/admin/layouts/Enviar correos/Alcalde/EnviarCorreoAlcalde";
-import DocumentoSoporte from "./views/admin/layouts/Documento soporte/DocumentoSoporte";
-import DocumentoComprador from "./views/admin/layouts/Documento soporte/adquiriente/DocumentoComprador";
-import DocumentoVendedor from "./views/admin/layouts/Documento soporte/emisor/DocumentoVendedor";
-import DocumentoVendedorAlcalde from "./views/admin/layouts/Documento soporte/emisor/DocumentoVendedorAlcalde";
-import DocumentoCompradorAlcalde from "./views/admin/layouts/Documento soporte/adquiriente/DocumentoCompradorAlcalde";
+
+
+import Seguimiento from "./views/admin/layouts/Seguimiento/Seguimiento";
 import Alcalde from "./views/admin/Admin-Panel/Roles/Alcalde/Alcalde";
 import Secretario from "./views/admin/Alcalde-Panel/Roles/Secretario/Secretario";
 import Personal from "./views/admin/Alcalde-Panel/Roles/Personal/Personal";
@@ -72,29 +68,16 @@ function App() {
           <Route index element={<Perfil />} />
           <Route path="perfil" element={<Perfil />} />
           <Route path="contribuyente" element={<Contribuyente />} />
-          <Route path="documentosoporte" element={<DocumentoSoporte />} />
+          <Route path="seguimiento" element={<Seguimiento />} />
           <Route path="otroscontribuyentes" element={<OtrosContribuyentes />} />
           <Route path="unionesconsorcios" element={<UnionesConsorcios />} />
           <Route path="consorcios" element={<Consorcios />} />
           <Route path="otroscontribuyentessinvinculo" element={<OtrosContribuyentesSinVinculo />} />
           <Route path="otrostipos" element={<OtrosTipos />} />
 
-          <Route
-            path="documentocompradoralcalde"
-            element={
-              <RestrictedRouteSecretarioPersonal>
-                <DocumentoCompradorAlcalde />
-              </RestrictedRouteSecretarioPersonal>
-            }
-          />
-          <Route
-            path="documentovendedoralcalde"
-            element={
-              <RestrictedRouteSecretarioPersonal>
-                <DocumentoVendedorAlcalde />
-              </RestrictedRouteSecretarioPersonal>
-            }
-          />
+         
+        
+          
           <Route
             path="calendarioalcalde"
             element={
@@ -183,14 +166,6 @@ function App() {
             }
           />
 
-          <Route
-            path="enviarcorreoalcalde"
-            element={
-              <RestrictedRouteAlcalde>
-                <EnviarCorreoAlcalde />
-              </RestrictedRouteAlcalde>
-            }
-          />
 
           {/* Rutas que solo puede ver el ADMIN */}
           <Route
@@ -201,22 +176,8 @@ function App() {
               </RestrictedRouteAdmin>
             }
           />
-          <Route
-            path="documentocomprador"
-            element={
-              <RestrictedRouteAdmin>
-                <DocumentoComprador />
-              </RestrictedRouteAdmin>
-            }
-          />
-          <Route
-            path="documentovendedor"
-            element={
-              <RestrictedRouteAdmin>
-                <DocumentoVendedor />
-              </RestrictedRouteAdmin>
-            }
-          />
+          
+          
           <Route
             path="alcalde"
             element={
@@ -290,14 +251,7 @@ function App() {
               </RestrictedRouteAdmin>
             }
           />
-          <Route
-            path="enviarcorreos"
-            element={
-              <RestrictedRouteAdmin>
-                <EnviarCorreos />
-              </RestrictedRouteAdmin>
-            }
-          />
+          
 
           <Route
             path="consorcioclientemunicipio"

@@ -19,9 +19,9 @@ import {
   RiBankFill,
   RiMoneyDollarCircleFill,
   RiTeamFill,
-  RiMailSendFill,
+
   RiArticleFill,
-  RiFolderOpenFill,
+  RiUserFollowFill,
   RiGroupFill,
 } from "react-icons/ri";
 import { MdManageAccounts } from "react-icons/md";
@@ -216,19 +216,7 @@ const Header = () => {
                       Inquietudes
                     </Link>
                   </MenuItem>
-                  <MenuItem className="p-0 ">
-                    <Link
-                      to="/enviarcorreos"
-                      className="flex items-center  gap-4 px-4 py-2 mb-2"
-                    >
-                      <RiMailSendFill
-                        className={`text-xl text-secundary ${
-                          location.pathname === "/enviarcorreos" ? "" : ""
-                        }`}
-                      />
-                      Enviar Correos
-                    </Link>
-                  </MenuItem>
+                  
                 </Menu>
                 <Menu
                   menuButton={
@@ -292,107 +280,85 @@ const Header = () => {
                     }
                     className=""
                   >
-                    <MenuItem>
-                      <Link
-                        to="/consorcios"
-                        className="flex items-center  gap-4 px-4 py-2  "
-                      >
-                        <IoFileTrayFull
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/consorcios" ? " " : ""
-                          }`}
-                        />
-                        Todos los no Vinculantes
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="">
-                      <Link
-                        to="/consorcioclientemunicipio"
-                        className="flex items-center  gap-4 px-4 py-2  "
-                      >
-                        <RiShakeHandsFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/consorcioclientemunicipio"
-                              ? " "
-                              : ""
-                          }`}
-                        />
-                        No Vinculante Cliente
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="">
-                      <Link
-                        to="/consorciovendedormunicipio"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
-                      >
-                        <RiBankFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/consorciovendedormunicipio"
-                              ? ""
-                              : ""
-                          }`}
-                        />
-                        No Vinculante Vendedor
-                      </Link>
-                    </MenuItem>
-                    
+                    <SubMenu
+                      label={
+                        <div className="flex items-center gap-2">
+                          <RiBankFill className="text-xl mr-2 text-secundary" />
+                          Consorcios y uniones
+                        </div>
+                      }
+                      className=""
+                    >
+                      <MenuItem>
+                        <Link
+                          to="/consorcios"
+                          className="flex items-center w-full  gap-4 px-4 py-2  "
+                        >
+                          <IoFileTrayFull
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/consorcios" ? " " : ""
+                            }`}
+                          />
+                          Todos los no Vinculantes
+                        </Link>
+                      </MenuItem>
+                      <MenuItem className="">
+                        <Link
+                          to="unionesconsorcios"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                        >
+                          <RiBankFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/unionesconsorcios"
+                                ? ""
+                                : ""
+                            }`}
+                          />
+                          Uniones Temporales y Consorcios
+                        </Link>
+                      </MenuItem>
+                    </SubMenu>
+                    <SubMenu
+                      label={
+                        <div className="flex items-center gap-2">
+                          <RiBankFill className="text-xl mr-2 text-secundary" />
+                          Otros Contribuyentes
+                        </div>
+                      }
+                      className=""
+                    >
+                      <MenuItem className="">
+                        <Link
+                          to="/otrostipos"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                        >
+                          <RiBankFill
+                            className={`text-xl text-secundary ${
+                              location.pathname === "/otrostipos" ? "" : ""
+                            }`}
+                          />
+                          Otros Tipos
+                        </Link>
+                      </MenuItem>
+                      <MenuItem className="">
+                        <Link
+                          to="/otroscontribuyentessinvinculo"
+                          className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                        >
+                          <RiBankFill
+                            className={`text-xl text-secundary ${
+                              location.pathname ===
+                              "/otroscontribuyentessinvinculo"
+                                ? ""
+                                : ""
+                            }`}
+                          />
+                          Otros Contribuyentes sin vinculo en el municipio
+                        </Link>
+                      </MenuItem>
+                    </SubMenu>
                   </SubMenu>
-                  <SubMenu
-                  label={
-                    <div className="flex items-center gap-2">
-                      <RiBankFill className="text-xl mr-2 text-secundary" />
-                      Otros Contribuyentes
-                    </div>
-                  }
-                  className=""
-                >
-                  
-                  <MenuItem className="">
-                      <Link
-                        to="unionesconsorcios"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
-                      >
-                        <RiBankFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/unionesconsorcios"
-                              ? ""
-                              : ""
-                          }`}
-                        />
-                        Uniones Temporales y Consorcios
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="">
-                      <Link
-                        to="/otrostipos"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
-                      >
-                        <RiBankFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/otrostipos"
-                              ? ""
-                              : ""
-                          }`}
-                        />
-                        Otros Tipos
-                      </Link>
-                    </MenuItem>
-                    <MenuItem className="">
-                      <Link
-                        to="/otroscontribuyentessinvinculo"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
-                      >
-                        <RiBankFill
-                          className={`text-xl text-secundary ${
-                            location.pathname === "/otroscontribuyentessinvinculo"
-                              ? ""
-                              : ""
-                          }`}
-                        />
-                        Otros Contribuyentes sin vinculo en el municipio
-                      </Link>
-                    </MenuItem>
-                </SubMenu>
+
                   <SubMenu
                     label={
                       <div className="flex items-center gap-2">
@@ -537,19 +503,7 @@ const Header = () => {
                   transition
                   menuClassName="bg-tertiary-100 text-black p-4"
                 >
-                  <MenuItem className="p-0 ">
-                    <Link
-                      to="/enviarcorreoalcalde"
-                      className="flex items-center  gap-4 px-4 py-2 mb-2"
-                    >
-                      <RiMailSendFill
-                        className={`text-xl text-secundary ${
-                          location.pathname === "/enviarcorreoalcalde" ? "" : ""
-                        }`}
-                      />
-                      Enviar Correos
-                    </Link>
-                  </MenuItem>
+                  
                   <MenuItem className="p-0 ">
                     <Link
                       to="/calendarioalcalde"
@@ -700,82 +654,60 @@ const Header = () => {
                   }
                   className=""
                 >
-                  <MenuItem>
-                    <Link
-                      to="/consorcios"
-                      className="flex items-center  gap-4 px-4 py-2  "
-                    >
-                      <IoFileTrayFull
-                        className={`text-xl text-secundary ${
-                          location.pathname === "/consorcios" ? " " : ""
-                        }`}
-                      />
-                      Todos los no Vinculantes
-                    </Link>
-                  </MenuItem>
-                  <MenuItem className="">
-                    <Link
-                      to="/clientealcalde"
-                      className="flex items-center  gap-4 px-4 py-2  "
-                    >
-                      <RiShakeHandsFill
-                        className={`text-xl text-secundary ${
-                          location.pathname === "/clientealcalde" ? "" : ""
-                        }`}
-                      />
-                      No Vinculante Cliente
-                    </Link>
-                  </MenuItem>
-                  <MenuItem className="">
-                    <Link
-                      to="/vendedoralcalde"
-                      className="flex items-center  gap-4 px-4 py-2 mb-2 "
-                    >
-                      <RiBankFill
-                        className={`text-xl text-secundary ${
-                          location.pathname === "/vendedoralcalde" ? "" : ""
-                        }`}
-                      />
-                      No Vinculante Vendedor
-                    </Link>
-                  </MenuItem>
-                  
-                </SubMenu>
-                <SubMenu
-                  label={
-                    <div className="flex items-center gap-2">
-                      <RiBankFill className="text-xl mr-2 text-secundary" />
-                      Otros Contribuyentes
-                    </div>
-                  }
-                  className=""
-                >
-                  
-                  <MenuItem className="">
+                  <SubMenu
+                    label={
+                      <div className="flex items-center gap-2">
+                        <RiTeamFill className="text-xl mr-2 text-secundary" />
+                        Consorcios y uniones
+                      </div>
+                    }
+                    className=""
+                  >
+                    <MenuItem>
+                      <Link
+                        to="/consorcios"
+                        className="flex items-center w-full gap-4 px-4 py-2  "
+                      >
+                        <IoFileTrayFull
+                          className={`text-xl text-secundary ${
+                            location.pathname === "/consorcios" ? " " : ""
+                          }`}
+                        />
+                        Todos los no Vinculantes
+                      </Link>
+                    </MenuItem>
+                    <MenuItem className="">
                       <Link
                         to="unionesconsorcios"
                         className="flex items-center  gap-4 px-4 py-2 mb-2 "
                       >
                         <RiBankFill
                           className={`text-xl text-secundary ${
-                            location.pathname === "/unionesconsorcios"
-                              ? ""
-                              : ""
+                            location.pathname === "/unionesconsorcios" ? "" : ""
                           }`}
                         />
                         Uniones Temporales y Consorcios
                       </Link>
                     </MenuItem>
+                  </SubMenu>
+                  <SubMenu
+                    label={
+                      <div className="flex items-center gap-2">
+                        <RiBankFill className="text-xl mr-2 text-secundary" />
+                        Otros Contribuyentes
+                      </div>
+                    }
+                    className=""
+                  >
                     <MenuItem className="">
+
                       <Link
                         to="/otrostipos"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                        className="flex items-center  w-full gap-4 px-4 py-2 mb-2 "
                       >
                         <RiBankFill
                           className={`text-xl text-secundary ${
-                            location.pathname === "/otrostipos"
-                              ? ""
-                              : ""
+                            location.pathname === "/otrostipos" ? "" : ""
                           }`}
                         />
                         Otros Tipos
@@ -784,11 +716,12 @@ const Header = () => {
                     <MenuItem className="">
                       <Link
                         to="/otroscontribuyentessinvinculo"
-                        className="flex items-center  gap-4 px-4 py-2 mb-2 "
+                        className="flex items-center w-full  gap-4 px-4 py-2 mb-2 "
                       >
                         <RiBankFill
                           className={`text-xl text-secundary ${
-                            location.pathname === "/otroscontribuyentessinvinculo"
+                            location.pathname ===
+                            "/otroscontribuyentessinvinculo"
                               ? ""
                               : ""
                           }`}
@@ -796,7 +729,9 @@ const Header = () => {
                         Otros Contribuyentes sin vinculo en el municipio
                       </Link>
                     </MenuItem>
+                  </SubMenu>
                 </SubMenu>
+
                 <SubMenu
                   label={
                     <div className="flex items-center gap-2">
@@ -809,7 +744,7 @@ const Header = () => {
                   <MenuItem className="">
                     <Link
                       to="/facturaelectronica"
-                      className="flex items-center  gap-4 px-4 py-2 "
+                      className="flex items-center w-full gap-4 px-4 py-2 "
                     >
                       <RiAddCircleFill
                         className={`text-xl text-secundary ${
@@ -888,7 +823,7 @@ const Header = () => {
                   <div className="flex items-center ">
                     <RiArticleFill className="text-xl mr-2 text-secundary" />
                     <span className="text-sm font-semibold hidden xl:inline">
-                      Documento Soporte
+                      Seguimiento
                     </span>
                   </div>
                   <RiArrowDownSLine className="h-6 w-6" />
@@ -899,94 +834,18 @@ const Header = () => {
             >
               <MenuItem className="p-0 ">
                 <Link
-                  to="/documentosoporte"
+                  to="/seguimiento"
                   className="flex items-center  gap-4 px-4 py-2  "
                 >
-                  <RiFolderOpenFill
+                  <RiUserFollowFill
                     className={`text-xl text-secundary ${
-                      location.pathname === "/documentosoporte" ? " " : ""
+                      location.pathname === "/seguimiento" ? " " : ""
                     }`}
                   />
-                  Documentos
+                  Control y Seguimiento Contribuyente
                 </Link>
               </MenuItem>
-              <MenuItem className="p-0 ">
-                <div
-                  hidden={
-                    userRoleId === "Secretario" ||
-                    userRoleId === "Alcalde" ||
-                    userRoleId === "Personal"
-                  }
-                >
-                  <Link
-                    to="/documentocomprador"
-                    className="flex items-center  gap-4 px-4 py-2 "
-                  >
-                    <RiShakeHandsFill
-                      className={`text-xl text-secundary ${
-                        location.pathname === "/documentocomprador" ? " " : ""
-                      }`}
-                    />
-                    Documento Comprador
-                  </Link>
-                </div>
-              </MenuItem>
-              <MenuItem className="p-0 ">
-                <div
-                  hidden={
-                    userRoleId === "Secretario" ||
-                    userRoleId === "Alcalde" ||
-                    userRoleId === "Personal"
-                  }
-                >
-                  <Link
-                    to="/documentovendedor"
-                    className="flex items-center  gap-4 px-4 py-2  "
-                  >
-                    <RiBankFill
-                      className={`text-xl text-secundary ${
-                        location.pathname === "/documentovendedor" ? " " : ""
-                      }`}
-                    />
-                    Documento Vendedor
-                  </Link>
-                </div>
-              </MenuItem>
-
-              <MenuItem className="p-0 ">
-                <div hidden={userRoleId === "ADMIN"}>
-                  <Link
-                    to="/documentocompradoralcalde"
-                    className="flex items-center  gap-4 px-4 py-2 "
-                  >
-                    <RiShakeHandsFill
-                      className={`text-xl text-secundary ${
-                        location.pathname === "/documentocompradoralcalde"
-                          ? " "
-                          : ""
-                      }`}
-                    />
-                    Documento Comprador
-                  </Link>
-                </div>
-              </MenuItem>
-              <MenuItem className="p-0 ">
-                <div hidden={userRoleId === "ADMIN"}>
-                  <Link
-                    to="/documentovendedoralcalde"
-                    className="flex items-center  gap-4 px-4 py-2  "
-                  >
-                    <RiBankFill
-                      className={`text-xl text-secundary ${
-                        location.pathname === "/documentovendedoralcalde"
-                          ? " "
-                          : ""
-                      }`}
-                    />
-                    Documento Vendedor
-                  </Link>
-                </div>
-              </MenuItem>
+              
             </Menu>
           </ul>
         </nav>
@@ -1099,8 +958,6 @@ const Header = () => {
                   className="w-10 h-10 rounded-full object-cover"
                   alt="Avatar"
                 />
-
-              
               </MenuButton>
             }
             transition
