@@ -32,9 +32,9 @@ const Seguimiento = () => {
   };
 
   const handleSubmit = async () => {
-    event.preventDefault(); // Evita el envío por defecto del formulario
+    event.preventDefault(); 
 
-  // Verifica si algún campo está vacío
+  
   for (let field in formData) {
     if (formData[field] === "" || formData[field] === null) {
       toast.info(`Por favor completa el campo: ${field}`);
