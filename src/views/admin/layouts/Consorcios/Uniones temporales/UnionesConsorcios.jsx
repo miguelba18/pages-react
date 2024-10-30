@@ -1,58 +1,58 @@
-import { useState, useEffect, useCallback } from "react";
-import useListUnionesConsorcios from "../../../../hook/Consorcios/useListUnionesConsorcios";
-import {
-  RiSearchLine,
-  RiDownloadLine,
-  RiArrowLeftSLine,
-  RiArrowRightSLine,
-} from "react-icons/ri";
-import useAuthToken from "../../../../hook/Token/useAuthToken";
-import HighlightedText from "../../../../../utils/HighlightedText";
-import { toast } from "react-toastify";
-const UnionesConsorcios = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 100;
-  const [resetAnio, setResetAnio] = useState(false);
-  const [facturasDisponibles, setFacturasDisponibles] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const { token } = useAuthToken();
-  const [selectedAnio, setSelectedAnio] = useState("");
+  import { useState, useEffect, useCallback } from "react";
+  import useListUnionesConsorcios from "../../../../hook/Consorcios/useListUnionesConsorcios";
+  import {
+    RiSearchLine,
+    RiDownloadLine,
+    RiArrowLeftSLine,
+    RiArrowRightSLine,
+  } from "react-icons/ri";
+  import useAuthToken from "../../../../hook/Token/useAuthToken";
+  import HighlightedText from "../../../../../utils/HighlightedText";
+  import { toast } from "react-toastify";
+  const UnionesConsorcios = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 100;
+    const [resetAnio, setResetAnio] = useState(false);
+    const [facturasDisponibles, setFacturasDisponibles] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const { token } = useAuthToken();
+    const [selectedAnio, setSelectedAnio] = useState("");
 
-  const { consorcios, listConsorcios } = useListUnionesConsorcios();
+    const { consorcios, listConsorcios } = useListUnionesConsorcios();
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
-  const handleAnioChange = (anio) => {
-    setSelectedAnio(anio);
-    listConsorcios("", anio)
-      .then((facturas) => {
-        setFacturasDisponibles(facturas.length > 0);
-      })
-      .catch(() => {
-        setFacturasDisponibles(false);
-      });
-  };
-  useEffect(() => {
-    listConsorcios();
-  }, [listConsorcios]);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
+    const handleAnioChange = (anio) => {
+      setSelectedAnio(anio);
+      listConsorcios("", anio)
+        .then((facturas) => {
+          setFacturasDisponibles(facturas.length > 0);
+        })
+        .catch(() => {
+          setFacturasDisponibles(false);
+        });
+    };
+    useEffect(() => {
+      listConsorcios(searchQuery, selectedAnio);
+    }, [listConsorcios,searchQuery,selectedAnio]);
 
-  const handleSearch = (query, anio) => {
-    setSearchQuery("");
-    setSearchQuery(query);
-    listConsorcios(query, anio);
-  };
-
-  const handleSearchWithResetAnio = (query) => {
-    setSelectedAnio("");
-    handleSearch(query, "");
-    setResetAnio(true);
-  };
-  useEffect(() => {
-    if (resetAnio) {
-      setResetAnio(false);
-    }
-  }, [resetAnio]);
+    const handleSearch = (query) => {
+      setSearchQuery(query);
+      listConsorcios(query, selectedAnio);
+    };
+  
+    const handleSearchWithResetAnio = (query) => {
+      setSelectedAnio("");
+      setResetAnio(true);
+      handleSearch(query);
+    };
+  
+    useEffect(() => {
+      if (resetAnio) {
+        setResetAnio(false);
+      }
+    }, [resetAnio]);
 
   const downloadDisVen = useCallback(
     async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
@@ -480,7 +480,7 @@ const UnionesConsorcios = () => {
                       </td>
 
                       <td className="border px-4 py-2 text-center">
-                        {consorcio.subtotalEmisor}
+                        ${consorcio.subtotalEmisor}
                       </td>
 
                       <td className="border px-4 py-2 text-center">

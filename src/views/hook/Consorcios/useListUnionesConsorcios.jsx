@@ -7,6 +7,7 @@ const useListUnionesConsorcios = () => {
   const listConsorcios = useCallback(async () => {
     try {
       let url = `http://localhost:8080/consorcio/listar2?filtro=`;
+      
 
       const response = await fetch(url, {
         method: "GET",

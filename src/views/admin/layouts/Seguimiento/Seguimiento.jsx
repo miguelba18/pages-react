@@ -125,7 +125,7 @@ const Seguimiento = () => {
         <div className="flex  justify-between"></div>
 
         <div className="overflow-x-auto">
-          <table className="table-auto w-full mt-2">
+          <table className="table-auto w-full mt-2">  
             <thead>
               <tr>
                 <th className="px-4 py-2 bg-secundary text-white">#</th>
@@ -136,7 +136,7 @@ const Seguimiento = () => {
                 <th className="px-4 py-2 bg-secundary text-white">
                   Año
                   <br />
-                  <input type="date" className="text-black" />
+                  <input type="date" className="text-secundary" />
                 </th>
 
                 <th className="px-4 py-2 bg-secundary text-white">
@@ -163,7 +163,14 @@ const Seguimiento = () => {
             </thead>
             <tbody>
               {consorcios.map((consorcio, index) => (
-                <tr key={index}>
+                <tr
+                key={consorcio.id}
+                className={
+                  index % 2 === 0
+                    ? "bg-gray-100 whitespace-nowrap"
+                    : "bg-white whitespace-nowrap"
+                }
+              >
                   <td className="px-4 py-2 border text-center">{index + 1}</td>
                   <td className="px-4 py-2 border text-center">{consorcio.contribuyente}</td>
                   <td className="px-4 py-2 border text-center">{consorcio.nit}</td>
