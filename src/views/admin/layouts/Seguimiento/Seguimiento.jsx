@@ -1,4 +1,4 @@
-import { RiSearchLine, RiDownloadLine, RiAddFill } from "react-icons/ri";
+import {  RiAddFill } from "react-icons/ri";
 import useListSeguimiento from "../../../hook/Seguimiento/useListSeguimiento";
 import useAddSeguimiento from "../../../hook/Seguimiento/useAddSeguimiento";
 import { useEffect, useState } from "react";
@@ -91,27 +91,8 @@ const Seguimiento = () => {
         Control y Seguimiento Contribuyente
       </h1>
 
-      <div className="flex justify-end">
-        <div className="xl:relative mr-4">
-          <button className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
-            <span className="hidden md:inline">Descargar facturas</span>
-            <RiDownloadLine className="mr-0 xl:mr-2" />
-          </button>
-        </div>
-
-        <div className="relative ">
-          <input
-            type="text"
-            className="rounded-[10px] shadow-xl  w-[100%] md:h-[50px] md:w-[400px] p-4 pl-12 bg-tertiary-100 placeholder-black placeholder-opacity-70 xl:mr-6"
-            placeholder="Search"
-            required
-          />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-secundary">
-            <RiSearchLine className="h-8 w-8 p-1  rounded-md shadow-2xl text-secundary font-semibold " />
-          </div>
-        </div>
-      </div>
-      <div className="xl:relative mr-4">
+     
+      <div className="xl:relative mr-4 grid justify-end">
         <button
           onClick={() => setShowModal(true)}
           className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]"
@@ -135,8 +116,8 @@ const Seguimiento = () => {
                 <th className="px-4 py-2 bg-secundary text-white">NIT</th>
                 <th className="px-4 py-2 bg-secundary text-white">
                   Año
-                  <br />
-                  <input type="date" className="text-secundary" />
+         
+      
                 </th>
 
                 <th className="px-4 py-2 bg-secundary text-white">
