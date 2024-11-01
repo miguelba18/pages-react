@@ -244,14 +244,17 @@ const Seguimiento = () => {
 
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Resolución Sanción por No Declarar</label>
-              <input
-                type="text"
+              <select
                 name="resolucionSancionPorNoDeclarar"
                 value={formData.resolucionSancionPorNoDeclarar}
                 required
                 onChange={handleInputChange}
                 className="border border-gray-300 rounded-md w-full px-4 py-2"
-              />
+              >
+                <option value="">Seleccionar</option>
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
             </div>
 
             <div className="mb-4">

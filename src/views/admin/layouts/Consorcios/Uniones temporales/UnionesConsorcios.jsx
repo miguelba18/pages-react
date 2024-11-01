@@ -1,4 +1,5 @@
   import { useState, useEffect, useCallback } from "react";
+  import Select from "react-select";
   import useListUnionesConsorcios from "../../../../hook/Consorcios/useListUnionesConsorcios";
   import {
     RiSearchLine,
@@ -326,6 +327,52 @@
     },
     [token]
   );
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "38px",
+      fontSize: "14px",
+      minWidth: "200px",
+      width: "100%",
+      boxSizing: "border-box",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      "&:hover": {
+        borderColor: "#888",
+      },
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: "#e0e0e0",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#000",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#ff0000",
+      ":hover": {
+        backgroundColor: "#f00",
+        color: "#fff",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#999",
+    }),
+  };
 
   return (
     <div>
@@ -421,9 +468,27 @@
 
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre Contribuyente
+                    <Select
+                      
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     NIT Contribuyente
+                    <Select
+                      
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
 
                   <th className="px-4 py-2 bg-secundary text-white">

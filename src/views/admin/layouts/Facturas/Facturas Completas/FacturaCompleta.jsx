@@ -219,25 +219,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedNombresComerciales);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedValues,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedNitsEmisores,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getNitsEmisoresOptions = (nitsEmisores) => {
@@ -252,25 +234,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedNitsEmisores);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedValues,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getTelefonosAdquirientesOptions = (telefonosAdquirientes) => {
@@ -285,26 +249,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedTelefonosAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedValues,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedNitsEmisores,
-      selectedValues,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+   
   };
 
   const getCorreosAdquirientesOptions = (correosAdquirientes) => {
@@ -319,25 +264,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedCorreosAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedValues,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedValues,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getDireccionesAdquirientesOptions = (direccionesAdquirientes) => {
@@ -352,24 +279,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedDireccionesAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedValues,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getMunicipiosAdquirientesOptions = (municipiosAdquirientes) => {
@@ -384,24 +294,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedMunicipiosAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedValues,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedValues,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getDepartamentosAdquirientesOptions = (departamentosAdquirientes) => {
@@ -416,25 +309,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedDepartamentosAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedValues,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedValues
-    );
+    
   };
 
   const getNombresAdquirientesOptions = (nombresAdquirientes) => {
@@ -449,25 +324,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedNombresAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedValues,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
   const getNumerosDocumentoAdquirientesOptions = (
     numerosDocumentoAdquirientes
@@ -483,25 +340,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedNumerosDocumentoAdquirientes);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedValues,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedValues,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getTelefonosEmisoresOptions = (telefonosEmisores) => {
@@ -516,23 +355,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedTelefonosEmisores);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedValues,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getCorreosEmisoresOptions = (correosEmisores) => {
@@ -547,24 +370,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedCorreosEmisores);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedValues,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedValues,
-      selectedMunicipiosEmisores,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getDireccionesEmisoresOptions = (direccionesEmisores) => {
@@ -579,24 +385,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedDireccionesEmisores);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedValues,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedValues,
-      selectedDepartamentosEmisores
-    );
+    
   };
 
   const getMunicipiosEmisoresOptions = (municipiosEmisores) => {
@@ -611,25 +400,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedMunicipiosEmisores);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedDepartamentosAdquirientes,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedValues,
-      selectedDepartamentosEmisores
-    );
+    
   };
   const getDepartamentosEmisoresOptions = (departamentosEmisores) => {
     return departamentosEmisores.map((departamento) => ({
@@ -643,25 +414,7 @@ const FacturaCompleta = () => {
 
     resetAllSelectsExcept(setSelectedDepartamentosEmisores);
 
-    fetchFacturas(
-      searchQuery,
-      selectedAnio,
-      "",
-      selectedNombresComerciales,
-      selectedNitsEmisores,
-      selectedTelefonosAdquirientes,
-      selectedCorreosAdquirientes,
-      selectedDireccionesAdquirientes,
-      selectedMunicipiosAdquirientes,
-      selectedValues,
-      selectedNumerosDocumentoAdquirientes,
-      selectedNombresAdquirientes,
-      selectedTelefonosEmisores,
-      selectedCorreosEmisores,
-      selectedDireccionesEmisores,
-      selectedMunicipiosEmisores,
-      selectedValues
-    );
+    
   };
 
   useEffect(() => {

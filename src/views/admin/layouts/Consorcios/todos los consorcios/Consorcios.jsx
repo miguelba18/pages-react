@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import useListConsorcios from "../../../../hook/Consorcios/useListConsorcios";
+
 import {
   RiSearchLine,
   RiDownloadLine,
@@ -12,7 +13,7 @@ import HighlightedText from "../../../../../utils/HighlightedText";
 
 import useDeleteConsorcios from "../../../../hook/Consorcios/useDeleteConsorcios";
 import Modal from "../../../../modal/Modal";
-
+import Select from "react-select";
 const Consorcios = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
@@ -25,11 +26,59 @@ const Consorcios = () => {
   const { deleteConsorcio } = useDeleteConsorcios();
   const [selectedAnio, setSelectedAnio] = useState("");
   const [totalSubtotal, setTotalSubtotal] = useState(0);
-  const { consorcios, listConsorcios } = useListConsorcios();
+  const { consorcios, listConsorcios,nombresComerciales,
+    telefonosAdquirientes,
+    correosAdquirientes,
+    direccionesAdquirientes,
+    municipiosAdquirientes,
+    departamentosAdquirientes,
+    numerosDocumentoAdquirientes,
+    nombresAdquirientes,
+    nitsEmisores,
+    telefonosEmisores,
+    correosEmisores,
+    direccionesEmisores,
+    municipiosEmisores,
+    departamentosEmisores, } = useListConsorcios();
+
+  const [selectedNombresComerciales, setSelectedNombresComerciales] = useState(
+    []
+  );
+  const [selectedTelefonosAdquirientes, setSelectedTelefonosAdquirientes] =
+    useState([]);
+  const [selectedCorreosAdquirientes, setSelectedCorreosAdquirientes] =
+    useState([]);
+  const [selectedDireccionesAdquirientes, setSelectedDireccionesAdquirientes] =
+    useState([]);
+  const [selectedMunicipiosAdquirientes, setSelectedMunicipiosAdquirientes] =
+    useState([]);
+  const [
+    selectedDepartamentosAdquirientes,
+    setSelectedDepartamentosAdquirientes,
+  ] = useState([]);
+  const [
+    selectedNumerosDocumentoAdquirientes,
+    setSelectedNumerosDocumentoAdquirientes,
+  ] = useState([]);
+  const [selectedNombresAdquirientes, setSelectedNombresAdquirientes] =
+    useState([]);
+  const [selectedNitsEmisores, setSelectedNitsEmisores] = useState([]);
+  const [selectedTelefonosEmisores, setSelectedTelefonosEmisores] = useState(
+    []
+  );
+  const [selectedCorreosEmisores, setSelectedCorreosEmisores] = useState([]);
+  const [selectedDireccionesEmisores, setSelectedDireccionesEmisores] =
+    useState([]);
+  const [selectedMunicipiosEmisores, setSelectedMunicipiosEmisores] = useState(
+    []
+  );
+  const [selectedDepartamentosEmisores, setSelectedDepartamentosEmisores] =
+    useState([]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = consorcios.slice(indexOfFirstItem, indexOfLastItem);
+
   const handleAnioChange = (anio) => {
     setSelectedAnio(anio);
     listConsorcios("", anio)
@@ -41,11 +90,68 @@ const Consorcios = () => {
       });
   };
   useEffect(() => {
-    listConsorcios();
-  }, [listConsorcios]);
+    const params = {
+      filtro: searchQuery,
+      anio: selectedAnio,
+      nombreComercialEmisor: selectedNombresComerciales.join(","),
+      telefonoAdquiriente: selectedTelefonosAdquirientes.join(","),
+      correoAdquiriente: selectedCorreosAdquirientes.join(","),
+      direccionAdquiriente: selectedDireccionesAdquirientes.join(","),
+      municipioAdquiriente: selectedMunicipiosAdquirientes.join(","),
+      departamentoAdquiriente: selectedDepartamentosAdquirientes.join(","),
+      numeroDocumentoAdquiriente:
+        selectedNumerosDocumentoAdquirientes.join(","),
+      nombreAdquiriente: selectedNombresAdquirientes.join(","),
+      nitEmisor: selectedNitsEmisores.join(","),
+      telefonoEmisor: selectedTelefonosEmisores.join(","),
+      correoEmisor: selectedCorreosEmisores.join(","),
+      direccionEmisor: selectedDireccionesEmisores.join(","),
+      municipioEmisor: selectedMunicipiosEmisores.join(","),
+      departamentoEmisor: selectedDepartamentosEmisores.join(","),
+    };
+
+    listConsorcios(params);
+  }, [
+    searchQuery,
+    selectedAnio,
+    selectedNombresComerciales,
+    selectedTelefonosAdquirientes,
+    selectedCorreosAdquirientes,
+    selectedDireccionesAdquirientes,
+    selectedMunicipiosAdquirientes,
+    selectedDepartamentosAdquirientes,
+    selectedNumerosDocumentoAdquirientes,
+    selectedNombresAdquirientes,
+    selectedNitsEmisores,
+    selectedTelefonosEmisores,
+    selectedCorreosEmisores,
+    selectedDireccionesEmisores,
+    selectedMunicipiosEmisores,
+    selectedDepartamentosEmisores,
+    listConsorcios,
+  ]);
 
   const handleDownload = () => {
-    handleDownloadExcel(searchQuery, selectedAnio);
+    handleDownloadExcel({
+      filtro: "",
+      ciudad: "",
+      anio: selectedAnio,
+      codigoUnico: "",
+      nombreComercialEmisor: selectedNombresComerciales,
+      telefonoAdquiriente: selectedTelefonosAdquirientes,
+      correoAdquiriente: selectedCorreosAdquirientes,
+      direccionAdquiriente: selectedDireccionesAdquirientes,
+      municipioAdquiriente: selectedMunicipiosAdquirientes,
+      departamentoAdquiriente: selectedDepartamentosAdquirientes,
+      numeroDocumentoAdquiriente: selectedNumerosDocumentoAdquirientes,
+      nombreAdquiriente: selectedNombresAdquirientes,
+      nitEmisor: selectedNitsEmisores,
+      telefonoEmisor: selectedTelefonosEmisores,
+      correoEmisor: selectedCorreosEmisores,
+      direccionEmisor: selectedDireccionesEmisores,
+      municipioEmisor: selectedMunicipiosEmisores,
+      departamentoEmisor: selectedDepartamentosEmisores,
+    });
   };
   const handleSearch = (query, anio) => {
     setSearchQuery("");
@@ -90,6 +196,284 @@ const Consorcios = () => {
       deleteConsorcio(facturaToDelete.id);
       setIsDeleteModalOpen(false);
     }
+  };
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      minHeight: "38px",
+      fontSize: "14px",
+      minWidth: "200px",
+      width: "100%",
+      boxSizing: "border-box",
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      "&:hover": {
+        borderColor: "#888",
+      },
+    }),
+    option: (styles, { isFocused, isSelected }) => ({
+      ...styles,
+      backgroundColor: isFocused ? "#f0f0f0" : isSelected ? "#eaeaea" : null,
+      color: "#333",
+      fontWeight: isSelected ? "bold" : "normal",
+      cursor: "pointer",
+    }),
+    menu: (base) => ({
+      ...base,
+      zIndex: 9999,
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: "#e0e0e0",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#000",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#ff0000",
+      ":hover": {
+        backgroundColor: "#f00",
+        color: "#fff",
+      },
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      color: "#999",
+    }),
+  };
+  const resetAllSelectsExcept = (excludedSetter) => {
+    const allSetters = [
+      setSelectedNombresComerciales,
+      setSelectedNitsEmisores,
+      setSelectedTelefonosAdquirientes,
+      setSelectedCorreosAdquirientes,
+      setSelectedDireccionesAdquirientes,
+      setSelectedMunicipiosAdquirientes,
+      setSelectedDepartamentosAdquirientes,
+      setSelectedNumerosDocumentoAdquirientes,
+      setSelectedNombresAdquirientes,
+      setSelectedTelefonosEmisores,
+      setSelectedCorreosEmisores,
+      setSelectedDireccionesEmisores,
+      setSelectedMunicipiosEmisores,
+      setSelectedDepartamentosEmisores,
+    ];
+
+    allSetters.forEach((setter) => {
+      if (setter !== excludedSetter) {
+        setter([]);
+      }
+    });
+  };
+  const getNombresComercialesOptions = (nombresComerciales) => {
+    return nombresComerciales.map((nombre) => ({
+      value: nombre,
+      label: nombre,
+    }));
+  };
+  const handleSelectNombresComerciales = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNombresComerciales(selectedValues);
+
+    resetAllSelectsExcept(setSelectedNombresComerciales);
+
+    
+  };
+
+  const getNitsEmisoresOptions = (nitsEmisores) => {
+    return nitsEmisores.map((nit) => ({
+      value: nit,
+      label: nit,
+    }));
+  };
+  const handleSelectNitsEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNitsEmisores(selectedValues);
+
+    resetAllSelectsExcept(setSelectedNitsEmisores);
+
+    
+  };
+
+  const getTelefonosAdquirientesOptions = (telefonosAdquirientes) => {
+    return telefonosAdquirientes.map((telefono) => ({
+      value: telefono,
+      label: telefono,
+    }));
+  };
+  const handleSelectTelefonosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedTelefonosAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedTelefonosAdquirientes);
+
+   
+  };
+
+  const getCorreosAdquirientesOptions = (correosAdquirientes) => {
+    return correosAdquirientes.map((correo) => ({
+      value: correo,
+      label: correo,
+    }));
+  };
+  const handleSelectCorreosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedCorreosAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedCorreosAdquirientes);
+
+   
+  };
+
+  const getDireccionesAdquirientesOptions = (direccionesAdquirientes) => {
+    return direccionesAdquirientes.map((direccion) => ({
+      value: direccion,
+      label: direccion,
+    }));
+  };
+  const handleSelectDireccionesAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDireccionesAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedDireccionesAdquirientes);
+
+   
+  };
+
+  const getMunicipiosAdquirientesOptions = (municipiosAdquirientes) => {
+    return municipiosAdquirientes.map((municipio) => ({
+      value: municipio,
+      label: municipio,
+    }));
+  };
+  const handleSelectMunicipiosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedMunicipiosAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedMunicipiosAdquirientes);
+
+   
+  };
+
+  const getDepartamentosAdquirientesOptions = (departamentosAdquirientes) => {
+    return departamentosAdquirientes.map((departamento) => ({
+      value: departamento,
+      label: departamento,
+    }));
+  };
+  const handleSelectDepartamentosAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDepartamentosAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedDepartamentosAdquirientes);
+
+  };
+
+  const getNombresAdquirientesOptions = (nombresAdquirientes) => {
+    return nombresAdquirientes.map((nombre) => ({
+      value: nombre,
+      label: nombre,
+    }));
+  };
+  const handleSelectNombresAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNombresAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedNombresAdquirientes);
+
+   
+  };
+  const getNumerosDocumentoAdquirientesOptions = (
+    numerosDocumentoAdquirientes
+  ) => {
+    return numerosDocumentoAdquirientes.map((numero) => ({
+      value: numero,
+      label: numero,
+    }));
+  };
+  const handleSelectNumerosDocumentoAdquirientes = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedNumerosDocumentoAdquirientes(selectedValues);
+
+    resetAllSelectsExcept(setSelectedNumerosDocumentoAdquirientes);
+
+   
+  };
+
+  const getTelefonosEmisoresOptions = (telefonosEmisores) => {
+    return telefonosEmisores.map((telefono) => ({
+      value: telefono,
+      label: telefono,
+    }));
+  };
+  const handleSelectTelefonosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedTelefonosEmisores(selectedValues);
+
+    resetAllSelectsExcept(setSelectedTelefonosEmisores);
+
+  
+  };
+
+  const getCorreosEmisoresOptions = (correosEmisores) => {
+    return correosEmisores.map((correo) => ({
+      value: correo,
+      label: correo,
+    }));
+  };
+  const handleSelectCorreosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedCorreosEmisores(selectedValues);
+
+    resetAllSelectsExcept(setSelectedCorreosEmisores);
+
+    
+  };
+
+  const getDireccionesEmisoresOptions = (direccionesEmisores) => {
+    return direccionesEmisores.map((direccion) => ({
+      value: direccion,
+      label: direccion,
+    }));
+  };
+  const handleSelectDireccionesEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDireccionesEmisores(selectedValues);
+
+    resetAllSelectsExcept(setSelectedDireccionesEmisores);
+
+    
+  };
+
+  const getMunicipiosEmisoresOptions = (municipiosEmisores) => {
+    return municipiosEmisores.map((municipio) => ({
+      value: municipio,
+      label: municipio,
+    }));
+  };
+  const handleSelectMunicipiosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedMunicipiosEmisores(selectedValues);
+
+    resetAllSelectsExcept(setSelectedMunicipiosEmisores);
+
+   
+  };
+  const getDepartamentosEmisoresOptions = (departamentosEmisores) => {
+    return departamentosEmisores.map((departamento) => ({
+      value: departamento,
+      label: departamento,
+    }));
+  };
+  const handleSelectDepartamentosEmisores = (selectedOptions) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setSelectedDepartamentosEmisores(selectedValues);
+
+    resetAllSelectsExcept(setSelectedDepartamentosEmisores);
+
+    
   };
 
   return (
@@ -159,16 +543,25 @@ const Consorcios = () => {
               <thead>
                 <tr>
                   <th className="px-4 py-2 bg-secundary text-white">#</th>
-                  <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Numero Factura
+                  <th className="px-4 py-2 bg-secundary text-white">CUFE
+                  <Select
+                      
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
+                 
+                  
 
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Forma de Pago
-                  </th>
+                  
+                
                   <th className="px-4 py-2 bg-secundary text-white">
                     Fecha Emision
+                    
                     <br />
                     <select
                       onChange={(e) =>
@@ -196,59 +589,241 @@ const Consorcios = () => {
                       <option value="2030">2030</option>
                     </select>
                   </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Pais Vendedor
-                  </th>
+                  
+                 
                   <th className="px-4 py-2 bg-secundary text-white">
                     Departamento Vendedor
+                    <Select
+                      options={getDepartamentosEmisoresOptions(
+                        departamentosEmisores
+                      )}
+                      value={getDepartamentosEmisoresOptions(
+                        selectedDepartamentosEmisores
+                      )}
+                      onChange={handleSelectDepartamentosEmisores}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Municipio Vendedor
+                    <Select
+                      options={getMunicipiosEmisoresOptions(municipiosEmisores)}
+                      value={getMunicipiosEmisoresOptions(
+                        selectedMunicipiosEmisores
+                      )}
+                      onChange={handleSelectMunicipiosEmisores}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Dirección Vendedor
+                    <Select
+                      options={getDireccionesEmisoresOptions(direccionesEmisores)}
+                      value={getDireccionesEmisoresOptions(
+                        selectedDireccionesEmisores
+                      )}
+                      onChange={handleSelectDireccionesEmisores}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Correo Vendedor
+                    <Select
+                      options={getCorreosEmisoresOptions(correosEmisores)}
+                      value={getCorreosEmisoresOptions(selectedCorreosEmisores)}
+                      onChange={handleSelectCorreosEmisores}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Telefono Vendedor
+                    <Select
+                      options={getTelefonosEmisoresOptions(telefonosEmisores)}
+                      value={getTelefonosEmisoresOptions(
+                        selectedTelefonosEmisores
+                      )}
+                      onChange={handleSelectTelefonosEmisores}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre Comercial Vendedor
+                    <Select
+                      options={getNombresComercialesOptions(nombresComerciales)}
+                      value={getNombresComercialesOptions(
+                        selectedNombresComerciales
+                      )}
+                      onChange={handleSelectNombresComerciales}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     NIT Vendedor
+                    <Select
+                      options={getNitsEmisoresOptions(nitsEmisores)}
+                      value={getNitsEmisoresOptions(selectedNitsEmisores)}
+                      onChange={handleSelectNitsEmisores}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Tipo Contribuyente Vendedor
-                  </th>
+                  
                   <th className="px-4 py-2 bg-secundary text-white">
                     Nombre Comprador
+                    <Select
+                      options={getNombresAdquirientesOptions(nombresAdquirientes)}
+                      value={getNombresAdquirientesOptions(
+                        selectedNombresAdquirientes
+                      )}
+                      onChange={handleSelectNombresAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Numero Documento Comprador
+                    <Select
+                      options={getNumerosDocumentoAdquirientesOptions(
+                        numerosDocumentoAdquirientes
+                      )}
+                      value={getNumerosDocumentoAdquirientesOptions(
+                        selectedNumerosDocumentoAdquirientes
+                      )}
+                      onChange={handleSelectNumerosDocumentoAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Tipo Documento Comprador
-                  </th>
-                  <th className="px-4 py-2 bg-secundary text-white">
-                    Pais Comprador
-                  </th>
+                  
                   <th className="px-4 py-2 bg-secundary text-white">
                     Departamento Comprador
+                    <Select
+                      options={getDepartamentosAdquirientesOptions(
+                        departamentosAdquirientes
+                      )}
+                      value={getDepartamentosAdquirientesOptions(
+                        selectedDepartamentosAdquirientes
+                      )}
+                      onChange={handleSelectDepartamentosAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Municipio Comprador
+                    <Select
+                      options={getMunicipiosAdquirientesOptions(
+                        municipiosAdquirientes
+                      )}
+                      value={getMunicipiosAdquirientesOptions(
+                        selectedMunicipiosAdquirientes
+                      )}
+                      onChange={handleSelectMunicipiosAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Dirección Comprador
+                    <Select
+                      options={getDireccionesAdquirientesOptions(
+                        direccionesAdquirientes
+                      )}
+                      value={getDireccionesAdquirientesOptions(
+                        selectedDireccionesAdquirientes
+                      )}
+                      onChange={handleSelectDireccionesAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Correo Comprador
+                    <Select
+                      options={getCorreosAdquirientesOptions(correosAdquirientes)}
+                      value={getCorreosAdquirientesOptions(
+                        selectedCorreosAdquirientes
+                      )}
+                      onChange={handleSelectCorreosAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Telefono Comprador
+                    <Select
+                      options={getTelefonosAdquirientesOptions(
+                        telefonosAdquirientes
+                      )}
+                      value={getTelefonosAdquirientesOptions(
+                        selectedTelefonosAdquirientes
+                      )}
+                      onChange={handleSelectTelefonosAdquirientes}
+                      placeholder="Selecciona nombre comercial"
+                      isMulti
+                      styles={customStyles}
+                      
+                      menuPlacement="auto"
+                      menuPosition="fixed"
+                    />
                   </th>
                   <th className="px-4 py-2 bg-secundary text-white">
                     Total Acumulado
@@ -277,19 +852,13 @@ const Consorcios = () => {
                         {consorcio.codigoUnico}
                       </td>
 
-                      <td className="border px-4 py-2 text-center">
-                        {consorcio.numeroFactura}
-                      </td>
+                     
 
-                      <td className="border px-4 py-2 text-center">
-                        {consorcio.formaPago}
-                      </td>
+                    
                       <td className="border px-4 py-2 text-center">
                         {consorcio.fechaEmision}
                       </td>
-                      <td className="border px-4 py-2 text-center">
-                        {consorcio.paisEmisor}
-                      </td>
+                    
                       <td className="border px-4 py-2 text-center">
                         {consorcio.departamentoEmisor}
                       </td>
