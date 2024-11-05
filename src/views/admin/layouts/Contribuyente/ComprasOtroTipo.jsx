@@ -1,23 +1,24 @@
+import useAuthToken from "../../../hook/Token/useAuthToken";
 import { useState, useEffect, useCallback } from "react";
-import useListConsorciosVentas from "../../../../hook/Consorcios/useListConsorciosVentas";
-import useListSelectConsorcios from "../../../../hook/Consorcios/useListSelectConsorcios";
+import useListContribuyentesCompras from "../../../hook/Contribuyente/useListContribuyentesCompras";
+import useListSelectConsorcios from "../../../hook/Consorcios/useListSelectConsorcios";
 import {
   RiDownloadLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
+import { toast } from "react-toastify";
 import Select from "react-select";
 
-import useAuthToken from "../../../../hook/Token/useAuthToken";
-import { toast } from "react-toastify";
-const Ventas = () => {
+const ComprasOtroTipo = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 100;
   const { compras, selectCompras } = useListSelectConsorcios();
-  const { token } = useAuthToken();
   const [selectedNit, setSelectedNit] = useState(null);
 
-  const { consorcios, listConsorcios } = useListConsorciosVentas();
+  const itemsPerPage = 100;
+  const { token } = useAuthToken();
+
+  const { consorcios, listConsorcios } = useListContribuyentesCompras();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -32,142 +33,6 @@ const Ventas = () => {
     selectCompras();
   }, [selectCompras]);
 
-  const downloadDisVen = useCallback(
-    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
-      try {
-        const url = new URL(
-          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorcio?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
-            nombreComercialEmisor
-          )}&nitEmisor=${nitEmisor}`
-        );
-
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(
-            errorMessage || "No se pudo descargar el archivo Excel."
-          );
-        }
-
-        const contentDisposition = response.headers.get("Content-Disposition");
-        let fileName = "archivo.xlsx";
-
-        if (contentDisposition) {
-          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
-          if (matches && matches[1]) {
-            fileName = matches[1];
-          }
-        }
-
-        const blob = await response.blob();
-        if (window.showSaveFilePicker) {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: fileName,
-            types: [
-              {
-                description: "Excel files",
-                accept: {
-                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                    [".xlsx"],
-                },
-              },
-            ],
-          });
-          const writableStream = await handle.createWritable();
-          await writableStream.write(blob);
-          await writableStream.close();
-          toast.success("El excel se ha descargado correctamente.");
-        } else {
-          const urlBlob = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = urlBlob;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.URL.revokeObjectURL(urlBlob);
-          toast.success("El excel se ha descargado correctamente.");
-        }
-      } catch (error) {
-        console.error("Error al descargar el archivo Excel:", error);
-      }
-    },
-    [token]
-  );
-  const downloadDisFacVen = useCallback(
-    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
-      try {
-        const url = new URL(
-          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorciouno?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
-            nombreComercialEmisor
-          )}&nitEmisor=${nitEmisor}`
-        );
-
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorMessage = await response.text();
-          throw new Error(
-            errorMessage || "No se pudo descargar el archivo Excel."
-          );
-        }
-
-        const contentDisposition = response.headers.get("Content-Disposition");
-        let fileName = "archivo.xlsx";
-
-        if (contentDisposition) {
-          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
-          if (matches && matches[1]) {
-            fileName = matches[1];
-          }
-        }
-
-        const blob = await response.blob();
-        if (window.showSaveFilePicker) {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: fileName,
-            types: [
-              {
-                description: "Excel files",
-                accept: {
-                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                    [".xlsx"],
-                },
-              },
-            ],
-          });
-          const writableStream = await handle.createWritable();
-          await writableStream.write(blob);
-          await writableStream.close();
-          toast.success("El excel se ha descargado correctamente.");
-        } else {
-          const urlBlob = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = urlBlob;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.URL.revokeObjectURL(urlBlob);
-          toast.success("El excel se ha descargado correctamente.");
-        }
-      } catch (error) {
-        console.error("Error al descargar el archivo Excel:", error);
-      }
-    },
-    [token]
-  );
   const getNombresComercialesOptions = (compras) => {
     return compras.map((contribuyente) => ({
       value: contribuyente.nitContribuyente,
@@ -175,7 +40,7 @@ const Ventas = () => {
     }));
   };
   const handleNombreChange = (selectedOption) => {
-    setSelectedNit(selectedOption ? selectedOption.value : "");
+    setSelectedNit(selectedOption ? selectedOption.value : null);
   };
   const customStyles = {
     control: (base) => ({
@@ -224,6 +89,143 @@ const Ventas = () => {
     }),
   };
 
+  const downloadDisCom = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipounocompra?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+  const downloadDisFacCom = useCallback(
+    async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
+      try {
+        const url = new URL(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipocompra?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+            nombreComercialEmisor
+          )}&nitEmisor=${nitEmisor}`
+        );
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(
+            errorMessage || "No se pudo descargar el archivo Excel."
+          );
+        }
+
+        const contentDisposition = response.headers.get("Content-Disposition");
+        let fileName = "archivo.xlsx";
+
+        if (contentDisposition) {
+          const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+          if (matches && matches[1]) {
+            fileName = matches[1];
+          }
+        }
+
+        const blob = await response.blob();
+        if (window.showSaveFilePicker) {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fileName,
+            types: [
+              {
+                description: "Excel files",
+                accept: {
+                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                    [".xlsx"],
+                },
+              },
+            ],
+          });
+          const writableStream = await handle.createWritable();
+          await writableStream.write(blob);
+          await writableStream.close();
+          toast.success("El excel se ha descargado correctamente.");
+        } else {
+          const urlBlob = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = urlBlob;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(urlBlob);
+          toast.success("El excel se ha descargado correctamente.");
+        }
+      } catch (error) {
+        console.error("Error al descargar el archivo Excel:", error);
+      }
+    },
+    [token]
+  );
+
   return (
     <div>
       <div className="mt-4">
@@ -239,7 +241,6 @@ const Ventas = () => {
           menuPosition="fixed"
         />
       </div>
-
       <div className="flex justify-end mt-4">
         {consorcios.length > 0 && (
           <div className="xl:relative mr-4">
@@ -286,7 +287,6 @@ const Ventas = () => {
 
                     <th className="px-4 py-2 bg-secundary text-white">
                       Fecha Emision
-                      <br />
                     </th>
 
                     <th className="px-4 py-2 bg-secundary text-white">
@@ -297,14 +297,14 @@ const Ventas = () => {
                     </th>
 
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Total Ventas
+                      Total Compras
                     </th>
 
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Discriminado Por Ventas
+                      Discriminado por Compras
                     </th>
                     <th className="px-4 py-2 bg-secundary text-white">
-                      Discriminado Factura por Ventas
+                      Discriminado Factura por Compras
                     </th>
                   </tr>
                 </thead>
@@ -328,21 +328,21 @@ const Ventas = () => {
                         </td>
 
                         <td className="border px-4 py-2 text-center">
-                          {consorcio.nombreComercialEmisor}
+                          {consorcio.nombreAdquiriente}
                         </td>
                         <td className="border px-4 py-2 text-center">
-                          {consorcio.nitEmisor}
+                          {consorcio.numeroDocumentoAdquiriente}
                         </td>
 
                         <td className="border px-4 py-2 text-center">
-                          ${consorcio.sumaTotal}
+                          {consorcio.sumaTotal}
                         </td>
 
                         <td className="border px-4 py-2 text-center">
                           <div className="grid justify-center">
                             <button
                               onClick={() =>
-                                downloadDisVen(
+                                downloadDisCom(
                                   consorcio.fechaEmision,
                                   consorcio.nombreComercialEmisor,
                                   consorcio.nitEmisor
@@ -358,7 +358,7 @@ const Ventas = () => {
                           <div className="grid justify-center">
                             <button
                               onClick={() =>
-                                downloadDisFacVen(
+                                downloadDisFacCom(
                                   consorcio.fechaEmision,
                                   consorcio.nombreComercialEmisor,
                                   consorcio.nitEmisor
@@ -395,4 +395,4 @@ const Ventas = () => {
   );
 };
 
-export default Ventas;
+export default ComprasOtroTipo;

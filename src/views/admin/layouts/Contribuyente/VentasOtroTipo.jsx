@@ -1,23 +1,24 @@
+import useAuthToken from "../../../hook/Token/useAuthToken";
 import { useState, useEffect, useCallback } from "react";
-import useListConsorciosVentas from "../../../../hook/Consorcios/useListConsorciosVentas";
-import useListSelectConsorcios from "../../../../hook/Consorcios/useListSelectConsorcios";
 import {
   RiDownloadLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
 } from "react-icons/ri";
+import { toast } from "react-toastify";
 import Select from "react-select";
 
-import useAuthToken from "../../../../hook/Token/useAuthToken";
-import { toast } from "react-toastify";
-const Ventas = () => {
+import useListContribuyentesVentas from "../../../hook/Contribuyente/useListContribuyentesVentas";
+import useListSelectConsorcios from "../../../hook/Consorcios/useListSelectConsorcios";
+const VentasOtroTipo = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 100;
-  const { compras, selectCompras } = useListSelectConsorcios();
   const { token } = useAuthToken();
+  const { compras, selectCompras } = useListSelectConsorcios();
+
   const [selectedNit, setSelectedNit] = useState(null);
 
-  const { consorcios, listConsorcios } = useListConsorciosVentas();
+  const { consorcios, listConsorcios } = useListContribuyentesVentas();
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -36,7 +37,7 @@ const Ventas = () => {
     async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
       try {
         const url = new URL(
-          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorcio?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipouno?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
             nombreComercialEmisor
           )}&nitEmisor=${nitEmisor}`
         );
@@ -104,7 +105,7 @@ const Ventas = () => {
     async (fechaEmision, nombreComercialEmisor, nitEmisor) => {
       try {
         const url = new URL(
-          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-consorciouno?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
+          `http://localhost:8080/factura/descargar-excel-persona-desagrupar-Otrotipo?fechaEmision=${fechaEmision}&nombreComercialEmisor=${encodeURIComponent(
             nombreComercialEmisor
           )}&nitEmisor=${nitEmisor}`
         );
@@ -239,7 +240,6 @@ const Ventas = () => {
           menuPosition="fixed"
         />
       </div>
-
       <div className="flex justify-end mt-4">
         {consorcios.length > 0 && (
           <div className="xl:relative mr-4">
@@ -286,7 +286,6 @@ const Ventas = () => {
 
                     <th className="px-4 py-2 bg-secundary text-white">
                       Fecha Emision
-                      <br />
                     </th>
 
                     <th className="px-4 py-2 bg-secundary text-white">
@@ -378,7 +377,7 @@ const Ventas = () => {
                         colSpan={20}
                         className="text-center py-4 text-red-500"
                       >
-                        <p>Esta ciudad no tiene facturas.</p>
+                        <p>Esta ciudad no tiene facturas</p>
                       </td>
                     </tr>
                   )}
@@ -395,4 +394,4 @@ const Ventas = () => {
   );
 };
 
-export default Ventas;
+export default VentasOtroTipo;

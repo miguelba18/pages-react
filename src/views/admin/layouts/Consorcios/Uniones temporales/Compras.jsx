@@ -226,14 +226,12 @@ const Compras = () => {
 
   return (
     <div>
-      <div>
+      <div className="mt-4">
         <Select
           options={getNombresComercialesOptions(compras)}
-          value={
-            getNombresComercialesOptions(compras).find(
-              (option) => option.value === selectedNit
-            ) 
-          }
+          value={getNombresComercialesOptions(compras).find(
+            (option) => option.value === selectedNit
+          )}
           onChange={handleNombreChange}
           placeholder="Seleccione un Contribuyente"
           menuPlacement="auto"
@@ -241,7 +239,7 @@ const Compras = () => {
           menuPosition="fixed"
         />
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-4">
         {consorcios.length > 0 && (
           <div className="xl:relative mr-4">
             <button className="flex justify-center items-center gap-2 xl:gap-2 px-4 py-3 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#78fb71] via-[#55e11d] to-[#12be1b] hover:shadow-xl hover:shadow-green-500 hover:scale-105 duration-300 hover:from-[#12be1b] hover:to-[#78fb71]">
