@@ -7,7 +7,7 @@ const useListContribuyentesSinVinculo = () => {
   const listConsorcios = useCallback(
     async () => {
       try {
-        let url = `http://localhost:8080/otrotipo/listar2?filtro=`;
+        let url = `http://localhost:8080/otrotipo/listarAdquiriente?filtro=901346585`;
         
         
           

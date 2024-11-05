@@ -43,7 +43,7 @@ const useListOtrosTipos = () => {
 
   const listConsorcios = useCallback(async (params) => {
     try {
-      const url = new URL("http://localhost:8080/consorcio/listarnuevoaver");
+      const url = new URL("http://localhost:8080/otrotipo/listarnuevoaver");
       const queryParams = new URLSearchParams(params);
       url.search = queryParams.toString();
 
@@ -67,20 +67,20 @@ const useListOtrosTipos = () => {
 
   
   useEffect(() => {
-    fetchData("http://localhost:8080/consorcio/listar/nombreComercialEmisor", setNombresComerciales);
-    fetchData("http://localhost:8080/consorcio/listar/telefonoAdquiriente", setTelefonosAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/correoAdquiriente", setCorreosAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/direccionAdquiriente", setDireccionesAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/municipioAdquiriente", setMunicipiosAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/departamentoAdquiriente", setDepartamentosAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/numeroDocumentoAdquiriente", setNumerosDocumentoAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/nombreAdquiriente", setNombresAdquirientes);
-    fetchData("http://localhost:8080/consorcio/listar/nitEmisor", setNitsEmisores);
-    fetchData("http://localhost:8080/consorcio/listar/telefonoEmisor", setTelefonosEmisores);
-    fetchData("http://localhost:8080/consorcio/listar/correoEmisor", setCorreosEmisores);
-    fetchData("http://localhost:8080/consorcio/listar/direccionEmisor", setDireccionesEmisores);
-    fetchData("http://localhost:8080/consorcio/listar/municipioEmisor", setMunicipiosEmisores);
-    fetchData("http://localhost:8080/consorcio/listar/departamentoEmisor", setDepartamentosEmisores);
+    fetchData("http://localhost:8080/otrotipo/listar/nombreComercialEmisor", setNombresComerciales);
+    fetchData("http://localhost:8080/otrotipo/listar/telefonoAdquiriente", setTelefonosAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/correoAdquiriente", setCorreosAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/direccionAdquiriente", setDireccionesAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/municipioAdquiriente", setMunicipiosAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/departamentoAdquiriente", setDepartamentosAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/numeroDocumentoAdquiriente", setNumerosDocumentoAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/nombreAdquiriente", setNombresAdquirientes);
+    fetchData("http://localhost:8080/otrotipo/listar/nitEmisor", setNitsEmisores);
+    fetchData("http://localhost:8080/otrotipo/listar/telefonoEmisor", setTelefonosEmisores);
+    fetchData("http://localhost:8080/otrotipo/listar/correoEmisor", setCorreosEmisores);
+    fetchData("http://localhost:8080/otrotipo/listar/direccionEmisor", setDireccionesEmisores);
+    fetchData("http://localhost:8080/otrotipo/listar/municipioEmisor", setMunicipiosEmisores);
+    fetchData("http://localhost:8080/otrotipo/listar/departamentoEmisor", setDepartamentosEmisores);
   }, [token]);
 
   return {
