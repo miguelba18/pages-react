@@ -877,6 +877,7 @@ const FacturaTodasAlcalde = () => {
                   <option value="2030">2030</option>
                 </select>
               </th>
+              <th className="px-4 py-2 bg-secundary text-white">FACTURA</th>
               <th className="px-4 py-2 bg-secundary text-white">CUFE</th>
               <th className="px-4 py-2 bg-secundary text-white">
                 Nombre Comercial vendedor
@@ -1150,6 +1151,9 @@ const FacturaTodasAlcalde = () => {
                   </td>
                   <td className="border px-4 py-2 text-center">
                     {factura.fechaEmision}
+                  </td>
+                  <td className="border px-4 py-2 text-center">
+                    {factura.nombreFactura}
                   </td>
                   <td className="border px-4 py-2 text-center">
                     {factura.codigoUnico}
