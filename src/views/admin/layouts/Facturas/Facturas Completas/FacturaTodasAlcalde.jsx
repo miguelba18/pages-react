@@ -17,6 +17,7 @@ const FacturaTodasAlcalde = () => {
   const {
     facturas,
     fetchFacturas,
+    fetchFacturasPorNit,
     totalSuma,
     nombresComerciales,
     telefonosAdquirientes,
@@ -105,9 +106,9 @@ const FacturaTodasAlcalde = () => {
   useEffect(() => {
     if (!isSearchingByNit) {
       fetchFacturas(
-        searchQuery,
+       
         selectedAnio,
-        "",
+       
         selectedNombresComerciales,
         selectedTelefonosAdquirientes,
         selectedCorreosAdquirientes,
@@ -125,7 +126,7 @@ const FacturaTodasAlcalde = () => {
       );
     }
   }, [
-    searchQuery,
+    
     selectedAnio,
     selectedNombresComerciales,
     selectedTelefonosAdquirientes,
@@ -153,7 +154,7 @@ const FacturaTodasAlcalde = () => {
 
   const handleSearch = () => {
     if (nitFiltro) {
-      fetchFacturas(null, null, null, nitFiltro);
+      fetchFacturasPorNit(nitFiltro);
       setIsSearchingByNit(true);
     } else {
       fetchFacturas();

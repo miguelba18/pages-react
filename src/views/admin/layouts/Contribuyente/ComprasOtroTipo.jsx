@@ -312,7 +312,7 @@ const ComprasOtroTipo = () => {
                   {consorcios.length > 0 ? (
                     currentItems.map((consorcio, index) => (
                       <tr
-                        key={consorcio.id}
+                        key={index}
                         className={
                           index % 2 === 0
                             ? "bg-gray-100 whitespace-nowrap"

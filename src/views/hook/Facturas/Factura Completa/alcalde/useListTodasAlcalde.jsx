@@ -58,26 +58,36 @@ const useListTodasAlcalde = () => {
   const fetchDepartamentosEmisores = useCallback(() => fetchData("http://localhost:8080/facturatodas/listar/departamentoEmisor", setDepartamentosEmisores), [token]);
 
   const fetchFacturas = useCallback(
-    async (query, anio, codigoUnico, filtroNit, nombreComercialEmisor = [], telefonoAdquiriente = [], correoAdquiriente = [], direccionAdquiriente = [], municipioAdquiriente = [], departamentoAdquiriente = [], numeroDocumentoAdquiriente = [], nombreAdquiriente = [], nitEmisor = [], telefonoEmisor = [], correoEmisor = [], direccionEmisor = [], municipioEmisor = [], departamentoEmisor = []) => {
+    async (
+      anio,
+      nombreComercialEmisor = [],
+      telefonoAdquiriente = [],
+      correoAdquiriente = [],
+      direccionAdquiriente = [],
+      municipioAdquiriente = [],
+      departamentoAdquiriente = [],
+      numeroDocumentoAdquiriente = [],
+      nombreAdquiriente = [],
+      nitEmisor = [],
+      telefonoEmisor = [],
+      correoEmisor = [],
+      direccionEmisor = [],
+      municipioEmisor = [],
+      departamentoEmisor = []
+    ) => {
       try {
-        let url;
-        if (filtroNit) {
-          url = `http://localhost:8080/facturatodas/buscar/porFiltro?filtro=${filtroNit}`;
-        } else {
-          url = `http://localhost:8080/facturatodas/listar`;
-          const params = new URLSearchParams();
-  
-        if (query) {
-          params.append("filtro", query);
-        }
+        let url = `http://localhost:8080/facturatodas/listar`;
+        const params = new URLSearchParams();
+
         if (anio) {
           params.append("anio", anio);
         }
-        if (codigoUnico) {
-          params.append("codigoUnico", codigoUnico);
-        }
+
         if (nombreComercialEmisor.length > 0) {
-          params.append("nombreComercialEmisor", nombreComercialEmisor.join(","));
+          params.append(
+            "nombreComercialEmisor",
+            nombreComercialEmisor.join(",")
+          );
         }
         if (telefonoAdquiriente.length > 0) {
           params.append("telefonoAdquiriente", telefonoAdquiriente.join(","));
@@ -92,10 +102,16 @@ const useListTodasAlcalde = () => {
           params.append("municipioAdquiriente", municipioAdquiriente.join(","));
         }
         if (departamentoAdquiriente.length > 0) {
-          params.append("departamentoAdquiriente", departamentoAdquiriente.join(","));
+          params.append(
+            "departamentoAdquiriente",
+            departamentoAdquiriente.join(",")
+          );
         }
         if (numeroDocumentoAdquiriente.length > 0) {
-          params.append("numeroDocumentoAdquiriente", numeroDocumentoAdquiriente.join(","));
+          params.append(
+            "numeroDocumentoAdquiriente",
+            numeroDocumentoAdquiriente.join(",")
+          );
         }
         if (nombreAdquiriente.length > 0) {
           params.append("nombreAdquiriente", nombreAdquiriente.join(","));
@@ -118,14 +134,11 @@ const useListTodasAlcalde = () => {
         if (departamentoEmisor.length > 0) {
           params.append("departamentoEmisor", departamentoEmisor.join(","));
         }
-  
+
         if (params.toString()) {
           url += `?${params.toString()}`;
         }
-        }
-      
-        
-  
+
         const response = await fetch(url, {
           method: "GET",
           headers: {
@@ -133,21 +146,44 @@ const useListTodasAlcalde = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         if (!response.ok) {
-          throw new Error("Error al obtener las facturas");
+          throw new Error("Error al obtener las facturas con filtros");
         }
-  
+
         const data = await response.json();
-        if (data.facturas) {
-          setFacturas(data.facturas); 
-        } else {
-          setFacturas(data); 
-        }
+        setFacturas(data.facturas);
         setTotalSuma(data.totalSuma);
       } catch (error) {
-        console.error("Error en fetchFacturas:", error);
-        setFacturas([]); 
+        console.error("Error en fetchFacturasConFiltros:", error);
+        setFacturas([]);
+      }
+    },
+    [token]
+  );
+
+  const fetchFacturasPorNit = useCallback(
+    async (filtroNit) => {
+      try {
+        const url = `http://localhost:8080/facturatodas/buscar/porFiltro?filtro=${filtroNit}`;
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al obtener las facturas por NIT");
+        }
+
+        const data = await response.json();
+        setFacturas(data);
+      } catch (error) {
+        console.error("Error en fetchFacturasPorNit:", error);
+        setFacturas([]);
       }
     },
     [token]
@@ -191,6 +227,7 @@ const useListTodasAlcalde = () => {
     facturas,
     totalSuma,
     fetchFacturas,
+    fetchFacturasPorNit,
     nombresComerciales,
     telefonosAdquirientes,
     correosAdquirientes,

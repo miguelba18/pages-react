@@ -1,5 +1,5 @@
 import useListFacturasAdquiriente from "../../../../../hook/Facturas/Adquiriente y emisor/adquiriente/Agrupadas/Alcalde/useListFacturasAdquiriente";
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { MdOutlineGroup } from "react-icons/md";
 import HighlightedText from "../../../../../../utils/HighlightedText";
@@ -605,81 +605,64 @@ const AgrupadasAdquirienteAlcalde = () => {
                 </tr>
               </thead>
               <tbody>
-                {facturas.length > 0 ? (
-                  currentItems.map((factura, index) => {
-                    return (
-                      <React.Fragment key={factura.id}>
-                        <tr className="bg-gray-100 whitespace-nowrap">
-                          <td className="border px-4 py-2 text-center">
-                            {indexOfFirstItem + index + 1}
-                          </td>
-                          <td className="border px-4 text-center">
-                            {factura.fechaEmision}
-                          </td>
-                          <td className="border px-4 text-center">
-                            {factura.nombreComercialEmisor}
-                          </td>
-                          <td className="border px-4 text-center">
-                            <HighlightedText
-                              text={factura.nitEmisor}
-                              highlight={searchQuery}
-                            />
-                          </td>
+  {facturas.length > 0 ? (
+    currentItems.map((factura, index) => {
+      return (
+        <tr key={index} className="bg-gray-100 whitespace-nowrap">
+          <td className="border px-4 py-2 text-center">
+            {indexOfFirstItem + index + 1}
+          </td>
+          <td className="border px-4 text-center">
+            {factura.fechaEmision}
+          </td>
+          <td className="border px-4 text-center">
+            {factura.nombreComercialEmisor}
+          </td>
+          <td className="border px-4 text-center">
+            <HighlightedText
+              text={factura.nitEmisor}
+              highlight={searchQuery}
+            />
+          </td>
+          <td className="border px-4 text-center">${factura.subtotal}</td>
+          <td className="border px-4 py-2 text-center">
+            <div className="grid justify-center">
+              <div>
+                <button
+                  onClick={() => toggleDespliegue(factura)}
+                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                >
+                  <RiDownloadLine className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+          </td>
+          <td className="border px-4 py-2 text-center">
+            <div className="grid justify-center">
+              <div>
+                <button
+                  onClick={() => toggleDespliegueRojo(factura)}
+                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
+                >
+                  <MdOutlineGroup className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      );
+    })
+  ) : (
+    <tr>
+      <td colSpan={6} className="text-center py-4 text-red-500">
+        {selectedAnio
+          ? "No hay facturas para el año seleccionado."
+          : "Esta ciudad no tiene facturas."}
+      </td>
+    </tr>
+  )}
+</tbody>
 
-                          <td className="border px-4 text-center">${factura.subtotal}</td>
-
-                          <td className="border px-4 py-2 text-center">
-                            <div className="grid justify-center">
-                            <div>
-                                <button
-                                  onClick={() => toggleDespliegue(factura)}
-                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
-                                 
-                                 
-                                
-                            
-                                >
-                                  <RiDownloadLine className="h-6 w-6" />
-                                </button>
-
-                                
-                              </div>
-                             
-                            </div>
-                          </td>
-
-                          <td className="border px-4 py-2 text-center">
-                            <div className="grid justify-center">
-                              <div>
-                                <button
-                                  onClick={() => toggleDespliegueRojo(factura)}
-                                  className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#fb7185] via-[#e11d48] to-[#be123c] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185] "
-                              
-                                    
-                                 
-                           
-                                >
-                                  <MdOutlineGroup className="h-6 w-6" />
-                                </button>
-
-                                
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      </React.Fragment>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="text-center py-4 text-red-500">
-                      {selectedAnio
-                        ? "No hay facturas para el año seleccionado."
-                        : "Esta ciudad no tiene facturas."}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
             </table>
           </div>
         </>
