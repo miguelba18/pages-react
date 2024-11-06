@@ -645,7 +645,7 @@ const AgrupadasEmisor = () => {
                 {facturas.length > 0 ? (
                   currentItems.map((factura, index) => {
                     return (
-                      <React.Fragment key={factura.id}>
+                      <React.Fragment key={index}>
                         <tr className="bg-gray-100 whitespace-nowrap">
                           <td className="border px-4 py-2 text-center">
                             {indexOfFirstItem + index + 1}

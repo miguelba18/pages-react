@@ -41,8 +41,12 @@ const Carrusel = ({ className, style, onClick }) => {
         <Slider {...settings}>
           {Datos.map((dato) => (
             <div key={dato.id} onClick={() => handleCardClick(dato)}>
-              <Cards imagen={dato.imagen} />
+              <Cards imagen={dato.imagen} 
+              
+               />
+          
             </div>
+            
           ))}
         </Slider>
         {selectedCard && (

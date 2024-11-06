@@ -15,8 +15,8 @@ const Cards = ({ imagen, titulo, descripcion }) => {
 
 Cards.propTypes = {
   imagen: PropTypes.string.isRequired,
-  titulo: PropTypes.string.isRequired,
-  descripcion: PropTypes.string.isRequired
+  titulo: PropTypes.string,
+  descripcion: PropTypes.string
 };
 
 export default Cards

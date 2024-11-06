@@ -95,7 +95,8 @@ const Calendario = () => {
                   handleDescriptionChange={handleDescriptionChange}
                   handleHourChange={handleHourChange}
                   handleMinuteChange={handleMinuteChange}
-                  selectedDay={selectedDay}
+                  selectedDay={selectedDay ? selectedDay.getDate() : null} 
+
                   selectedMonth={selectedMonth}
                   selectedYear={selectedYear}
                   formatDate={formatDate}

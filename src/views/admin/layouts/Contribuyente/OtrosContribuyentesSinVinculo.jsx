@@ -2,25 +2,18 @@ import ComprasOtroTipo from "./ComprasOtroTipo";
 import VentasOtroTipo from "./VentasOtroTipo";
 import { useState } from "react";
 const UnionesConsorcios = () => {
-  
   const [selectedEmpresa, setSelectedEmpresa] = useState("comprasotrotipo");
 
   const handleEmpresaChange = (empresa) => {
     setSelectedEmpresa(empresa);
-
   };
-
-
-
-
 
   return (
     <div>
       <h1 className="font-bold text-3xl text-secundary">Compras y Ventas</h1>
-      
 
       <div>
-        <div className="mt-4" >
+        <div className="mt-4">
           <button
             onClick={() => handleEmpresaChange("comprasotrotipo")}
             className={`${

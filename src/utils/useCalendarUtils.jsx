@@ -80,8 +80,10 @@ function useCalendarUtils() {
   }
 
   function handleDayClick(day) {
-    setSelectedDay(day === selectedDay ? null : day);
+    const date = new Date(selectedYear, selectedMonth, day);
+    setSelectedDay(selectedDay?.getDate() === day ? null : date);
   }
+  
 
   function handleTitleChange(e) {
     setNewTitle(e.target.value);
