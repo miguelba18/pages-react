@@ -344,8 +344,8 @@ const ComprasOtroTipo = () => {
                               onClick={() =>
                                 downloadDisCom(
                                   consorcio.fechaEmision,
-                                  consorcio.nombreComercialEmisor,
-                                  consorcio.nitEmisor
+                                  consorcio.nombreAdquiriente,
+                                  consorcio.numeroDocumentoAdquiriente
                                 )
                               }
                               className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
@@ -360,8 +360,8 @@ const ComprasOtroTipo = () => {
                               onClick={() =>
                                 downloadDisFacCom(
                                   consorcio.fechaEmision,
-                                  consorcio.nombreComercialEmisor,
-                                  consorcio.nitEmisor
+                                  consorcio.nombreAdquiriente,
+                                  consorcio.numeroDocumentoAdquiriente
                                 )
                               }
                               className="flex justify-center items-center gap-2 w-8 h-8 cursor-pointer rounded-md shadow-2xl text-white font-semibold bg-gradient-to-r from-[#61e44a] via-[#04f518] to-[#0be816] hover:shadow-xl hover:shadow-red-500 hover:scale-105 duration-300 hover:from-[#be123c] hover:to-[#fb7185]"
