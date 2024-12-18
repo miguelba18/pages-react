@@ -170,11 +170,7 @@ const Contacto = () => {
         </h1>
         <div className="p-8">
         <img
-<<<<<<< HEAD
           src="../../public/assets/img/marcas/dian.png"
-=======
-          src="/src/assets/img/dian.png"
->>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
           className="h-[50%] w-[100%] object-cover >  "
         />
         </div>

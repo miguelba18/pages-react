@@ -66,11 +66,7 @@ const Content = () => {
 
       <div className="md:col-span-4 flex ml-6 -mt-20 xl:mt-10 ">
       <img
-<<<<<<< HEAD
         src="../../public/assets/img/landing/fondologin.png"
-=======
-        src="/src/assets/img/fondologin.png"
->>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
         className="h-[50%] w-[90%] md:h-[60%] md:w-[90%] mt-20 rounded-full"
         alt="Fondo"
       />

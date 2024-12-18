@@ -69,28 +69,17 @@ const Login = () => {
   };
 
   const images = [
-<<<<<<< HEAD
     "../../../../../public/assets/img/imgcarousel/carousel_login/login1.jpg",
     "../../../../../public/assets/img/imgcarousel/carousel_login/login2.jpg",
     "../../../../../public/assets/img/imgcarousel/carousel_login/login3.jpg",
     "../../../../../public/assets/img/imgcarousel/carousel_login/login4.jpg",
-=======
-    "../../../../src/assets/imgcarousel/login1.jpg",
-    "../../../../src/assets/imgcarousel/login2.jpg",
-    "../../../../src/assets/imgcarousel/login3.jpg",
-    "../../../../src/assets/imgcarousel/login4.jpg",
->>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
   ];
 
   return (
     <div
       className="flex flex-col items-center justify-center xl:min-h-screen bg-cover bg-center"
       style={{
-<<<<<<< HEAD
         backgroundImage: 'url("../../../../../public/assets/img/login/fondologin.avif")',
-=======
-        backgroundImage: 'url("../../../../src/assets/img/fondologin.avif")',
->>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
       }}
     >
       <h1 className="text-3xl md:text-5xl font-bold text-gray-500 text-center mt-10 xl:mt-0 xl:mb-10">
