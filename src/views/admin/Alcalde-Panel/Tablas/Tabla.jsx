@@ -71,7 +71,7 @@ const Tabla = () => {
   return (
     <>
       <div className="flex justify-center">
-        <img src="../../../../../../src/assets/img/img2.png" />
+        <img src="/assets/img/img2.png" />
       </div>
       <h1 className="font-bold text-3xl text-secundary mb-4">
           Lista de Secretarios/Personal

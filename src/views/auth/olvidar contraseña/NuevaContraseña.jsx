@@ -33,17 +33,17 @@ const NuevaContraseña = () => {
 
   // Imágenes para el Slider
   const images = [
-    "../../../../src/assets/imgcarousel/login1.jpg",
-    "../../../../src/assets/imgcarousel/login2.jpg",
-    "../../../../src/assets/imgcarousel/login3.jpg",
-    "../../../../src/assets/imgcarousel/login4.jpg",
+    "/assets/img/imgcarousel/carousel_login/login1.jpg",
+    "/assets/img/imgcarousel/carousel_login/login2.jpg",
+    "/assets/img/imgcarousel/carousel_login/login3.jpg",
+    "/assets/img/imgcarousel/carousel_login/login4.jpg",
   ];
 
   return (
     <div
       className="flex flex-col items-center justify-center xl:min-h-screen bg-cover bg-center"
       style={{
-        backgroundImage: 'url("../../../../src/assets/img/fondologin.avif")',
+        backgroundImage: 'url("/assets/img/login/fondologin.avif")',
       }}
     >
       <div className="xl:flex items-center justify-center w-full">

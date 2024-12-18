@@ -17,7 +17,7 @@ const Calendar = ({
   return (
     <div className="p-4 rounded-lg shadow-xl bg-tertiary-100">
       <div className="flex justify-center mb-4">
-        <img src="../../../../../src/assets/img/img1.png" alt="Calendario" />
+        <img src="/assets/img/landing/fondo-login.png" alt="Calendario" />
       </div>
       <h1 className="text-secundary text-5xl font-medium text-center">
         Calendario

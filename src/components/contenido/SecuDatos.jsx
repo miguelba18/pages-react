@@ -18,7 +18,7 @@ const SecuDatos = () => {
 
       <div className="flex justify-center items-center w-full">
         <img
-          src="../../public/assets/img/marcas/dian.png"
+          src="/assets/img/marcas/dian.png"
           className="h-[50%] w-[80] object-cover "
         />
       </div>

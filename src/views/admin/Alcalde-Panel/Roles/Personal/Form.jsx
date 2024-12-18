@@ -105,7 +105,7 @@ const Form = () => {
         >
           <div className="flex justify-center">
             <img
-              src="../../../../../../src/assets/img/fondo-login.png"
+              src="/assets/img/dashboard/fondo-login.png"
               alt=""
               className="mb-0 rounded-2xl w-[60%] h-1/2"
             />

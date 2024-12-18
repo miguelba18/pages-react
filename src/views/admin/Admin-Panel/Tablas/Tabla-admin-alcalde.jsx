@@ -69,7 +69,7 @@ const Tabla = () => {
     <>
     <div className="overflow-auto">
       <div className="flex justify-center">
-        <img src="../../../../../../src/assets/img/img2.png" alt="Imagen" />
+        <img src="/assets/img/dashboard/img2.png" alt="Imagen" />
       </div>
       
       <h1 className="font-bold text-3xl text-secundary mb-4">

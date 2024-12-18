@@ -69,17 +69,17 @@ const Login = () => {
   };
 
   const images = [
-    "../../../../../public/assets/img/imgcarousel/carousel_login/login1.jpg",
-    "../../../../../public/assets/img/imgcarousel/carousel_login/login2.jpg",
-    "../../../../../public/assets/img/imgcarousel/carousel_login/login3.jpg",
-    "../../../../../public/assets/img/imgcarousel/carousel_login/login4.jpg",
+    "/assets/img/imgcarousel/carousel_login/login1.jpg",
+    "/assets/img/imgcarousel/carousel_login/login2.jpg",
+    "/assets/img/imgcarousel/carousel_login/login3.jpg",
+    "/assets/img/imgcarousel/carousel_login/login4.jpg",
   ];
 
   return (
     <div
       className="flex flex-col items-center justify-center xl:min-h-screen bg-cover bg-center"
       style={{
-        backgroundImage: 'url("../../../../../public/assets/img/login/fondologin.avif")',
+        backgroundImage: 'url("/assets/img/login/fondologin.avif")',
       }}
     >
       <h1 className="text-3xl md:text-5xl font-bold text-gray-500 text-center mt-10 xl:mt-0 xl:mb-10">

@@ -102,14 +102,14 @@ DifferentCard.propTypes = {
 const CardList = () => {
   const cards = [
     {
-      title: 'DIAN incrementó en 13% el recaudo de impuestos en 2023',
+      title: 'DIAN incrementó en 13% el recaudo de impuestos en 2024',
       description: 'Por otra parte, según el oficio, el valor del recaudo neto de los impuestos administrados por la Dian durante el período de enero a diciembre de 2023 alcanzó los $262.214. 4701 millones, representando un cumplimiento del 95,90% en relación con la meta de recaudo neto de $273.285.',
-      imageUrl: "/src/assets/Img/img1.png", 
+      imageUrl: "/assets/img/dashboard/grafica.png", 
     },
     {
       title: 'Listado de Criptomoneda 11 de Abril 2024',
       description: 'Cotización y análisis de las principales critptomonedas en este momento. Bitcoin, Ethereum, Cardano, Solana, Litlecoin y Theter.',
-      imageUrl: "/src/assets/img/CRIPTO.png",
+      imageUrl: "/assets/img/dashboard/CRIPTO.png",
     },
     {
       title: 'Total Income',
