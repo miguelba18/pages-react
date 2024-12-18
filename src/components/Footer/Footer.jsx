@@ -18,9 +18,9 @@ const Footer = () => {
   };
 
   return (
-    <div id="Politicas" className="bg-cover bg-primary/90 text-white relative">
+    <div id="Politicas" className="bg-cover bg-primary text-white ">
       <div className="xl:flex  items-center  justify-around">
-        <div className="b w-[33%] p-10 ">
+        <div className=" xl:w-[33%] p-10 ">
           <h1 id="Footer" className="text-4xl text-white font-bold ">
             Conoce a SIM SAS hoy
           </h1>
@@ -31,27 +31,31 @@ const Footer = () => {
             Conoce nuestras políticas. Da click en nuestro botón para que puedas
             leerlas.
           </p>
-          <div className="flex justify-between">
-            <div className="flex space-x-6 mt-4">
-              <RiWhatsappLine className="h-8 w-8 text-white-100" />
-              <RiInstagramLine className="h-8 w-8 text-white-100" />
-              <RiFacebookCircleLine className="h-8 w-8 text-white-100" />
-            </div>
-            <div className="grid justify-center items-center mb-2">
-              <button
-                onClick={handleOpenPoliticas}
-                className="overflow-hidden w-32 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
-              >
-                Empieza!
-                <span className="absolute w-36 h-32 -top-8 -left-2 bg-primary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
-                <span className="absolute w-36 h-32 -top-8 -left-2 bg-secundary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
-                <span className="absolute w-36 h-32 -top-8 -left-2 bg-cuartary-100 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
-                <span className="group-hover:opacity-100 group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
-                  Explora!
-                </span>
-              </button>
-            </div>
-          </div>
+          <div className="flex flex-wrap justify-center items-center gap-6 mt-4">
+  {/* Iconos */}
+  <div className="flex space-x-6 items-center justify-center">
+    <RiWhatsappLine className="xl:h-8 xl:w-8 w-12 h-12 text-white-100" />
+    <RiInstagramLine className="xl:h-8 xl:w-8 w-12 h-12 text-white-100" />
+    <RiFacebookCircleLine className="xl:h-8 xl:w-8 w-12 h-12 text-white-100" />
+  </div>
+
+  {/* Botón */}
+  <div className="flex justify-center items-center">
+    <button
+      onClick={handleOpenPoliticas}
+      className="overflow-hidden w-32 p-2 h-12 bg-white text-black/60 border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
+    >
+      Empieza!
+      <span className="absolute w-36 h-32 -top-8 -left-2 bg-primary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"></span>
+      <span className="absolute w-36 h-32 -top-8 -left-2 bg-secundary rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-bottom"></span>
+      <span className="absolute w-36 h-32 -top-8 -left-2 bg-cuartary-100 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-bottom"></span>
+      <span className="group-hover:opacity-100 group-hover:duration-1000 text-white duration-100 opacity-0 absolute top-2.5 left-6 z-10">
+        Explora!
+      </span>
+    </button>
+  </div>
+</div>
+
         </div>
 
         {politicas && (
@@ -158,28 +162,30 @@ const Footer = () => {
           </div>
         )}
 
-        <div className="grid items-center justify-center space-y-4   ">
-          <p className="text-2xl mb-2 font-semibold ">Explore </p>
-          <p className="text-md ml-4 cursor-pointer"> Go pro</p>
-          <p className="text-md ml-4 cursor-pointer">Explore Design</p>
-          <p className="text-md ml-4 cursor-pointer">Create Design</p>
-          <p className="text-md ml-4 cursor-pointer">Playoffs</p>
-        </div>
-        <div className="grid items-center justify-center space-y-4   ">
-          <p className="text-2xl mb-2 font-semibold ">Innovate </p>
-          <p className="text-md ml-4 cursor-pointer"> Tags</p>
-          <p className="text-md ml-4 cursor-pointer">API</p>
-          <p className="text-md ml-4 cursor-pointer">Places</p>
-          <p className="text-md ml-4 cursor-pointer">Creative Markets</p>
-        </div>
+<div className="flex flex-wrap justify-center gap-4">
+  <div className="flex flex-col items-center space-y-4">
+    <p className="text-2xl mb-2 font-semibold">Explore</p>
+    <p className="text-md ml-4 cursor-pointer">Go pro</p>
+    <p className="text-md ml-4 cursor-pointer">Explore Design</p>
+    <p className="text-md ml-4 cursor-pointer">Create Design</p>
+    <p className="text-md ml-4 cursor-pointer">Playoffs</p>
+  </div>
+  <div className="flex flex-col items-center space-y-4">
+    <p className="text-2xl mb-2 font-semibold">Innovate</p>
+    <p className="text-md ml-4 cursor-pointer">Tags</p>
+    <p className="text-md ml-4 cursor-pointer">API</p>
+    <p className="text-md ml-4 cursor-pointer">Places</p>
+    <p className="text-md ml-4 cursor-pointer">Creative Markets</p>
+  </div>
+  <div className="flex flex-col items-center space-y-4">
+    <p className="text-2xl mb-2 font-semibold">About</p>
+    <p className="text-md ml-4 cursor-pointer">Community</p>
+    <p className="text-md ml-4 cursor-pointer">Designers</p>
+    <p className="text-md ml-4 cursor-pointer">Support</p>
+    <p className="text-md ml-4 cursor-pointer">Terms of service</p>
+  </div>
+</div>
 
-        <div className="grid items-center justify-center  space-y-4 ">
-          <p className="text-2xl mb-2 font-semibold ">About</p>
-          <p className="text-md ml-4 cursor-pointer">Community</p>
-          <p className="text-md ml-4 cursor-pointer">Designers</p>
-          <p className="text-md ml-4 cursor-pointer">Support</p>
-          <p className="text-md ml-4 cursor-pointer">Terms of service</p>
-        </div>
       </div>
 
       <div className="flex flex-col items-center justify-center py-4">
