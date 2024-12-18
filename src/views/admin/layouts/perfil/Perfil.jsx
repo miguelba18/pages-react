@@ -31,8 +31,8 @@ function Perfil() {
         <>
           <div className=" mb-8  xl:w-1/2 xl:p-10 flex justify-center xl:justify-end">
             <div className="w-[80%] bg-white shadow-2xl shadow-primary rounded-3xl ">
-              <div className="flex justify-center mt-5 mb-6 ">
-                <p className="text-3xl text-primary font-bold">
+              <div className="flex justify-center items-center rounded-t-3xl mb-6 border-b bg-gray-100      ">
+                <p className="text-3xl text-primary font-bold py-4">
                   {profile.nombre} {profile.apellido}
                 </p>
               </div>
@@ -59,10 +59,8 @@ function Perfil() {
           </div>
 
           <div className="bg-primary p-8 rounded-xl mb-8 xl:w-1/2">
-          <h1 className="text-3xl text-white font-semibold mb-4">
-            Perfil
-          </h1>
-          <hr className="mb-2"></hr>
+            <h1 className="text-3xl text-white font-semibold mb-4">Perfil</h1>
+            <hr className="mb-2"></hr>
             <form>
               <div className=" mb-8 flex">
                 <div className="w-full mr-2">

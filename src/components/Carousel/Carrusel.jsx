@@ -19,6 +19,7 @@ const Carrusel = ({ className, style, onClick }) => {
     draggable: false,
     slidesToShow: 1,
     slidesToScroll: 1,
+    adaptativeHeight: true,
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
   };
@@ -32,21 +33,17 @@ const Carrusel = ({ className, style, onClick }) => {
   };
 
   return (
-    <div className="bg-gray-200 p-2">
+    <div className="p-4 flex justify-center items-center">
       <div
-        className={` mb-[3%] mx-[22%] shadow-2xl relative  cursor-pointer ${className}`}
+        className={`w-full max-w-xl max-h-3xl relative ${className}`}
         style={style}
         onClick={onClick}
       >
         <Slider {...settings}>
           {Datos.map((dato) => (
             <div key={dato.id} onClick={() => handleCardClick(dato)}>
-              <Cards imagen={dato.imagen} 
-              
-               />
-          
+              <Cards imagen={dato.imagen} />
             </div>
-            
           ))}
         </Slider>
         {selectedCard && (
@@ -60,6 +57,7 @@ const Carrusel = ({ className, style, onClick }) => {
       </div>
     </div>
   );
+  
 };
 
 Carrusel.propTypes = {
