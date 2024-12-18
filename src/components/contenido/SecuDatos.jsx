@@ -16,12 +16,20 @@ const SecuDatos = () => {
         </div>
       </div>
 
+<<<<<<< HEAD
       <div className="md:col-span-4 flex ml-[15%] xl:ml-0 pb-8 xl:p-0 ">
         <div className="flex justify-center items-center ">
         <img
           src="../../public/assets/img/marcas/dian.png"
           className="h-[70%] w-[70%] object-cover >  "
         /></div>
+=======
+      <div className="md:col-span-4 flex ml-[15%] xl:ml-0     pb-8 xl:p-0 ">
+        <img
+          src="/src/assets/img/dian.png"
+          className="h-[100%] w-[100%] object-cover >  "
+        />
+>>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
       </div>
     </section>
   );

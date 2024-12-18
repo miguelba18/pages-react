@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import imagen1 from "../../../public/assets/img/imgcarousel/imagen1.jpg";
 import imagen2 from "../../../public/assets/img/imgcarousel/imagen2.jpg";
 import imagen3 from "../../../public/assets/img/imgcarousel/imagen3.jpg";
 import imagen4 from "../../../public/assets/img/imgcarousel/imagen4.jpg";
+=======
+import imagen1 from "../../assets/imgcarousel/imagen1.jpg";
+import imagen2 from "../../assets/imgcarousel/imagen2.jpg";
+import imagen3 from "../../assets/imgcarousel/imagen3.jpg";
+import imagen4 from "../../assets/imgcarousel/imagen4.jpg";
+>>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
 
 export default [
   {

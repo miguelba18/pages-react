@@ -15,7 +15,11 @@
     left: 0;
     width: 100%;
     height: 50%;
+<<<<<<< HEAD
     background: url('../../public/assets/svg/wave.svg') no-repeat center bottom;
+=======
+    background: url('/src/assets/svg/wave.svg') no-repeat center bottom;
+>>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
     background-size: cover;
     z-index: -1;
     
@@ -32,8 +36,13 @@
     display: block;
     width: 90%;
     height: auto;
+<<<<<<< HEAD
     mask-image: url('../../public/assets/svg/wave-mask.svg');
     -webkit-mask-image: url('../../public/assets/svg/wave-mask.svg');
+=======
+    mask-image: url('/src/assets/svg/wave-mask.svg');
+    -webkit-mask-image: url('/src/assets/svg/wave-mask.svg');
+>>>>>>> f9d1ad047a1bfeb54b76cf554d3006ea828e5fe5
   }
   
   
