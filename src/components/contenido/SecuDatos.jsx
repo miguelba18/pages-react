@@ -1,9 +1,9 @@
 const SecuDatos = () => {
   return (
-    <section className=" min-h-[50vh] h-[1/2] grid grid-cols-1 xl:grid-cols-8 mb-4 ">
-      <div className=" md:col-span-4 flex justify-center xl:pl-[22%] p-4  ">
+    <section className=" xl:flex mb-4  ">
+      <div className=" md:col-span-4 flex justify-center  p-4  ">
         <div className="flex flex-col gap-6">
-          <h1 className="text-4xl xl:text-6xl font-bold leading-[4rem] xl:leading-[4.5rem] text-black mt-[20%] xl:mt-0 ">
+          <h1 className="text-4xl xl:text-6xl font-bold leading-[4rem] xl:leading-[4.5rem] text-black mt-8 ">
             Tus datos 100% seguros con nosotros
           </h1>
 
@@ -16,12 +16,11 @@ const SecuDatos = () => {
         </div>
       </div>
 
-      <div className="md:col-span-4 flex ml-[15%] xl:ml-0 pb-8 xl:p-0 ">
-        <div className="flex justify-center items-center ">
+      <div className="flex justify-center items-center w-full">
         <img
           src="../../public/assets/img/marcas/dian.png"
-          className="h-[70%] w-[70%] object-cover >  "
-        /></div>
+          className="h-[50%] w-[80] object-cover "
+        />
       </div>
     </section>
   );

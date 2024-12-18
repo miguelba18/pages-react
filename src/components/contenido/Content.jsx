@@ -12,7 +12,7 @@ const Content = () => {
   return (
     <>
       <div className="relative min-h-[90vh] ">
-        <div className="absolute inset-x-0 xl:bottom-4 -bottom-6 grid justify-center  z-10 ">
+        <div className="absolute inset-x-0 xl:bottom-4 -bottom-6 grid justify-center  z-1 ">
           <div className="flex justify-center ">
             <RxSwitch className="h-8 w-8 rounded-md  text-white rotate-90  " />
           </div>

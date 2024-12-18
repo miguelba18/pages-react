@@ -92,7 +92,7 @@ const Contacto = () => {
           Formulario
         </h1>
         <form onSubmit={handleSubmit} className="xl:p-8">
-          <div className="md:flex space-x-4 ">
+          <div className="md:flex md:space-x-4 ">
             <div className="xl:mt-0 mt-4">
               <label className="text-lg">
                 Nombre*
