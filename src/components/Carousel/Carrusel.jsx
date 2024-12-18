@@ -32,9 +32,9 @@ const Carrusel = ({ className, style, onClick }) => {
   };
 
   return (
-    <div className="bg-gray-100 p-2">
+    <div className="bg-gray-200 p-2">
       <div
-        className={` mb-[10%] mx-[22%] shadow-2xl relative  cursor-pointer ${className}`}
+        className={` mb-[3%] mx-[22%] shadow-2xl relative  cursor-pointer ${className}`}
         style={style}
         onClick={onClick}
       >
